@@ -14,7 +14,7 @@ from unittest import TestCase
 
 from hamcrest import assert_that
 
-from nti.analytics.learning_network.database.common import _get_new_variance
+from ..common import _get_new_variance
 
 class TestVariance( TestCase ):
 

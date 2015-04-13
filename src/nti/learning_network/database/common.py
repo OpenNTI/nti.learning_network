@@ -14,7 +14,7 @@ from nti.analytics.database.users import get_user_db_id
 from nti.analytics.database.users import get_or_create_user
 from nti.analytics.database.root_context import get_root_context_id
 
-from nti.analytics.learning_network.database import get_analytics_db
+from . import get_analytics_db
 
 def _get_new_variance( new_count, old_total, delta, old_sum_of_squares ):
 	"""

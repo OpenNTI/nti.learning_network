@@ -13,11 +13,11 @@ from sqlalchemy import Integer
 
 from sqlalchemy.schema import Sequence
 
-from nti.analytics.learning_network.database.common import get_bucket_for_timestamp
-from nti.analytics.learning_network.database.common import get_course_bucket_for_timestamp
-from nti.analytics.learning_network.database.meta_mixins import StatMixin
-from nti.analytics.learning_network.database.meta_mixins import LearningNetworkTableMixin
-from nti.analytics.learning_network.database.meta_mixins import CourseLearningNetworkTableMixin
+from .common import get_bucket_for_timestamp
+from .common import get_course_bucket_for_timestamp
+from .meta_mixins import StatMixin
+from .meta_mixins import LearningNetworkTableMixin
+from .meta_mixins import CourseLearningNetworkTableMixin
 
 class LearningAccessZones( CourseLearningNetworkTableMixin, StatMixin ):
 	__tablename__ = 'LearningAccessZones'
