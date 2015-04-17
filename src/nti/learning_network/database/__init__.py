@@ -9,5 +9,7 @@ __docformat__ = "restructuredtext en"
 
 logger = __import__('logging').getLogger(__name__)
 
+from nti.analytics.database import Base
+
 from nti.analytics.database import get_analytics_db
 get_analytics_db = get_analytics_db
