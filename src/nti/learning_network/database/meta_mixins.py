@@ -10,6 +10,7 @@ logger = __import__('logging').getLogger(__name__)
 
 from sqlalchemy import Column
 from sqlalchemy import Integer
+from sqlalchemy import BigInteger
 from sqlalchemy import ForeignKey
 from sqlalchemy import DateTime
 
@@ -40,4 +41,4 @@ class StatMixin( object ):
 
 	total_duration = Column('total_duration', Integer, nullable=False, autoincrement=False, default=0 )
 	count = Column('count', Integer, nullable=False, autoincrement=False, default=0 )
-	sum_of_squares = Column('sum_of_squares', Integer, nullable=False, autoincrement=False, default=0 )
+	sum_of_squares = Column('sum_of_squares', BigInteger, nullable=False, autoincrement=False, default=0 )
