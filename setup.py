@@ -3,6 +3,12 @@ from setuptools import setup, find_packages
 
 VERSION = '0.0.0'
 
+entry_points = {
+	"z3c.autoinclude.plugin": [
+		'target = nti.analytics',
+	],
+}
+
 setup(
 	name='nti.learning_network',
 	version=VERSION,
@@ -25,5 +31,6 @@ setup(
 	install_requires=[
 		'setuptools',
 		'nti.analytics'
-	]
+	],
+	entry_points=entry_points
 )
