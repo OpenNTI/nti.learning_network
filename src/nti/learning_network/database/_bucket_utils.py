@@ -14,7 +14,7 @@ from nti.analytics.database.users import get_user_db_id
 from nti.analytics.database.users import get_or_create_user
 from nti.analytics.database.root_context import get_root_context_id
 
-from . import get_analytics_db
+from . import get_learning_db
 
 def get_bucket_boundaries( timestamp ):
 	"""
@@ -46,7 +46,7 @@ def get_bucket_for_timestamp( table, timestamp, user, create=False ):
 	Get the bounded bucket record for the give user, table, timestamp;
 	creating on request.
 	"""
-	db = get_analytics_db()
+	db = get_learning_db()
 	if create:
 		user = get_or_create_user( user )
 		user_id = user.user_id
@@ -71,7 +71,7 @@ def get_course_bucket_for_timestamp( table, timestamp, user, course=None, create
 	creating on request.  A ``None`` course indicates an aggregate across
 	all courses.
 	"""
-	db = get_analytics_db()
+	db = get_learning_db()
 	result = None
 
 	if create:
