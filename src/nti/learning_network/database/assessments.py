@@ -23,6 +23,7 @@ from nti.app.assessment.interfaces import IUsersCourseAssignmentHistoryItem
 
 from . import Base
 
+from ._utils import increment_field
 from ._bucket_utils import get_course_bucket_for_timestamp
 from .meta_mixins import CourseLearningNetworkTableMixin
 
@@ -54,10 +55,6 @@ def _is_late( course, assessment ):
 	submitted_late = assessment.created > due_date if due_date else False
 	return submitted_late
 
-def _increment_field( obj, field ):
-	old_val = getattr( obj, field ) or 0
-	setattr( obj, field, old_val + 1 )
-
 def update_assessment( user, timestamp, assessment, course ):
 	bucket_record = get_course_bucket_for_timestamp(
 							AssessmentProduction, timestamp,
@@ -71,21 +68,21 @@ def update_assessment( user, timestamp, assessment, course ):
 		is_first_time = _is_first_time( user, assessment_id, get_assignment_for_user )
 		is_late = _is_late( course, assessment )
 
-		_increment_field( bucket_record, 'assignment_count' )
+		increment_field( bucket_record, 'assignment_count' )
 		if is_late:
-			_increment_field( bucket_record, 'assignment_late_count' )
+			increment_field( bucket_record, 'assignment_late_count' )
 
 		if is_first_time:
-			_increment_field( bucket_record, 'assigment_unique_count' )
+			increment_field( bucket_record, 'assigment_unique_count' )
 
 		if IQTimedAssignment.providedBy( assessment ):
-			_increment_field( bucket_record, 'assignment_timed_count' )
+			increment_field( bucket_record, 'assignment_timed_count' )
 			if is_late:
-				_increment_field( bucket_record, 'assigment_timed_late_count' )
+				increment_field( bucket_record, 'assigment_timed_late_count' )
 	else:
 		assessment_id = getattr( assessment, 'questionSetId', '' )
 		is_first_time = _is_first_time( user, assessment_id, get_self_assessments_for_user_and_id )
 
-		_increment_field( bucket_record, 'assessment_count' )
+		increment_field( bucket_record, 'assessment_count' )
 		if is_first_time:
-			_increment_field( bucket_record, 'assessment_unique_count' )
+			increment_field( bucket_record, 'assessment_unique_count' )
