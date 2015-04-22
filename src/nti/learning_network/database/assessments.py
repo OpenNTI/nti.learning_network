@@ -15,9 +15,6 @@ from sqlalchemy.schema import Sequence
 
 from nti.analytics.assessments import get_assignment_for_user
 from nti.analytics.assessments import get_self_assessments_for_user_and_id
-from nti.analytics.assessments import _self_assessment_taken
-
-from nti.analytics.database.users import get_user_db_id
 
 from nti.assessment.interfaces import IQTimedAssignment
 from nti.assessment.interfaces import IQAssignmentDateContext
@@ -25,10 +22,9 @@ from nti.assessment.interfaces import IQAssignmentDateContext
 from nti.app.assessment.interfaces import IUsersCourseAssignmentHistoryItem
 
 from . import Base
-from . import get_learning_db
 
 from ._utils import increment_field
-from ._bucket_utils import get_bucket_boundaries
+from ._bucket_utils import get_bounded_buckets
 from ._bucket_utils import get_course_bucket_for_timestamp
 from .meta_mixins import CourseLearningNetworkTableMixin
 
@@ -98,18 +94,8 @@ def get_aggregate_assessment_stats( user, timestamp=None ):
 	"""
 	Get the platform stats for a user starting at the beginning timestamp, inclusive.
 	"""
-	db = get_learning_db()
-	user_id = get_user_db_id( user )
 	result = None
-
-	if timestamp is None:
-		stats = db.session.query( AssessmentProduction ).filter(
-								AssessmentProduction.user_id == user_id ).all()
-	else:
-		beginning, _ = get_bucket_boundaries( timestamp )
-		stats = db.session.query( AssessmentProduction ).filter(
-								AssessmentProduction.user_id == user_id,
-								AssessmentProduction.bucket_start_time >= beginning ).all()
+	assessment_records = get_bounded_buckets( user, AssessmentProduction, timestamp )
 
 	field_map = { 'assessment_count':'SelfAssessmentCount',
 					'assessment_unique_count':'UniqueSelfAssessmentCount',
@@ -119,7 +105,7 @@ def get_aggregate_assessment_stats( user, timestamp=None ):
 					'assignment_timed_count':'TimedAssignmentCount',
 					'assignment_timed_late_count':'TimedAssignmentLateCount' }
 
-	if stats:
+	if assessment_records:
 		accum = {}
 
 		def accum_fields( obj ):
@@ -128,7 +114,7 @@ def get_aggregate_assessment_stats( user, timestamp=None ):
 				val = accum.setdefault( stat_field, 0 )
 				accum[stat_field] = val + field_delta
 
-		map( accum_fields, stats )
+		map( accum_fields, assessment_records )
 
 		result = AggregateAssessmentStats( **accum )
 	return result

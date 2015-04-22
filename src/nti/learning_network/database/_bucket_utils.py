@@ -65,6 +65,22 @@ def get_bucket_for_timestamp( table, timestamp, user, create=False ):
 		result = create_bucket_for_timestamp( db, table, user_id, timestamp )
 	return result
 
+def get_bounded_buckets( user, table, start_timestamp=None ):
+	"""
+	Get all buckets within the timestamp given.
+	"""
+	db = get_learning_db()
+	user_id = get_user_db_id( user )
+	if start_timestamp is None:
+		result = db.session.query( table ).filter(
+								table.user_id == user_id ).all()
+	else:
+		beginning, _ = get_bucket_boundaries( start_timestamp )
+		result = db.session.query( table ).filter(
+								table.user_id == user_id,
+								table.bucket_start_time >= beginning ).all()
+	return result
+
 def get_course_bucket_for_timestamp( table, timestamp, user, course=None, create=False ):
 	"""
 	Get the bounded bucket record for the give user, table, course, timestamp;

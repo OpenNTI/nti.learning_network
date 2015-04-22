@@ -13,14 +13,11 @@ from sqlalchemy import Integer
 
 from sqlalchemy.schema import Sequence
 
-from nti.analytics.database.users import get_user_db_id
-
 from . import Base
-from . import get_learning_db
 
 from ._stat_utils import get_aggregate_stats
 from ._stat_utils import update_record_stats
-from ._bucket_utils import get_bucket_boundaries
+from ._bucket_utils import get_bounded_buckets
 from ._bucket_utils import get_bucket_for_timestamp
 from ._bucket_utils import get_course_bucket_for_timestamp
 
@@ -57,16 +54,6 @@ def get_platform_stats( user, timestamp=None ):
 	"""
 	Get the platform stats for a user starting at the beginning timestamp, inclusive.
 	"""
-	db = get_learning_db()
-	user_id = get_user_db_id( user )
-	if timestamp is None:
-		stats = db.session.query( PlatformAccess ).filter(
-								PlatformAccess.user_id == user_id ).all()
-	else:
-		beginning, _ = get_bucket_boundaries( timestamp )
-		stats = db.session.query( PlatformAccess ).filter(
-								PlatformAccess.user_id == user_id,
-								PlatformAccess.bucket_start_time >= beginning ).all()
-
+	stats = get_bounded_buckets( user, PlatformAccess, timestamp )
 	stats = get_aggregate_stats( stats )
 	return stats
