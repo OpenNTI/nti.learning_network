@@ -1,0 +1,91 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*
+"""
+$Id$
+"""
+from __future__ import print_function, unicode_literals, absolute_import, division
+__docformat__ = "restructuredtext en"
+
+logger = __import__('logging').getLogger(__name__)
+
+from sqlalchemy import Column
+from sqlalchemy import Integer
+
+from sqlalchemy.schema import Sequence
+
+from nti.analytics.assessments import get_assignment_for_user
+from nti.analytics.assessments import get_self_assessments_for_user_and_id
+
+from nti.assessment.interfaces import IQTimedAssignment
+from nti.assessment.interfaces import IQAssignmentDateContext
+
+from nti.app.assessment.interfaces import IUsersCourseAssignmentHistoryItem
+
+from . import Base
+
+from ._bucket_utils import get_course_bucket_for_timestamp
+from .meta_mixins import CourseLearningNetworkTableMixin
+
+class AssessmentProduction( Base, CourseLearningNetworkTableMixin ):
+	__tablename__ = 'AssessmentProduction'
+
+	assessment_prod_id = Column('assessment_prod_id', Integer, Sequence( 'assessment_prod_seq' ),
+							index=True, nullable=False, primary_key=True )
+
+	assessment_count = Column('assessment_count', Integer, nullable=True )
+	assessment_unique_count = Column('assessment_unique_count', Integer, nullable=True )
+
+	assignment_count = Column('assignment_count', Integer, nullable=True )
+	assigment_unique_count = Column('assigment_unique_count', Integer, nullable=True )
+	assignment_late_count = Column('assigment_late_count', Integer, nullable=True )
+
+	assignment_timed_count = Column('assignment_timed_count', Integer, nullable=True )
+	assignment_timed_late_count = Column('assignment_timed_late_count', Integer, nullable=True )
+
+def _is_first_time( user, assessment_id, assessment_call ):
+	# The given assessment should already exist
+	results = assessment_call( user, assessment_id )
+	return bool( not results or len( results ) == 1 )
+
+def _is_late( course, assessment ):
+	assignment = assessment.Assignment
+	date_context = IQAssignmentDateContext( course )
+	due_date = date_context.of( assignment ).available_for_submission_ending
+	submitted_late = assessment.created > due_date if due_date else False
+	return submitted_late
+
+def _increment_field( obj, field ):
+	old_val = getattr( obj, field ) or 0
+	setattr( obj, field, old_val + 1 )
+
+def update_assessment( user, timestamp, assessment, course ):
+	bucket_record = get_course_bucket_for_timestamp(
+							AssessmentProduction, timestamp,
+							user, course, create=True )
+
+	bucket_record.last_modified = timestamp
+
+	if IUsersCourseAssignmentHistoryItem.providedBy( assessment ):
+		# Timed assignments are aggregated in assignment columns as well.
+		assessment_id = getattr( assessment, 'assignmentId', '' )
+		is_first_time = _is_first_time( user, assessment_id, get_assignment_for_user )
+		is_late = _is_late( course, assessment )
+
+		_increment_field( bucket_record, 'assignment_count' )
+		if is_late:
+			_increment_field( bucket_record, 'assignment_late_count' )
+
+		if is_first_time:
+			_increment_field( bucket_record, 'assigment_unique_count' )
+
+		if IQTimedAssignment.providedBy( assessment ):
+			_increment_field( bucket_record, 'assignment_timed_count' )
+			if is_late:
+				_increment_field( bucket_record, 'assigment_timed_late_count' )
+	else:
+		assessment_id = getattr( assessment, 'questionSetId', '' )
+		is_first_time = _is_first_time( user, assessment_id, get_self_assessments_for_user_and_id )
+
+		_increment_field( bucket_record, 'assessment_count' )
+		if is_first_time:
+			_increment_field( bucket_record, 'assessment_unique_count' )

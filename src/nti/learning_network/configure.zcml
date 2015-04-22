@@ -11,7 +11,10 @@
 
 	<!-- Subscribers -->
 	<!-- Commented out until we migrate
+
 	<subscriber handler=".access._analytics_session" />
+	<subscriber handler=".assessments._analytics_assessment" />
+
 	-->
 
 </configure>

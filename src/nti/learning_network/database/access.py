@@ -43,11 +43,13 @@ def update_access_zones( user, timestamp, duration, course=None ):
 	bucket_record = get_course_bucket_for_timestamp(
 							LearningAccessZones, timestamp,
 							user, course, create=True )
+	bucket_record.last_modified = timestamp
 	update_record_stats( bucket_record, duration )
 
 def update_platform_access( user, timestamp, duration ):
 	bucket_record = get_bucket_for_timestamp( PlatformAccess, timestamp,
 											user, create=True )
+	bucket_record.last_modified = timestamp
 	update_record_stats( bucket_record, duration )
 
 def get_platform_stats( user, timestamp=None ):
