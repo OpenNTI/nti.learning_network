@@ -39,10 +39,9 @@ def update_record_stats( record, duration ):
 	increment_field( record, 'total_duration', delta=duration )
 
 	duration_squared = duration ** 2
-
 	increment_field( record, 'sum_of_squares', delta=duration_squared )
 
-def get_stats( statmixin_iter ):
+def get_aggregate_stats( statmixin_iter ):
 	"""
 	For an iterable of ``StatMixin`` rows, return some aggregate statistics.
 	"""
@@ -60,6 +59,6 @@ def get_stats( statmixin_iter ):
 		variance = sum_of_squares / count - ( summation / count ) ** 2
 		average = summation / count
 		std_dev = sqrt( variance )
-		stats = Stats( average=average, std_dev=std_dev )
+		stats = Stats( Average=average, StandardDeviation=std_dev )
 	return stats
 

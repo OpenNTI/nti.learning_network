@@ -14,6 +14,9 @@ from nti.analytics.recorded.interfaces import IAnalyticsSessionRecordedEvent
 
 from .database.access import update_access_zones
 from .database.access import update_platform_access
+from .database.access import get_platform_stats
+
+get_platform_stats = get_platform_stats
 
 # def update_access_zones( user, timestamp, duration, course=None ):
 # def update_platform_access( user, timestamp, duration ):
@@ -22,5 +25,5 @@ from .database.access import update_platform_access
 def _analytics_session( session ):
 	duration = session.SessionEndTime - session.SessionStartTime
 	duration = duration.seconds
-	assert( duration >= 0 )
-	update_platform_access( session.user, session.timestamp, duration )
+	if duration > 0:
+		update_platform_access( session.user, session.timestamp, duration )

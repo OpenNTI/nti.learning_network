@@ -13,6 +13,9 @@ from zope import component
 from nti.analytics.recorded.interfaces import IAnalyticsAssessmentRecordedEvent
 
 from .database.assessments import update_assessment
+from .database.assessments import get_aggregate_assessment_stats
+
+get_aggregate_assessment_stats = get_aggregate_assessment_stats
 
 @component.adapter( IAnalyticsAssessmentRecordedEvent )
 def _analytics_assessment( event ):

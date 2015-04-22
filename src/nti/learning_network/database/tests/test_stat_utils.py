@@ -21,7 +21,7 @@ from hamcrest import assert_that
 
 from ..meta_mixins import StatMixin
 
-from .._stat_utils import get_stats
+from .._stat_utils import get_aggregate_stats
 from .._stat_utils import _get_new_variance
 from .._stat_utils import update_record_stats
 
@@ -78,23 +78,23 @@ class TestStatUtils( TestCase ):
 
 	def test_get_stats( self ):
 		# Empty/none
-		result = get_stats( [] )
+		result = get_aggregate_stats( [] )
 		assert_that( result, none() )
 
 		record = StatRecord( 0, 10, 100 )
-		result = get_stats( (record,) )
+		result = get_aggregate_stats( (record,) )
 		assert_that( result, none() )
 
 		# Single value
 		record = StatRecord( 1, 10, 100 )
-		result = get_stats( (record,) )
+		result = get_aggregate_stats( (record,) )
 		assert_that( result.average, is_( 10 ))
 		assert_that( result.std_dev, is_( 0 ))
 
 		# Single record with values
 		values = [ 0, 1, 5, 10, 20, 30, 40, 50, 1000 ]
 		record = StatRecord( len( values ), sum( values ), sum( x ** 2 for x in values ) )
-		result = get_stats( (record,) )
+		result = get_aggregate_stats( (record,) )
 		average = sum( values ) / len( values )
 		assert_that( result.average, is_( average ))
 
@@ -112,7 +112,7 @@ class TestStatUtils( TestCase ):
 			record = StatRecord( len( value ), sum( value ), sum( x ** 2 for x in value ) )
 			records.append( record )
 
-		result = get_stats( records )
+		result = get_aggregate_stats( records )
 		assert_that( result.average, is_( average ))
 
 		if _numpy:
