@@ -13,10 +13,16 @@
 	<!-- Commented out until we migrate
 
 	<subscriber handler=".access._analytics_session" />
+	<subscriber handler=".access._video_view" />
+	<subscriber handler=".access._discussion_view" />
+	<subscriber handler=".access._reading_view" />
+	<subscriber handler=".access._assessment_view" />
+	<subscriber handler=".access._assignment_view" />
 	<subscriber handler=".assessments._analytics_assessment" />
 	<subscriber handler=".assessments._analytics_assignment" />
 
 	-->
+	<subscriber handler=".access._reading_view" />
 
 </configure>
 
