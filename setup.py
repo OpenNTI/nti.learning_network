@@ -4,8 +4,7 @@ from setuptools import setup, find_packages
 VERSION = '0.0.0'
 
 entry_points = {
-	"z3c.autoinclude.plugin": [
-		'target = nti.analytics',
+	'console_scripts': [
 	],
 }
 
