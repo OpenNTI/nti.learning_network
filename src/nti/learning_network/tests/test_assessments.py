@@ -46,6 +46,7 @@ from nti.dataserver.tests.mock_dataserver import WithMockDSTrans
 
 from . import NTIAnalyticsTestCase
 
+from ..assessments import _analytics_assignment
 from ..assessments import _analytics_assessment
 from ..assessments import get_aggregate_assessment_stats
 
@@ -120,7 +121,7 @@ class TestAssessments( NTIAnalyticsTestCase ):
 		# Assignment
 		assignment = self.assignment
 		assignment_event = AnalyticsAssessmentRecordedEvent( user, assignment, course, now )
-		_analytics_assessment( assignment_event )
+		_analytics_assignment( assignment_event )
 
 		stats = get_aggregate_assessment_stats( user )
 		assert_that( stats, not_none() )
@@ -145,7 +146,7 @@ class TestAssessments( NTIAnalyticsTestCase ):
 		assert_that( stats.TimedAssignmentLateCount, is_( 0 ))
 
 		# Second assignment
-		_analytics_assessment( assignment_event )
+		_analytics_assignment( assignment_event )
 		stats = get_aggregate_assessment_stats( user )
 		assert_that( stats, not_none() )
 		assert_that( stats.SelfAssessmentCount, is_( 2 ))
@@ -160,7 +161,7 @@ class TestAssessments( NTIAnalyticsTestCase ):
 		month_ago = now - timedelta( days=30 )
 		assignment.Assignment.available_for_submission_ending = month_ago
 
-		_analytics_assessment( assignment_event )
+		_analytics_assignment( assignment_event )
 		stats = get_aggregate_assessment_stats( user )
 		assert_that( stats, not_none() )
 		assert_that( stats.SelfAssessmentCount, is_( 2 ))
@@ -173,7 +174,7 @@ class TestAssessments( NTIAnalyticsTestCase ):
 
 		# Timed
 		assignment.Assignment = QTimedAssignment()
-		_analytics_assessment( assignment_event )
+		_analytics_assignment( assignment_event )
 		stats = get_aggregate_assessment_stats( user )
 		assert_that( stats, not_none() )
 		assert_that( stats.SelfAssessmentCount, is_( 2 ))
@@ -186,7 +187,7 @@ class TestAssessments( NTIAnalyticsTestCase ):
 
 		# Timed late
 		assignment.Assignment.available_for_submission_ending = month_ago
-		_analytics_assessment( assignment_event )
+		_analytics_assignment( assignment_event )
 		stats = get_aggregate_assessment_stats( user )
 		assert_that( stats, not_none() )
 		assert_that( stats.SelfAssessmentCount, is_( 2 ))

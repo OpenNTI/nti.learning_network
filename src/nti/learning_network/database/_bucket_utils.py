@@ -31,6 +31,7 @@ def create_bucket_for_timestamp( db, table, user_id, timestamp, **kwargs ):
 	"""
 	beginning, ending = get_bucket_boundaries( timestamp )
 
+	# Add in extra params, typically course_id
 	effective_kwargs = {'user_id': user_id,
 						'last_modified': timestamp,
 						'bucket_start_time': beginning,

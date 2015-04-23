@@ -65,30 +65,34 @@ def update_assessment( user, timestamp, assessment, course ):
 
 	bucket_record.last_modified = timestamp
 
-	if IUsersCourseAssignmentHistoryItem.providedBy( assessment ):
-		# Timed assignments are aggregated in assignment columns as well.
-		assessment_id = assessment.assignmentId
-		is_first_time = _is_first_time( user, assessment_id, get_assignment_for_user )
-		is_late = _is_late( course, assessment )
+	assessment_id = assessment.questionSetId
+	is_first_time = _is_first_time( user, assessment_id, get_self_assessments_for_user_and_id )
 
-		increment_field( bucket_record, 'assignment_count' )
+	increment_field( bucket_record, 'assessment_count' )
+	if is_first_time:
+		increment_field( bucket_record, 'assessment_unique_count' )
+
+def update_assignment( user, timestamp, assessment, course ):
+	bucket_record = get_course_bucket_for_timestamp(
+							AssessmentProduction, timestamp,
+							user, course, create=True )
+
+	# Timed assignments are aggregated in assignment columns as well.
+	assessment_id = assessment.assignmentId
+	is_first_time = _is_first_time( user, assessment_id, get_assignment_for_user )
+	is_late = _is_late( course, assessment )
+
+	increment_field( bucket_record, 'assignment_count' )
+	if is_late:
+		increment_field( bucket_record, 'assignment_late_count' )
+
+	if is_first_time:
+		increment_field( bucket_record, 'assignment_unique_count' )
+
+	if IQTimedAssignment.providedBy( assessment.Assignment ):
+		increment_field( bucket_record, 'assignment_timed_count' )
 		if is_late:
-			increment_field( bucket_record, 'assignment_late_count' )
-
-		if is_first_time:
-			increment_field( bucket_record, 'assignment_unique_count' )
-
-		if IQTimedAssignment.providedBy( assessment.Assignment ):
-			increment_field( bucket_record, 'assignment_timed_count' )
-			if is_late:
-				increment_field( bucket_record, 'assignment_timed_late_count' )
-	else:
-		assessment_id = assessment.questionSetId
-		is_first_time = _is_first_time( user, assessment_id, get_self_assessments_for_user_and_id )
-
-		increment_field( bucket_record, 'assessment_count' )
-		if is_first_time:
-			increment_field( bucket_record, 'assessment_unique_count' )
+			increment_field( bucket_record, 'assignment_timed_late_count' )
 
 def get_aggregate_assessment_stats( user, timestamp=None ):
 	"""

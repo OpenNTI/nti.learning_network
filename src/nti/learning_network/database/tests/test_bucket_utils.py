@@ -30,7 +30,7 @@ from .._bucket_utils import get_bucket_for_timestamp
 from .._bucket_utils import get_course_bucket_for_timestamp
 
 from ..access import PlatformAccess
-from ..access import LearningAccessZones
+from ..access import DiscussionAccess
 
 class TestBucketUtils( TestCase ):
 
@@ -77,7 +77,7 @@ class TestBucketTables( NTIAnalyticsTestCase ):
 
 	@WithMockDSTrans
 	def test_course_buckets(self):
-		table = LearningAccessZones
+		table = DiscussionAccess
 		timestamp = datetime.utcnow()
 		user = User.create_user( username='new_user1', dataserver=self.ds )
 		course = None

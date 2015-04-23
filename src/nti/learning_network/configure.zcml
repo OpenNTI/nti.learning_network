@@ -14,6 +14,7 @@
 
 	<subscriber handler=".access._analytics_session" />
 	<subscriber handler=".assessments._analytics_assessment" />
+	<subscriber handler=".assessments._analytics_assignment" />
 
 	-->
 
