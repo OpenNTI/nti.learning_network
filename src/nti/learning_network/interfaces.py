@@ -64,7 +64,7 @@ class IAccessStatsSource( interface.Interface ):
 	"""
 	def get_platform_stats( timestamp=None ):
 		"""
-		Return the learning network stats for context, optionally
+		Return the learning network stats for the platform, optionally
 		with a timestamp filter.
 		"""
 

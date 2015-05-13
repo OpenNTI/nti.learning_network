@@ -35,7 +35,7 @@ class Stats( SchemaConfigured ):
 
 @EqHash( 'aggregate_time' )
 @interface.implementer(ITimeStats)
-class TimeStats( SchemaConfigured ):
+class TimeStats( Stats ):
 
 	aggregate_time = alias( 'AggregateTime' )
 
