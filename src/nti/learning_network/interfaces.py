@@ -86,9 +86,9 @@ class IAccessStatsSource( interface.Interface ):
 		with a course or timestamp filter.
 		"""
 
-	def get_assessment_stats( course=None, timestamp=None ):
+	def get_assignment_views( course=None, timestamp=None ):
 		"""
-		Return the learning network stats for assessment views, optionally
+		Return the learning network stats for assignment views, optionally
 		with a course or timestamp filter.
 		"""
 

@@ -26,7 +26,7 @@ def _get_std_dev( values, summation=None ):
 
 def get_time_stats( time_lengths ):
 	"""
-	For a sequence of time_lengths, return the TimeStats.
+	For a sequence of time lengths, return the TimeStats.
 	"""
 	stats = None
 

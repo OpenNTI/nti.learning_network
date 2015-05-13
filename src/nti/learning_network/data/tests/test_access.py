@@ -17,13 +17,13 @@ from hamcrest import not_none
 from hamcrest import assert_that
 
 from . import MockTimeRecord
-from ..access import _AccessStatsSource
+from ..access import _AnalyticsAccessStatsSource
 
 class TestAccess( unittest.TestCase ):
 
 	def setUp(self):
 		self.user = None
-		self.stat_source = _AccessStatsSource( self.user )
+		self.stat_source = _AnalyticsAccessStatsSource( self.user )
 
 	@fudge.patch( 'nti.learning_network.data.access.get_user_sessions' )
 	def test_platform_stats(self, mock_get_sessions):
@@ -43,7 +43,7 @@ class TestAccess( unittest.TestCase ):
 		assert_that( platform_stats, none() )
 
 		# Single valid
-		records = [ MockTimeRecord( 10, 1 ), MockTimeRecord( 10, None ) ]
+		records = [ MockTimeRecord( 10, 1 ), MockTimeRecord( 10, 0 ) ]
 		mock_get_sessions.is_callable().returns( records )
 		platform_stats = self.stat_source.get_platform_stats()
 		assert_that( platform_stats, not_none() )
