@@ -9,5 +9,9 @@
 	<include package="zope.component" />
 	<include package="zope.security" />
 
+	<adapter factory="data.access._AccessStatsSource"
+			 for="nti.dataserver.interfaces.IUser"
+			 provides=".interfaces.IAccessStatsSource" />
+
 </configure>
 

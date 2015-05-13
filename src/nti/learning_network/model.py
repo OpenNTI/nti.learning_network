@@ -16,17 +16,31 @@ from nti.schema.field import SchemaConfigured
 from nti.schema.schema import EqHash
 
 from nti.learning_network.interfaces import IStats
+from nti.learning_network.interfaces import ITimeStats
 from nti.learning_network.interfaces import IAggregateAssessmentStats
 
-@EqHash( 'average', 'std_dev' )
+@EqHash( 'average', 'std_dev', 'count' )
 @interface.implementer(IStats)
 class Stats( SchemaConfigured ):
 
 	std_dev = alias( 'StandardDeviation' )
 	average = alias( 'Average' )
+	count = alias( 'Count' )
 
 	__external_class_name__ = "Stats"
 	mime_type = mimeType = 'application/vnd.nextthought.learningnetwork.stats'
+
+	def __init__(self, *args, **kwargs):
+		SchemaConfigured.__init__(self, *args, **kwargs)
+
+@EqHash( 'aggregate_time' )
+@interface.implementer(ITimeStats)
+class TimeStats( SchemaConfigured ):
+
+	aggregate_time = alias( 'AggregateTime' )
+
+	__external_class_name__ = "TimeStats"
+	mime_type = mimeType = 'application/vnd.nextthought.learningnetwork.timestats'
 
 	def __init__(self, *args, **kwargs):
 		SchemaConfigured.__init__(self, *args, **kwargs)
