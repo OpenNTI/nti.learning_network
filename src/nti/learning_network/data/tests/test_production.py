@@ -21,6 +21,7 @@ from datetime import datetime
 from zope.interface import directlyProvides
 
 from nti.analytics.read_models import AnalyticsAssignment
+from nti.analytics.read_models import AnalyticsAssessment
 
 from nti.app.assessment.history import UsersCourseAssignmentHistory
 
@@ -51,9 +52,7 @@ course = CourseInstance()
 _question_id = '1968'
 _question_set_id = '2'
 _assignment_id = 'b'
-_assignment_ntiid = 'tag:nextthought:bleh'
 _response = 'bleh'
-test_user_ds_id = 9999
 
 def _get_assessed_question_set():
 	assessed_parts = []
@@ -75,9 +74,8 @@ def _get_history_item( assignment_type=QAssignment ):
 	result = history.recordSubmission( submission, pending )
 
 	# Need a weak ref for owner.
-	result_creator = Principal( username=str( test_user_ds_id ) )
+	result_creator = Principal( username=str( 'mrshowwithbobanddavid' ) )
 	directlyProvides( result_creator, IUser )
-	result_creator.__dict__['_ds_intid'] = test_user_ds_id
 	history.owner = weakref.ref( result_creator )
 
 	result.createdTime = time.time()
@@ -98,6 +96,15 @@ def _get_assignment( assignment_id, user, submission, is_late=False ):
 									Details=None )
 	return result
 
+def _get_assessment( assignment_id, user, submission ):
+	result = AnalyticsAssessment( Submission=submission,
+									user=user,
+									timestamp=datetime.utcnow(),
+									RootContext=course,
+									Duration=30,
+									AssessmentId=assignment_id )
+	return result
+
 class TestProduction( LearningNetworkTestCase ):
 
 	def setUp(self):
@@ -109,7 +116,9 @@ class TestProduction( LearningNetworkTestCase ):
 		return User.create_user( username='new_user1', dataserver=self.ds )
 
 	@fudge.patch( 'nti.learning_network.data.production.get_assignments_for_user' )
-	def test_assessment_stats( self, mock_get_assignments ):
+	def test_assignment_stats( self, mock_get_assignments ):
+		user = self._get_user()
+
 		# Empty
 		mock_get_assignments.is_callable().returns( None )
 		stats = self.stat_source.get_assignment_stats()
@@ -119,7 +128,6 @@ class TestProduction( LearningNetworkTestCase ):
 		stats = self.stat_source.get_assignment_stats()
 		assert_that( stats, none() )
 
-		user = self._get_user()
 		# Single
 		assignment_id = 'assignment1'
 		submission, _ = _get_history_item()
@@ -147,7 +155,7 @@ class TestProduction( LearningNetworkTestCase ):
 		assert_that( stats.TimedAssignmentCount, is_( 0 ))
 		assert_that( stats.TimedAssignmentLateCount, is_( 0 ))
 
-		# Double, late
+		# Dupe, late
 		assignment3 = _get_assignment( assignment_id, user, submission, is_late=True )
 		assignments = ( assignment, assignment2, assignment3 )
 		mock_get_assignments.is_callable().returns( assignments )
@@ -172,3 +180,46 @@ class TestProduction( LearningNetworkTestCase ):
 		assert_that( stats.AssignmentLateCount, is_( 2 ))
 		assert_that( stats.TimedAssignmentCount, is_( 1 ))
 		assert_that( stats.TimedAssignmentLateCount, is_( 1 ))
+
+	@fudge.patch( 'nti.learning_network.data.production.get_self_assessments_for_user' )
+	def test_assessment_stats( self, mock_get_assessments ):
+		user = self._get_user()
+
+		# Empty
+		mock_get_assessments.is_callable().returns( None )
+		stats = self.stat_source.get_self_assessment_stats()
+		assert_that( stats, none() )
+
+		mock_get_assessments.is_callable().returns( () )
+		stats = self.stat_source.get_self_assessment_stats()
+		assert_that( stats, none() )
+
+		# Single
+		assignment_id = 'assignment1'
+		submission = _get_assessed_question_set()
+		assignment = _get_assessment( assignment_id, user, submission )
+		assignments = ( assignment, )
+		mock_get_assessments.is_callable().returns( assignments )
+
+		stats = self.stat_source.get_self_assessment_stats()
+		assert_that( stats.Count, is_( 1 ))
+		assert_that( stats.UniqueCount, is_( 1 ))
+
+		# Second
+		assignment_id2 = 'assignment2'
+		assignment2 = _get_assessment( assignment_id2, user, submission )
+		assignments = ( assignment, assignment2 )
+		mock_get_assessments.is_callable().returns( assignments )
+
+		stats = self.stat_source.get_self_assessment_stats()
+		assert_that( stats.Count, is_( 2 ))
+		assert_that( stats.UniqueCount, is_( 2 ))
+
+		# Dupe
+		assignment3 = _get_assessment( assignment_id, user, submission )
+		assignments = ( assignment, assignment2, assignment3 )
+		mock_get_assessments.is_callable().returns( assignments )
+
+		stats = self.stat_source.get_self_assessment_stats()
+		assert_that( stats.Count, is_( 3 ))
+		assert_that( stats.UniqueCount, is_( 2 ))

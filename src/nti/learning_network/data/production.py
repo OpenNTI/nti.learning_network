@@ -90,7 +90,7 @@ class _AnalyticsProductionStatsSource( object ):
 
 		if assessments:
 			count = sum( (1 for x in assessments) )
-			assessment_ids = {x.AssignmentId for x in assessments}
+			assessment_ids = {x.AssessmentId for x in assessments}
 			unique_count = len( assessment_ids )
 
 			stats = SelfAssessmentStats( Count=count, UniqueCount=unique_count )
