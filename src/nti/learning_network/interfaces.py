@@ -27,7 +27,7 @@ class IPostMixin( IStats ):
 	TotalFavorites = Number( title="The total number of posts favorites.", required=True )
 	RecursiveChildrenCount = Number( title="The total number of direct or indirect children of this post.",
 									required=True )
-	StandardDeviationLength = Float( title="Standard deviation body length", required=True )
+	StandardDeviationLength = Float( title="Standard deviation body length", required=False )
 	AverageLength = Float( title="Average body length", required=True )
 	ContainsWhiteboardCount = Number( title="The total amount of time spent.", required=True )
 
@@ -45,7 +45,7 @@ class ITimeStats( IStats ):
 	A container for holding various time stats.
 	"""
 	AggregateTime = Number( title="The total amount of time spent.", required=True )
-	StandardDeviationDuration = Float( title="Standard deviation duration", required=True )
+	StandardDeviationDuration = Float( title="Standard deviation duration", required=False )
 	AverageDuration = Float( title="Average duration", required=True )
 
 class IUniqueStatsMixin( IStats ):

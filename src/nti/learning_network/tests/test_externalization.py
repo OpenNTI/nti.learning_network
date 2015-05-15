@@ -83,7 +83,7 @@ class TestExternalization( LearningNetworkTestCase ):
 		assert_that(ext_obj, has_entry('TimedAssignmentCount', timed_count ))
 		assert_that(ext_obj, has_entry('TimedAssignmentLateCount', timed_late_count ))
 
-	def _test_post_stats( self, clazz, iface ):
+	def _test_post_stats( self, clazz, iface, std_dev_length ):
 		count = 10
 		reply_count = 4
 		top_level_count = 6
@@ -92,7 +92,6 @@ class TestExternalization( LearningNetworkTestCase ):
 		total_likes = 12
 		total_faves = 8
 		recursive_child_count = 24
-		std_dev_length = 18.4
 		average_length = 50
 		contains_board_count = 5
 
@@ -125,7 +124,9 @@ class TestExternalization( LearningNetworkTestCase ):
 		assert_that(ext_obj, has_entry('ContainsWhiteboardCount', contains_board_count ))
 
 	def test_note_stats(self):
-		self._test_post_stats( NoteStats, INoteStats )
+		self._test_post_stats( NoteStats, INoteStats, 17.3 )
+		self._test_post_stats( NoteStats, INoteStats, None )
 
 	def test_comment_stats(self):
-		self._test_post_stats( CommentStats, ICommentStats )
+		self._test_post_stats( CommentStats, ICommentStats, 18.4 )
+		self._test_post_stats( CommentStats, ICommentStats, None )
