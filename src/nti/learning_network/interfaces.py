@@ -13,30 +13,41 @@ from nti.schema.field import Float
 
 class IStats( interface.Interface ):
 	"""
+	A container for holding the count of events.
+	"""
+
+	Count = Number( title="Count", required=True )
+
+class IAdvancedStats( IStats ):
+	"""
 	A container for holding various stats.
 	"""
 
 	StandardDeviation = Float( title="Standard deviation", required=True )
 	Average = Float( title="Average", required=True )
-	Count = Number( title="Count", required=True )
 
-class ITimeStats( IStats ):
+class ITimeStats( IAdvancedStats ):
 	"""
 	A container for holding various time stats.
 	"""
 
 	AggregateTime = Number( title="The total amount of time spent.", required=True )
 
-class IAggregateAssessmentStats( interface.Interface ):
+class IUniqueStatsMixin( IStats ):
 	"""
-	A container for holding assessment aggregate stats.
+	Establishes uniqueness counts.
+	"""
+	UniqueCount = Number( title="Unique self assessment count", required=True )
+
+class ISelfAssessmentStats( IUniqueStatsMixin ):
+	"""
+	A container for holding self-assessment stats.
 	"""
 
-	SelfAssessmentCount = Number( title="Self assessment count", required=True )
-	UniqueSelfAssessmentCount = Number( title="Unique self assessment count", required=True )
-
-	AssignmentCount = Number( title="Assignment count", required=True )
-	UniqueAssignmentCount = Number( title="Unique assignment count", required=True )
+class IAssignmentStats( IUniqueStatsMixin ):
+	"""
+	A container for holding assignment stats.
+	"""
 	AssignmentLateCount = Number( title="Unique self assessment count", required=True )
 	TimedAssignmentCount = Number( title="Unique assignment count", required=True )
 	TimedAssignmentLateCount = Number( title="Late assignment timed count", required=True )
@@ -60,8 +71,9 @@ class IAccessScoreProvider( ILearningNetworkScoreProvider ):
 
 class IAccessStatsSource( interface.Interface ):
 	"""
-	Provides learning network stats for access.
+	A source of learning network access stats.
 	"""
+
 	def get_platform_stats( timestamp=None ):
 		"""
 		Return the learning network stats for the platform, optionally
@@ -86,7 +98,7 @@ class IAccessStatsSource( interface.Interface ):
 		with a course or timestamp filter.
 		"""
 
-	def get_assignment_views( course=None, timestamp=None ):
+	def get_assignment_stats( course=None, timestamp=None ):
 		"""
 		Return the learning network stats for assignment views, optionally
 		with a course or timestamp filter.
@@ -95,5 +107,52 @@ class IAccessStatsSource( interface.Interface ):
 	def get_self_assessment_stats( course=None, timestamp=None ):
 		"""
 		Return the learning network stats for self assessment views, optionally
+		with a course or timestamp filter.
+		"""
+
+class IProductionStatsSource( interface.Interface ):
+	"""
+	A source of learning network production stats.
+	"""
+
+	def get_assignment_stats( course=None, timestamp=None ):
+		"""
+		Return the learning network stats for the assignments, optionally
+		with a timestamp filter.
+		"""
+
+	def get_self_assessment_stats( course=None, timestamp=None ):
+		"""
+		Return the learning network stats for self-assessments, optionally
+		with a course or timestamp filter.
+		"""
+
+	def get_comment_stats( course=None, timestamp=None ):
+		"""
+		Return the learning network stats for comments, optionally
+		with a course or timestamp filter.
+		"""
+
+	def get_thought_stats( timestamp=None ):
+		"""
+		Return the learning network stats for thoughts, optionally
+		with a timestamp filter.
+		"""
+
+	def get_note_stats( course=None, timestamp=None ):
+		"""
+		Return the learning network stats for notes, optionally
+		with a course or timestamp filter.
+		"""
+
+	def get_highlight_stats( course=None, timestamp=None ):
+		"""
+		Return the learning network stats for highlights, optionally
+		with a course or timestamp filter.
+		"""
+
+	def get_bookmark_stats( course=None, timestamp=None ):
+		"""
+		Return the learning network stats for bookmarks, optionally
 		with a course or timestamp filter.
 		"""

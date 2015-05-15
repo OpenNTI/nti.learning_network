@@ -9,9 +9,26 @@
 	<include package="zope.component" />
 	<include package="zope.security" />
 
+	<!-- Adapters -->
+
 	<adapter factory="data.access._AnalyticsAccessStatsSource"
 			 for="nti.dataserver.interfaces.IUser"
 			 provides=".interfaces.IAccessStatsSource" />
+
+	<adapter factory="data.production._AnalyticsProductionStatsSource"
+			 for="nti.dataserver.interfaces.IUser"
+			 provides=".interfaces.IProductionStatsSource" />
+
+	<!-- Externalization -->
+
+	<include package="nti.externalization" file="meta.zcml" />
+	<include package="nti.externalization" />
+	<ext:registerAutoPackageIO
+		root_interfaces=".interfaces.ITimeStats
+						.interfaces.IAdvancedStats
+						.interfaces.IAccessStatsSource
+						.interfaces.IProductionStatsSource"
+		modules=".model" />
 
 </configure>
 

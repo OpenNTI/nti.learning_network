@@ -11,6 +11,7 @@ logger = __import__('logging').getLogger(__name__)
 
 from math import sqrt
 
+from nti.learning_network.model import Stats
 from nti.learning_network.model import TimeStats
 
 def _get_std_dev( values, summation=None ):
@@ -23,6 +24,17 @@ def _get_std_dev( values, summation=None ):
 		variance = sum_of_squares / count - ( summation / count ) ** 2
 		result = sqrt( variance )
 	return result
+
+def get_count_stats( records ):
+	"""
+	For a sequence of records, return Stats.
+	"""
+	stats = None
+
+	if records is not None:
+		count = len( records )
+		stats = Stats( Count=count )
+	return stats
 
 def get_time_stats( time_lengths ):
 	"""
