@@ -4,7 +4,6 @@
 $Id$
 """
 from __future__ import print_function, unicode_literals, absolute_import, division
-
 __docformat__ = "restructuredtext en"
 
 logger = __import__('logging').getLogger(__name__)
@@ -53,27 +52,31 @@ class _AnalyticsProductionStatsSource( object ):
 		"""
 		assignments = get_assignments_for_user( self.user, course=course,
 											timestamp=timestamp )
+		stats = None
 
-		count = timed_count = late_count = timed_late_count = 0
-		id_set = set()
-		for submission in assignments:
-			count += 1
-			id_set.add( submission.AssignmentId )
-			if submission.IsLate:
-				late_count += 1
+		if assignments:
+			count = timed_count = late_count = timed_late_count = 0
+			id_set = set()
+			for assignment_record in assignments:
+				count += 1
+				id_set.add( assignment_record.AssignmentId )
+				if assignment_record.IsLate:
+					late_count += 1
 
-			if IQTimedAssignment.providedBy( submission.Assignment ):
-				timed_count += 1
-				if submission.IsLate:
-					timed_late_count += 1
+				assignment = assignment_record.Submission.Assignment
 
-		unique_count = len( id_set )
+				if IQTimedAssignment.providedBy( assignment ):
+					timed_count += 1
+					if assignment_record.IsLate:
+						timed_late_count += 1
 
-		stats = AssignmentStats( Count=count,
-								UniqueCount=unique_count,
-								AssignmentLateCount=late_count,
-								TimedAssignmentCount=timed_count,
-								TimedAssignmentLateCount=timed_late_count )
+			unique_count = len( id_set )
+
+			stats = AssignmentStats( Count=count,
+									UniqueCount=unique_count,
+									AssignmentLateCount=late_count,
+									TimedAssignmentCount=timed_count,
+									TimedAssignmentLateCount=timed_late_count )
 		return stats
 
 	def get_self_assessment_stats( self, course=None, timestamp=None ):
@@ -83,14 +86,14 @@ class _AnalyticsProductionStatsSource( object ):
 		"""
 		assessments = get_self_assessments_for_user( self.user, course=course,
 													timestamp=timestamp )
+		stats = None
 
-		count = unique_count = 0
 		if assessments:
 			count = sum( (1 for x in assessments) )
 			assessment_ids = {x.AssignmentId for x in assessments}
 			unique_count = len( assessment_ids )
 
-		stats = SelfAssessmentStats( Count=count, UniqueCount=unique_count )
+			stats = SelfAssessmentStats( Count=count, UniqueCount=unique_count )
 		return stats
 
 	def get_comment_stats( self, course=None, timestamp=None ):
