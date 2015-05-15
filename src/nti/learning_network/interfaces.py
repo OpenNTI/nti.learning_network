@@ -18,20 +18,13 @@ class IStats( interface.Interface ):
 
 	Count = Number( title="Count", required=True )
 
-class IAdvancedStats( IStats ):
-	"""
-	A container for holding various stats.
-	"""
-
-	StandardDeviation = Float( title="Standard deviation", required=True )
-	Average = Float( title="Average", required=True )
-
-class ITimeStats( IAdvancedStats ):
+class ITimeStats( IStats ):
 	"""
 	A container for holding various time stats.
 	"""
-
 	AggregateTime = Number( title="The total amount of time spent.", required=True )
+	StandardDeviationDuration = Float( title="Standard deviation duration", required=True )
+	AverageDuration = Float( title="Average duration", required=True )
 
 class IUniqueStatsMixin( IStats ):
 	"""

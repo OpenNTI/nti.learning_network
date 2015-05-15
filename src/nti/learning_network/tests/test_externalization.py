@@ -15,12 +15,10 @@ from nti.externalization.externalization import toExternalObject
 from nti.testing.matchers import verifiably_provides
 
 from ..interfaces import ITimeStats
-from ..interfaces import IAdvancedStats
 from ..interfaces import IAssignmentStats
 from ..interfaces import ISelfAssessmentStats
 
 from ..model import TimeStats
-from ..model import AdvancedStats
 from ..model import SelfAssessmentStats
 from ..model import AssignmentStats
 
@@ -34,8 +32,8 @@ class TestExternalization( LearningNetworkTestCase ):
 		average = 4.3
 		total_time = count * average
 		time_stats = TimeStats( Count=count,
-							StandardDeviation=std_dev,
-							Average=average,
+							StandardDeviationDuration=std_dev,
+							AverageDuration=average,
 							AggregateTime=total_time )
 		assert_that(time_stats, verifiably_provides( ITimeStats ) )
 
@@ -43,23 +41,9 @@ class TestExternalization( LearningNetworkTestCase ):
 		assert_that(ext_obj, has_entry('Class', TimeStats.__external_class_name__ ))
 		assert_that(ext_obj, has_entry('MimeType', TimeStats.mimeType ))
 		assert_that(ext_obj, has_entry('Count', count ))
-		assert_that(ext_obj, has_entry('StandardDeviation', std_dev ))
-		assert_that(ext_obj, has_entry('Average', average ))
+		assert_that(ext_obj, has_entry('StandardDeviationDuration', std_dev ))
+		assert_that(ext_obj, has_entry('AverageDuration', average ))
 		assert_that(ext_obj, has_entry('AggregateTime', total_time ))
-
-	def test_adv_stats(self):
-		count = 10
-		std_dev = 1.3
-		average = 4.3
-		adv_stats = AdvancedStats( Count=count, StandardDeviation=std_dev, Average=average )
-		assert_that( adv_stats, verifiably_provides( IAdvancedStats ) )
-
-		ext_obj = toExternalObject( adv_stats )
-		assert_that(ext_obj, has_entry('Class', AdvancedStats.__external_class_name__ ))
-		assert_that(ext_obj, has_entry('MimeType', AdvancedStats.mimeType ))
-		assert_that(ext_obj, has_entry('Count', count ))
-		assert_that(ext_obj, has_entry('StandardDeviation', std_dev ))
-		assert_that(ext_obj, has_entry('Average', average ))
 
 	def test_assess_stats(self):
 		count = 10

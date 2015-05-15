@@ -48,7 +48,7 @@ def get_time_stats( time_lengths ):
 		average = total_time / count
 		std_dev = _get_std_dev( time_lengths, total_time )
 		stats = TimeStats( 	AggregateTime=total_time,
-							StandardDeviation=std_dev,
-							Average=average,
+							StandardDeviationDuration=std_dev,
+							AverageDuration=average,
 							Count=count )
 	return stats

@@ -25,7 +25,6 @@
 	<include package="nti.externalization" />
 	<ext:registerAutoPackageIO
 		root_interfaces=".interfaces.ITimeStats
-						.interfaces.IAdvancedStats
 						.interfaces.ISelfAssessmentStats
 						.interfaces.IAssignmentStats"
 		modules=".model" />
