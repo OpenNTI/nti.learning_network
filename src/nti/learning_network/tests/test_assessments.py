@@ -10,6 +10,7 @@ logger = __import__('logging').getLogger(__name__)
 
 import time
 import weakref
+import unittest
 
 from datetime import datetime
 from datetime import timedelta
@@ -42,7 +43,7 @@ from nti.dataserver.users.users import Principal
 
 from nti.dataserver.tests.mock_dataserver import WithMockDSTrans
 
-from . import NTIAnalyticsTestCase
+from . import LearningNetworkTestCase
 
 _question_id = '1968'
 _question_set_id = '2'
@@ -80,7 +81,7 @@ def _get_history_item():
 	result.Assignment = QAssignment()
 	return result, result_creator
 
-class TestAssessments( NTIAnalyticsTestCase ):
+class TestAssessments( LearningNetworkTestCase ):
 
 	def setUp(self):
 		super( TestAssessments, self ).setUp()

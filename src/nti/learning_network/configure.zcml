@@ -11,11 +11,11 @@
 
 	<!-- Adapters -->
 
-	<adapter factory="data.access._AnalyticsAccessStatsSource"
+	<adapter factory=".data.access._AnalyticsAccessStatsSource"
 			 for="nti.dataserver.interfaces.IUser"
 			 provides=".interfaces.IAccessStatsSource" />
 
-	<adapter factory="data.production._AnalyticsProductionStatsSource"
+	<adapter factory=".data.production._AnalyticsProductionStatsSource"
 			 for="nti.dataserver.interfaces.IUser"
 			 provides=".interfaces.IProductionStatsSource" />
 
@@ -26,8 +26,8 @@
 	<ext:registerAutoPackageIO
 		root_interfaces=".interfaces.ITimeStats
 						.interfaces.IAdvancedStats
-						.interfaces.IAccessStatsSource
-						.interfaces.IProductionStatsSource"
+						.interfaces.ISelfAssessmentStats
+						.interfaces.IAssignmentStats"
 		modules=".model" />
 
 </configure>

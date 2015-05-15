@@ -20,9 +20,9 @@ from nti.dataserver.users import User
 
 from nti.dataserver.tests.mock_dataserver import WithMockDSTrans
 
-from . import NTIAnalyticsTestCase
+from . import LearningNetworkTestCase
 
-class TestAccess( NTIAnalyticsTestCase ):
+class TestAccess( LearningNetworkTestCase ):
 
 	@WithMockDSTrans
 	def test_platform_access(self):
