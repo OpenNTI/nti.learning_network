@@ -14,13 +14,17 @@ from nti.externalization.externalization import toExternalObject
 
 from nti.testing.matchers import verifiably_provides
 
+from ..interfaces import INoteStats
 from ..interfaces import ITimeStats
+from ..interfaces import ICommentStats
 from ..interfaces import IAssignmentStats
 from ..interfaces import ISelfAssessmentStats
 
+from ..model import NoteStats
 from ..model import TimeStats
-from ..model import SelfAssessmentStats
+from ..model import CommentStats
 from ..model import AssignmentStats
+from ..model import SelfAssessmentStats
 
 from . import LearningNetworkTestCase
 
@@ -79,3 +83,49 @@ class TestExternalization( LearningNetworkTestCase ):
 		assert_that(ext_obj, has_entry('TimedAssignmentCount', timed_count ))
 		assert_that(ext_obj, has_entry('TimedAssignmentLateCount', timed_late_count ))
 
+	def _test_post_stats( self, clazz, iface ):
+		count = 10
+		reply_count = 4
+		top_level_count = 6
+		distinct_like_count = 3
+		distinct_fave_count = 2
+		total_likes = 12
+		total_faves = 8
+		recursive_child_count = 24
+		std_dev_length = 18.4
+		average_length = 50
+		contains_board_count = 3
+
+		note_stats = clazz( Count=count,
+								ReplyCount=reply_count,
+								TopLevelCount=top_level_count,
+								DistinctPostsLiked=distinct_like_count,
+								DistinctPostsFavorited=distinct_fave_count,
+								TotalLikes=total_likes,
+								TotalFavorites=total_faves,
+								RecursiveChildrenCount=recursive_child_count,
+								StandardDeviationLength=std_dev_length,
+								AverageLength=average_length,
+								ContainsWhiteboardCount=contains_board_count )
+		assert_that( note_stats, verifiably_provides( iface ) )
+
+		ext_obj = toExternalObject( note_stats )
+		assert_that(ext_obj, has_entry('Class', clazz.__external_class_name__ ))
+		assert_that(ext_obj, has_entry('MimeType', clazz.mimeType ))
+		assert_that(ext_obj, has_entry('Count', count ))
+		assert_that(ext_obj, has_entry('ReplyCount', reply_count ))
+		assert_that(ext_obj, has_entry('TopLevelCount', top_level_count ))
+		assert_that(ext_obj, has_entry('DistinctPostsLiked', distinct_like_count ))
+		assert_that(ext_obj, has_entry('DistinctPostsFavorited', distinct_fave_count ))
+		assert_that(ext_obj, has_entry('TotalLikes', total_likes ))
+		assert_that(ext_obj, has_entry('TotalFavorites', total_faves ))
+		assert_that(ext_obj, has_entry('RecursiveChildrenCount', recursive_child_count ))
+		assert_that(ext_obj, has_entry('StandardDeviationLength', std_dev_length ))
+		assert_that(ext_obj, has_entry('AverageLength', average_length ))
+		assert_that(ext_obj, has_entry('ContainsWhiteboardCount', contains_board_count ))
+
+	def test_note_stats(self):
+		self._test_post_stats( NoteStats, INoteStats )
+
+	def test_comment_stats(self):
+		self._test_post_stats( CommentStats, ICommentStats )

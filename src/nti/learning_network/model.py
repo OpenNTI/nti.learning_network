@@ -16,7 +16,9 @@ from nti.schema.field import SchemaConfigured
 from nti.schema.schema import EqHash
 
 from nti.learning_network.interfaces import IStats
+from nti.learning_network.interfaces import INoteStats
 from nti.learning_network.interfaces import ITimeStats
+from nti.learning_network.interfaces import ICommentStats
 from nti.learning_network.interfaces import IAssignmentStats
 from nti.learning_network.interfaces import ISelfAssessmentStats
 
@@ -52,3 +54,20 @@ class SelfAssessmentStats( Stats ):
 class AssignmentStats( Stats ):
 	__external_class_name__ = "AssignmentStats"
 	mime_type = mimeType = 'application/vnd.nextthought.learningnetwork.assignmentstats'
+
+@EqHash( 'Count', 'TopLevelCount', 'ReplyCount',
+		'DistinctPostsLiked', 'DistinctPostsFavorited',
+		'TotalLikes', 'TotalFavorites', 'RecursiveChildrenCount',
+		'StandardDeviationLength', 'AverageLength', 'ContainsWhiteboardCount' )
+class PostStats( Stats ):
+	pass
+
+@interface.implementer(INoteStats)
+class NoteStats( PostStats ):
+	__external_class_name__ = "NoteStats"
+	mime_type = mimeType = 'application/vnd.nextthought.learningnetwork.notestats'
+
+@interface.implementer(ICommentStats)
+class CommentStats( PostStats ):
+	__external_class_name__ = "CommentStats"
+	mime_type = mimeType = 'application/vnd.nextthought.learningnetwork.commentstats'

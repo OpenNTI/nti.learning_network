@@ -18,6 +18,28 @@ class IStats( interface.Interface ):
 
 	Count = Number( title="Count", required=True )
 
+class IPostMixin( IStats ):
+	TopLevelCount = Number( title="The number of top level posts.", required=True )
+	ReplyCount = Number( title="The number of reply posts.", required=True )
+	DistinctPostsLiked = Number( title="The number of distinct posts liked.", required=True )
+	DistinctPostsFavorited = Number( title="The number of distinct posts favorited.", required=True )
+	TotalLikes = Number( title="The total number of posts likes.", required=True )
+	TotalFavorites = Number( title="The total number of posts favorites.", required=True )
+	RecursiveChildrenCount = Number( title="The total number of direct or indirect children of this post.",
+									required=True )
+	StandardDeviationLength = Float( title="Standard deviation body length", required=True )
+	AverageLength = Float( title="Average body length", required=True )
+	ContainsWhiteboardCount = Number( title="The total amount of time spent.", required=True )
+
+class INoteStats( IPostMixin ):
+	"""
+	A container for holding various note stats.
+	"""
+class ICommentStats( IPostMixin ):
+	"""
+	A container for holding various comment stats.
+	"""
+
 class ITimeStats( IStats ):
 	"""
 	A container for holding various time stats.

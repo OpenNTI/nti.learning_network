@@ -47,8 +47,8 @@ class _AnalyticsProductionStatsSource( object ):
 
 	def get_assignment_stats( self, course=None, timestamp=None ):
 		"""
-		Return the learning network stats for the assignments, optionally
-		with a timestamp filter.
+		Return the learning network stats for assignments, optionally
+		with a course or timestamp filter.
 		"""
 		assignments = get_assignments_for_user( self.user, course=course,
 											timestamp=timestamp )
