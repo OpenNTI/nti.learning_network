@@ -94,9 +94,9 @@ class TestExternalization( LearningNetworkTestCase ):
 		recursive_child_count = 24
 		std_dev_length = 18.4
 		average_length = 50
-		contains_board_count = 3
+		contains_board_count = 5
 
-		note_stats = clazz( Count=count,
+		post_stats = clazz( Count=count,
 								ReplyCount=reply_count,
 								TopLevelCount=top_level_count,
 								DistinctPostsLiked=distinct_like_count,
@@ -107,9 +107,9 @@ class TestExternalization( LearningNetworkTestCase ):
 								StandardDeviationLength=std_dev_length,
 								AverageLength=average_length,
 								ContainsWhiteboardCount=contains_board_count )
-		assert_that( note_stats, verifiably_provides( iface ) )
+		assert_that( post_stats, verifiably_provides( iface ) )
 
-		ext_obj = toExternalObject( note_stats )
+		ext_obj = toExternalObject( post_stats )
 		assert_that(ext_obj, has_entry('Class', clazz.__external_class_name__ ))
 		assert_that(ext_obj, has_entry('MimeType', clazz.mimeType ))
 		assert_that(ext_obj, has_entry('Count', count ))

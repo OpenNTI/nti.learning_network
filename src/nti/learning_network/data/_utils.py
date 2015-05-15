@@ -14,7 +14,7 @@ from math import sqrt
 from nti.learning_network.model import Stats
 from nti.learning_network.model import TimeStats
 
-def _get_std_dev( values, summation=None ):
+def get_std_dev( values, summation=None ):
 	result = None
 
 	if values:
@@ -46,7 +46,7 @@ def get_time_stats( time_lengths ):
 		total_time = sum( time_lengths )
 		count = len( time_lengths )
 		average = total_time / count
-		std_dev = _get_std_dev( time_lengths, total_time )
+		std_dev = get_std_dev( time_lengths, total_time )
 		stats = TimeStats( 	AggregateTime=total_time,
 							StandardDeviationDuration=std_dev,
 							AverageDuration=average,

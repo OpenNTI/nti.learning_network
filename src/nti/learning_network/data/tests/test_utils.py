@@ -19,23 +19,23 @@ from hamcrest import is_
 from hamcrest import none
 from hamcrest import assert_that
 
-from .._utils import _get_std_dev
+from .._utils import get_std_dev
 
 class TestUtils( unittest.TestCase ):
 
 	def test_std_dev(self):
 		# Empty
 		values = None
-		std_dev = _get_std_dev( values )
+		std_dev = get_std_dev( values )
 		assert_that( std_dev, none() )
 
 		values = []
-		std_dev = _get_std_dev( values )
+		std_dev = get_std_dev( values )
 		assert_that( std_dev, none() )
 
 		# Single
 		values = [ 10 ]
-		std_dev = _get_std_dev( values )
+		std_dev = get_std_dev( values )
 		assert_that( std_dev, is_( 0 ) )
 
 		# Other
@@ -46,7 +46,7 @@ class TestUtils( unittest.TestCase ):
 		values = []
 		for val in value_source:
 			values.append( val )
-			expected_std_dev = _get_std_dev( values )
+			expected_std_dev = get_std_dev( values )
 			actual_std_dev = _numpy.std( values )
 			is_close = _numpy.isclose( expected_std_dev, actual_std_dev )
 			assert_that( is_close )
