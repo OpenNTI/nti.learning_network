@@ -36,9 +36,9 @@ class TestExternalization( LearningNetworkTestCase ):
 		average = 4.3
 		total_time = count * average
 		time_stats = TimeStats( Count=count,
-							StandardDeviationDuration=std_dev,
-							AverageDuration=average,
-							AggregateTime=total_time )
+								StandardDeviationDuration=std_dev,
+								AverageDuration=average,
+								AggregateTime=total_time )
 		assert_that(time_stats, verifiably_provides( ITimeStats ) )
 
 		ext_obj = toExternalObject(time_stats)
@@ -96,16 +96,16 @@ class TestExternalization( LearningNetworkTestCase ):
 		contains_board_count = 5
 
 		post_stats = clazz( Count=count,
-								ReplyCount=reply_count,
-								TopLevelCount=top_level_count,
-								DistinctPostsLiked=distinct_like_count,
-								DistinctPostsFavorited=distinct_fave_count,
-								TotalLikes=total_likes,
-								TotalFavorites=total_faves,
-								RecursiveChildrenCount=recursive_child_count,
-								StandardDeviationLength=std_dev_length,
-								AverageLength=average_length,
-								ContainsWhiteboardCount=contains_board_count )
+							ReplyCount=reply_count,
+							TopLevelCount=top_level_count,
+							DistinctPostsLiked=distinct_like_count,
+							DistinctPostsFavorited=distinct_fave_count,
+							TotalLikes=total_likes,
+							TotalFavorites=total_faves,
+							RecursiveChildrenCount=recursive_child_count,
+							StandardDeviationLength=std_dev_length,
+							AverageLength=average_length,
+							ContainsWhiteboardCount=contains_board_count )
 		assert_that( post_stats, verifiably_provides( iface ) )
 
 		ext_obj = toExternalObject( post_stats )

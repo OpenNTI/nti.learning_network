@@ -18,6 +18,8 @@ from nti.analytics.resource_views import get_user_resource_views
 from nti.analytics.assessments import get_assignment_views
 from nti.analytics.assessments import get_self_assessment_views
 
+from nti.common.property import readproperty
+
 from nti.learning_network.interfaces import IAccessStatsSource
 
 from ._utils import get_time_stats
@@ -44,11 +46,14 @@ class _AnalyticsAccessStatsSource( object ):
 	An access stats source that pulls data from analytics.
 	"""
 
-	def __init__(self, user):
+	def __init__(self, user, course=None, timestamp=None):
 		self.user = user
+		self.course = course
+		self.timestamp = timestamp
 
-	def get_platform_stats( self, timestamp=None ):
-		user_sessions = get_user_sessions( self.user, timestamp=timestamp )
+	@readproperty
+	def platform_stats( self ):
+		user_sessions = get_user_sessions( self.user, timestamp=self.timestamp )
 
 		def is_complete( record ):
 			# Filtering out sessions without end times or time_lengths
@@ -56,52 +61,57 @@ class _AnalyticsAccessStatsSource( object ):
 
 		return _get_stats( user_sessions, do_include=is_complete )
 
-	def get_forum_stats( self, course=None, timestamp=None ):
+	@readproperty
+	def forum_stats( self ):
 		"""
 		Return the learning network stats for forums, optionally
 		with a course or timestamp filter.
 		"""
-		topic_views = get_topic_views( self.user, course=course,
-									timestamp=timestamp )
+		topic_views = get_topic_views( self.user, course=self.course,
+									timestamp=self.timestamp )
 		return _get_stats( topic_views )
 
-	def get_video_stats( self, course=None, timestamp=None ):
+	@readproperty
+	def video_stats( self ):
 		"""
 		Return the learning network stats for videos, optionally
 		with a course or timestamp filter.
 		"""
-		video_views = get_user_video_events( self.user, course=course,
-											timestamp=timestamp )
+		video_views = get_user_video_events( self.user, course=self.course,
+											timestamp=self.timestamp )
 
 		return _get_stats( video_views )
 
-	def get_reading_stats( self, course=None, timestamp=None ):
+	@readproperty
+	def reading_stats( self ):
 		"""
 		Return the learning network stats for readings, optionally
 		with a course or timestamp filter.
 		"""
-		resource_views = get_user_resource_views( self.user, course=course,
-												timestamp=timestamp )
+		resource_views = get_user_resource_views( self.user, course=self.course,
+												timestamp=self.timestamp )
 
 		return _get_stats( resource_views )
 
-	def get_assignment_stats( self, course=None, timestamp=None ):
+	@readproperty
+	def assignment_stats( self ):
 		"""
 		Return the learning network stats for assignment views, optionally
 		with a course or timestamp filter.
 		"""
-		assignment_views = get_assignment_views( self.user, course=course,
-												timestamp=timestamp )
+		assignment_views = get_assignment_views( self.user, course=self.course,
+												timestamp=self.timestamp )
 
 		return _get_stats( assignment_views )
 
-	def get_self_assessment_stats( self, course=None, timestamp=None ):
+	@readproperty
+	def self_assessment_stats( self ):
 		"""
 		Return the learning network stats for self assessment views, optionally
 		with a course or timestamp filter.
 		"""
-		self_assess_views = get_self_assessment_views( self.user, course=course,
-													timestamp=timestamp )
+		self_assess_views = get_self_assessment_views( self.user, course=self.course,
+													timestamp=self.timestamp )
 
 		return _get_stats( self_assess_views )
 

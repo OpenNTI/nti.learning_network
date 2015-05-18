@@ -24,6 +24,8 @@ from nti.analytics.resource_tags import get_notes
 from nti.analytics.resource_tags import get_highlights
 from nti.analytics.resource_tags import get_bookmarks
 
+from nti.common.property import readproperty
+
 from nti.dataserver.core.interfaces import ICanvas
 
 from nti.learning_network.interfaces import IProductionStatsSource
@@ -116,16 +118,19 @@ class _AnalyticsProductionStatsSource( object ):
 	A production stats source that pulls data from analytics.
 	"""
 
-	def __init__(self, user):
+	def __init__(self, user, course=None, timestamp=None):
 		self.user = user
+		self.course = course
+		self.timestamp = timestamp
 
-	def get_assignment_stats( self, course=None, timestamp=None ):
+	@readproperty
+	def assignment_stats( self ):
 		"""
 		Return the learning network stats for assignments, optionally
 		with a course or timestamp filter.
 		"""
-		assignments = get_assignments_for_user( self.user, course=course,
-											timestamp=timestamp )
+		assignments = get_assignments_for_user( self.user, course=self.course,
+												timestamp=self.timestamp )
 		stats = None
 
 		if assignments:
@@ -153,13 +158,14 @@ class _AnalyticsProductionStatsSource( object ):
 									TimedAssignmentLateCount=timed_late_count )
 		return stats
 
-	def get_self_assessment_stats( self, course=None, timestamp=None ):
+	@readproperty
+	def self_assessment_stats( self ):
 		"""
 		Return the learning network stats for self-assessments, optionally
 		with a course or timestamp filter.
 		"""
-		assessments = get_self_assessments_for_user( self.user, course=course,
-													timestamp=timestamp )
+		assessments = get_self_assessments_for_user( self.user, course=self.course,
+													timestamp=self.timestamp )
 		stats = None
 
 		if assessments:
@@ -170,51 +176,56 @@ class _AnalyticsProductionStatsSource( object ):
 			stats = SelfAssessmentStats( Count=count, UniqueCount=unique_count )
 		return stats
 
-	def get_comment_stats( self, course=None, timestamp=None ):
+	@readproperty
+	def comment_stats( self ):
 		"""
 		Return the learning network stats for comments, optionally
 		with a course or timestamp filter.
 		"""
-		comment_records = get_forum_comments_for_user( self.user, course=course,
-													timestamp=timestamp )
+		comment_records = get_forum_comments_for_user( self.user, course=self.course,
+													timestamp=self.timestamp )
 		stats = _get_post_stats( comment_records, CommentStats,
 								'Comment', 'CommentLength' )
 		return stats
 
-	def get_thought_stats( self, timestamp=None ):
+	@readproperty
+	def thought_stats( self ):
 		"""
 		Return the learning network stats for thoughts, optionally
 		with a timestamp filter.
 		"""
-		blog_records = get_blogs( self.user, timestamp=timestamp )
+		blog_records = get_blogs( self.user, timestamp=self.timestamp )
 		# FIXME posts also?
 		# Thought comments?
 		return _get_stats( blog_records )
 
-	def get_note_stats( self, course=None, timestamp=None ):
+	@readproperty
+	def note_stats( self ):
 		"""
 		Return the learning network stats for notes, optionally
 		with a course or timestamp filter.
 		"""
-		note_records = get_notes( self.user, course=course,
-								timestamp=timestamp )
+		note_records = get_notes( self.user, course=self.course,
+									timestamp=self.timestamp )
 		stats = _get_post_stats( note_records, NoteStats, 'Note', 'NoteLength' )
 		return stats
 
-	def get_highlight_stats( self, course=None, timestamp=None ):
+	@readproperty
+	def highlight_stats( self ):
 		"""
 		Return the learning network stats for highlights, optionally
 		with a course or timestamp filter.
 		"""
-		highlight_records = get_highlights( self.user, course=course,
-										timestamp=timestamp )
+		highlight_records = get_highlights( self.user, course=self.course,
+										timestamp=self.timestamp )
 		return _get_stats( highlight_records )
 
-	def get_bookmark_stats( self, course=None, timestamp=None ):
+	@readproperty
+	def bookmark_stats( self ):
 		"""
 		Return the learning network stats for bookmarks, optionally
 		with a course or timestamp filter.
 		"""
-		blog_records = get_bookmarks( self.user, course=course,
-									timestamp=timestamp )
+		blog_records = get_bookmarks( self.user, course=self.course,
+										timestamp=self.timestamp )
 		return _get_stats( blog_records )

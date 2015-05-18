@@ -14,9 +14,12 @@ import weakref
 
 from hamcrest import is_
 from hamcrest import none
+from hamcrest import not_none
 from hamcrest import assert_that
 
 from datetime import datetime
+
+from zope import component
 
 from zope.interface import directlyProvides
 
@@ -43,6 +46,8 @@ from nti.dataserver.interfaces import IUser
 from nti.dataserver.users.users import Principal
 
 from nti.dataserver.tests.mock_dataserver import WithMockDSTrans
+
+from nti.learning_network.interfaces import IProductionStatsSource
 
 from ..production import _AnalyticsProductionStatsSource
 
@@ -121,11 +126,11 @@ class TestProduction( LearningNetworkTestCase ):
 
 		# Empty
 		mock_get_assignments.is_callable().returns( None )
-		stats = self.stat_source.get_assignment_stats()
+		stats = self.stat_source.assignment_stats
 		assert_that( stats, none() )
 
 		mock_get_assignments.is_callable().returns( () )
-		stats = self.stat_source.get_assignment_stats()
+		stats = self.stat_source.assignment_stats
 		assert_that( stats, none() )
 
 		# Single
@@ -135,7 +140,7 @@ class TestProduction( LearningNetworkTestCase ):
 		assignments = ( assignment, )
 		mock_get_assignments.is_callable().returns( assignments )
 
-		stats = self.stat_source.get_assignment_stats()
+		stats = self.stat_source.assignment_stats
 		assert_that( stats.Count, is_( 1 ))
 		assert_that( stats.UniqueCount, is_( 1 ))
 		assert_that( stats.AssignmentLateCount, is_( 0 ))
@@ -148,7 +153,7 @@ class TestProduction( LearningNetworkTestCase ):
 		assignments = ( assignment, assignment2 )
 		mock_get_assignments.is_callable().returns( assignments )
 
-		stats = self.stat_source.get_assignment_stats()
+		stats = self.stat_source.assignment_stats
 		assert_that( stats.Count, is_( 2 ))
 		assert_that( stats.UniqueCount, is_( 2 ))
 		assert_that( stats.AssignmentLateCount, is_( 0 ))
@@ -160,7 +165,7 @@ class TestProduction( LearningNetworkTestCase ):
 		assignments = ( assignment, assignment2, assignment3 )
 		mock_get_assignments.is_callable().returns( assignments )
 
-		stats = self.stat_source.get_assignment_stats()
+		stats = self.stat_source.assignment_stats
 		assert_that( stats.Count, is_( 3 ))
 		assert_that( stats.UniqueCount, is_( 2 ))
 		assert_that( stats.AssignmentLateCount, is_( 1 ))
@@ -174,7 +179,7 @@ class TestProduction( LearningNetworkTestCase ):
 		assignments = ( assignment, assignment2, assignment3, assignment4 )
 		mock_get_assignments.is_callable().returns( assignments )
 
-		stats = self.stat_source.get_assignment_stats()
+		stats = self.stat_source.assignment_stats
 		assert_that( stats.Count, is_( 4 ))
 		assert_that( stats.UniqueCount, is_( 3 ))
 		assert_that( stats.AssignmentLateCount, is_( 2 ))
@@ -187,11 +192,11 @@ class TestProduction( LearningNetworkTestCase ):
 
 		# Empty
 		mock_get_assessments.is_callable().returns( None )
-		stats = self.stat_source.get_self_assessment_stats()
+		stats = self.stat_source.self_assessment_stats
 		assert_that( stats, none() )
 
 		mock_get_assessments.is_callable().returns( () )
-		stats = self.stat_source.get_self_assessment_stats()
+		stats = self.stat_source.self_assessment_stats
 		assert_that( stats, none() )
 
 		# Single
@@ -201,7 +206,7 @@ class TestProduction( LearningNetworkTestCase ):
 		assignments = ( assignment, )
 		mock_get_assessments.is_callable().returns( assignments )
 
-		stats = self.stat_source.get_self_assessment_stats()
+		stats = self.stat_source.self_assessment_stats
 		assert_that( stats.Count, is_( 1 ))
 		assert_that( stats.UniqueCount, is_( 1 ))
 
@@ -211,7 +216,7 @@ class TestProduction( LearningNetworkTestCase ):
 		assignments = ( assignment, assignment2 )
 		mock_get_assessments.is_callable().returns( assignments )
 
-		stats = self.stat_source.get_self_assessment_stats()
+		stats = self.stat_source.self_assessment_stats
 		assert_that( stats.Count, is_( 2 ))
 		assert_that( stats.UniqueCount, is_( 2 ))
 
@@ -220,6 +225,21 @@ class TestProduction( LearningNetworkTestCase ):
 		assignments = ( assignment, assignment2, assignment3 )
 		mock_get_assessments.is_callable().returns( assignments )
 
-		stats = self.stat_source.get_self_assessment_stats()
+		stats = self.stat_source.self_assessment_stats
 		assert_that( stats.Count, is_( 3 ))
 		assert_that( stats.UniqueCount, is_( 2 ))
+
+class TestAdapters( LearningNetworkTestCase ):
+
+	def test_adapting(self):
+		user = User( username='blehxxxxxxxx' )
+		now = datetime.utcnow()
+
+		stats_source = component.queryMultiAdapter( ( user, course, now ), IProductionStatsSource )
+		assert_that( stats_source, not_none() )
+
+		stats_source = component.queryMultiAdapter( ( user, course ), IProductionStatsSource )
+		assert_that( stats_source, not_none() )
+
+		stats_source = IProductionStatsSource( user )
+		assert_that( stats_source, not_none() )

@@ -8,6 +8,7 @@ __docformat__ = "restructuredtext en"
 
 from zope import interface
 
+from nti.schema.field import Object
 from nti.schema.field import Number
 from nti.schema.field import Float
 
@@ -88,86 +89,34 @@ class IAccessStatsSource( interface.Interface ):
 	"""
 	A source of learning network access stats.
 	"""
-
-	def get_platform_stats( timestamp=None ):
-		"""
-		Return the learning network stats for the platform, optionally
-		with a timestamp filter.
-		"""
-
-	def get_forum_stats( course=None, timestamp=None ):
-		"""
-		Return the learning network stats for forums, optionally
-		with a course or timestamp filter.
-		"""
-
-	def get_video_stats( course=None, timestamp=None ):
-		"""
-		Return the learning network stats for videos, optionally
-		with a course or timestamp filter.
-		"""
-
-	def get_reading_stats( course=None, timestamp=None ):
-		"""
-		Return the learning network stats for readings, optionally
-		with a course or timestamp filter.
-		"""
-
-	def get_assignment_stats( course=None, timestamp=None ):
-		"""
-		Return the learning network stats for assignment views, optionally
-		with a course or timestamp filter.
-		"""
-
-	def get_self_assessment_stats( course=None, timestamp=None ):
-		"""
-		Return the learning network stats for self assessment views, optionally
-		with a course or timestamp filter.
-		"""
+	platform_stats = Object( ITimeStats,
+							title="The platform timing view stats for the context." )
+	forum_stats = Object( ITimeStats,
+						title="The forum timing view stats for the context." )
+	video_stats = Object( ITimeStats,
+						title="The video timing view stats for the context." )
+	reading_stats = Object( ITimeStats,
+						title="The reading timing view stats for the context." )
+	assignment_stats = Object( ITimeStats,
+							title="The assignment timing view stats for the context." )
+	self_assessment_stats = Object( ITimeStats,
+								title="The self-assessment timing view stats for the context." )
 
 class IProductionStatsSource( interface.Interface ):
 	"""
 	A source of learning network production stats.
 	"""
-
-	def get_assignment_stats( course=None, timestamp=None ):
-		"""
-		Return the learning network stats for the assignments, optionally
-		with a timestamp filter.
-		"""
-
-	def get_self_assessment_stats( course=None, timestamp=None ):
-		"""
-		Return the learning network stats for self-assessments, optionally
-		with a course or timestamp filter.
-		"""
-
-	def get_comment_stats( course=None, timestamp=None ):
-		"""
-		Return the learning network stats for comments, optionally
-		with a course or timestamp filter.
-		"""
-
-	def get_thought_stats( timestamp=None ):
-		"""
-		Return the learning network stats for thoughts, optionally
-		with a timestamp filter.
-		"""
-
-	def get_note_stats( course=None, timestamp=None ):
-		"""
-		Return the learning network stats for notes, optionally
-		with a course or timestamp filter.
-		"""
-
-	def get_highlight_stats( course=None, timestamp=None ):
-		"""
-		Return the learning network stats for highlights, optionally
-		with a course or timestamp filter.
-		"""
-
-	def get_bookmark_stats( course=None, timestamp=None ):
-		"""
-		Return the learning network stats for bookmarks, optionally
-		with a course or timestamp filter.
-		"""
+	assignment_stats = Object( IAssignmentStats,
+							title="Stats on context assignment production." )
+	self_assessment_stats = Object( ISelfAssessmentStats,
+								title="Stats on context self-assessment production." )
+	comment_stats = Object( ICommentStats,
+						title="Stats on context comment production." )
+	thought_stats = Object( ITimeStats,
+						title="Stats on context thought production." )
+	note_stats = Object( INoteStats,
+						title="Stats on context note production." )
+	highlight_stats = Object( ITimeStats,
+							title="Stats on context highlight production." )
+	bookmark_stats = Object( ITimeStats,
+							title="Stats on context bookmark production." )
