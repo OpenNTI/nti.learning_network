@@ -46,7 +46,8 @@
 	<include package="nti.externalization" file="meta.zcml" />
 	<include package="nti.externalization" />
 	<ext:registerAutoPackageIO
-		root_interfaces=".interfaces.ITimeStats
+		root_interfaces=".interfaces.IStats
+						.interfaces.ITimeStats
 						.interfaces.INoteStats
 						.interfaces.ICommentStats
 						.interfaces.ISelfAssessmentStats
