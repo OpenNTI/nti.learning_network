@@ -32,7 +32,7 @@ def _get_time_lengths( records, do_include ):
 					if do_include( x ) and x.time_length ]
 	return result
 
-def _get_stats( records, do_include=lambda: True ):
+def _get_stats( records, do_include=lambda _: True ):
 	"""
 	For time length records, return the stats, optionally filtering.
 	"""
@@ -59,7 +59,7 @@ class _AnalyticsAccessStatsSource( object ):
 
 		def is_complete( record ):
 			# Filtering out sessions without end times or time_lengths
-			return record.end_time and record.time_length
+			return record.SessionEndTime
 
 		return _get_stats( user_sessions, do_include=is_complete )
 

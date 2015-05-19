@@ -37,7 +37,7 @@ from nti.learning_network.model import SelfAssessmentStats
 from ._utils import get_std_dev
 from ._utils import get_count_stats
 
-def _get_stats( records, do_include=lambda: True ):
+def _get_stats( records, do_include=lambda _: True ):
 	"""
 	For records, return the stats, optionally filtering.
 	"""
@@ -91,7 +91,7 @@ def _get_post_stats( records, clazz, obj_field, length_field ):
 			if obj is not None:
 				# Waking up object, expensive if we're
 				# waking up every child?
-				recursive_child_count += obj.referents
+				recursive_child_count += len( obj.referents )
 
 				if _has_whiteboard( obj ):
 					contains_board_count += 1
