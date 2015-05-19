@@ -45,6 +45,8 @@ class _AnalyticsAccessStatsSource( object ):
 	"""
 	An access stats source that pulls data from analytics.
 	"""
+	__external_class_name__ = "AccessStatsSource"
+	mime_type = mimeType = 'application/vnd.nextthought.learningnetwork.accessstatssource'
 
 	def __init__(self, user, course=None, timestamp=None):
 		self.user = user

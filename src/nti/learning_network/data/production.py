@@ -4,7 +4,6 @@
 $Id$
 """
 from __future__ import print_function, unicode_literals, absolute_import, division
-from brownie.itools import count
 __docformat__ = "restructuredtext en"
 
 logger = __import__('logging').getLogger(__name__)
@@ -42,8 +41,10 @@ def _get_stats( records, do_include=lambda: True ):
 	"""
 	For records, return the stats, optionally filtering.
 	"""
-	records = [x for x in records if do_include( x )]
-	stats = get_count_stats( records )
+	stats = None
+	if records:
+		records = [x for x in records if do_include( x )]
+		stats = get_count_stats( records )
 	return stats
 
 def _has_whiteboard( obj ):
@@ -117,6 +118,8 @@ class _AnalyticsProductionStatsSource( object ):
 	"""
 	A production stats source that pulls data from analytics.
 	"""
+	__external_class_name__ = "ProductionStatsSource"
+	mime_type = mimeType = 'application/vnd.nextthought.learningnetwork.productionstatssource'
 
 	def __init__(self, user, course=None, timestamp=None):
 		self.user = user
