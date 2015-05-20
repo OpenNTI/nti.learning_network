@@ -23,6 +23,8 @@ from zope import component
 
 from zope.interface import directlyProvides
 
+from nti.analytics.read_models import AnalyticsBlog
+from nti.analytics.read_models import AnalyticsBlogComment
 from nti.analytics.read_models import AnalyticsAssignment
 from nti.analytics.read_models import AnalyticsAssessment
 
@@ -44,6 +46,11 @@ from nti.contenttypes.courses.courses import CourseInstance
 from nti.dataserver.users import User
 from nti.dataserver.interfaces import IUser
 from nti.dataserver.users.users import Principal
+
+from nti.dataserver.contenttypes.forums.forum import PersonalBlog
+from nti.dataserver.contenttypes.forums.topic import PersonalBlogEntry
+from nti.dataserver.contenttypes.forums.post import PersonalBlogEntryPost
+from nti.dataserver.contenttypes.forums.post import PersonalBlogComment
 
 from nti.dataserver.tests.mock_dataserver import WithMockDSTrans
 
@@ -110,6 +117,23 @@ def _get_assessment( assignment_id, user, submission ):
 									AssessmentId=assignment_id )
 	return result
 
+def _get_blog( blog, user ):
+	result = AnalyticsBlog( Blog=blog,
+							user=user,
+							timestamp=datetime.utcnow(),
+							BlogLength=30 )
+	return result
+
+def _get_blog_comment( comment, user, like_count=0, fave_count=0, is_reply=False ):
+	result = AnalyticsBlogComment( Comment=comment,
+									user=user,
+									timestamp=datetime.utcnow(),
+									CommentLength=30,
+									LikeCount=like_count,
+									FavoriteCount=fave_count,
+									IsReply=is_reply )
+	return result
+
 class TestProduction( LearningNetworkTestCase ):
 
 	def setUp(self):
@@ -126,11 +150,11 @@ class TestProduction( LearningNetworkTestCase ):
 
 		# Empty
 		mock_get_assignments.is_callable().returns( None )
-		stats = self.stat_source.assignment_stats
+		stats = self.stat_source.AssignmentStats
 		assert_that( stats, none() )
 
 		mock_get_assignments.is_callable().returns( () )
-		stats = self.stat_source.assignment_stats
+		stats = self.stat_source.AssignmentStats
 		assert_that( stats, none() )
 
 		# Single
@@ -140,7 +164,7 @@ class TestProduction( LearningNetworkTestCase ):
 		assignments = ( assignment, )
 		mock_get_assignments.is_callable().returns( assignments )
 
-		stats = self.stat_source.assignment_stats
+		stats = self.stat_source.AssignmentStats
 		assert_that( stats.Count, is_( 1 ))
 		assert_that( stats.UniqueCount, is_( 1 ))
 		assert_that( stats.AssignmentLateCount, is_( 0 ))
@@ -153,7 +177,7 @@ class TestProduction( LearningNetworkTestCase ):
 		assignments = ( assignment, assignment2 )
 		mock_get_assignments.is_callable().returns( assignments )
 
-		stats = self.stat_source.assignment_stats
+		stats = self.stat_source.AssignmentStats
 		assert_that( stats.Count, is_( 2 ))
 		assert_that( stats.UniqueCount, is_( 2 ))
 		assert_that( stats.AssignmentLateCount, is_( 0 ))
@@ -165,7 +189,7 @@ class TestProduction( LearningNetworkTestCase ):
 		assignments = ( assignment, assignment2, assignment3 )
 		mock_get_assignments.is_callable().returns( assignments )
 
-		stats = self.stat_source.assignment_stats
+		stats = self.stat_source.AssignmentStats
 		assert_that( stats.Count, is_( 3 ))
 		assert_that( stats.UniqueCount, is_( 2 ))
 		assert_that( stats.AssignmentLateCount, is_( 1 ))
@@ -179,7 +203,7 @@ class TestProduction( LearningNetworkTestCase ):
 		assignments = ( assignment, assignment2, assignment3, assignment4 )
 		mock_get_assignments.is_callable().returns( assignments )
 
-		stats = self.stat_source.assignment_stats
+		stats = self.stat_source.AssignmentStats
 		assert_that( stats.Count, is_( 4 ))
 		assert_that( stats.UniqueCount, is_( 3 ))
 		assert_that( stats.AssignmentLateCount, is_( 2 ))
@@ -192,11 +216,11 @@ class TestProduction( LearningNetworkTestCase ):
 
 		# Empty
 		mock_get_assessments.is_callable().returns( None )
-		stats = self.stat_source.self_assessment_stats
+		stats = self.stat_source.SelfAssessmentStats
 		assert_that( stats, none() )
 
 		mock_get_assessments.is_callable().returns( () )
-		stats = self.stat_source.self_assessment_stats
+		stats = self.stat_source.SelfAssessmentStats
 		assert_that( stats, none() )
 
 		# Single
@@ -206,7 +230,7 @@ class TestProduction( LearningNetworkTestCase ):
 		assignments = ( assignment, )
 		mock_get_assessments.is_callable().returns( assignments )
 
-		stats = self.stat_source.self_assessment_stats
+		stats = self.stat_source.SelfAssessmentStats
 		assert_that( stats.Count, is_( 1 ))
 		assert_that( stats.UniqueCount, is_( 1 ))
 
@@ -216,7 +240,7 @@ class TestProduction( LearningNetworkTestCase ):
 		assignments = ( assignment, assignment2 )
 		mock_get_assessments.is_callable().returns( assignments )
 
-		stats = self.stat_source.self_assessment_stats
+		stats = self.stat_source.SelfAssessmentStats
 		assert_that( stats.Count, is_( 2 ))
 		assert_that( stats.UniqueCount, is_( 2 ))
 
@@ -225,9 +249,78 @@ class TestProduction( LearningNetworkTestCase ):
 		assignments = ( assignment, assignment2, assignment3 )
 		mock_get_assessments.is_callable().returns( assignments )
 
-		stats = self.stat_source.self_assessment_stats
+		stats = self.stat_source.SelfAssessmentStats
 		assert_that( stats.Count, is_( 3 ))
 		assert_that( stats.UniqueCount, is_( 2 ))
+
+	@fudge.patch( 'nti.learning_network.data.production.get_blogs',
+				 'nti.learning_network.data.production.get_blog_comments')
+	def test_blog_stats( self, mock_get_blogs, mock_get_blog_comments ):
+		user = self._get_user()
+		# Empty
+		mock_get_blogs.is_callable().returns( None )
+		mock_get_blog_comments.is_callable().returns( None )
+		assert_that( self.stat_source.ThoughtStats, none() )
+		assert_that( self.stat_source.ThoughtCommentStats, none() )
+
+		mock_get_blogs.is_callable().returns( () )
+		mock_get_blog_comments.is_callable().returns( () )
+		assert_that( self.stat_source.ThoughtStats, none() )
+		assert_that( self.stat_source.ThoughtCommentStats, none() )
+
+		# Blog, comment with one reply, and that reply
+		blog_container = PersonalBlog()
+		blog = PersonalBlogEntry()
+		blog.headline = PersonalBlogEntryPost()
+		blog.__parent__ = blog_container
+		blog.creator = user
+		comment1 = PersonalBlogComment()
+		comment1.creator = user
+		comment1.__parent__ = blog
+
+		comment2 = PersonalBlogComment()
+		comment2.creator = user
+		comment2.__parent__ = blog
+
+		blog_record = _get_blog( blog, user )
+		blog_comment_record1 = _get_blog_comment( comment1, user )
+		like_count = 10
+		fave_count = 5
+		blog_comment_record2 = _get_blog_comment( comment2, user, is_reply=True,
+												like_count=10, fave_count=5 )
+
+		mock_get_blogs.is_callable().returns( (blog_record,) )
+		stats = self.stat_source.ThoughtStats
+		assert_that( stats.Count, is_( 1 ) )
+
+		# One comment
+		mock_get_blog_comments.is_callable().returns( (blog_comment_record1,) )
+		stats = self.stat_source.ThoughtCommentStats
+		assert_that( stats.Count, is_( 1 ) )
+		assert_that( stats.ReplyCount, is_( 0 ) )
+		assert_that( stats.TopLevelCount, is_( 1 ) )
+		assert_that( stats.DistinctPostsLiked, is_( 0 ) )
+		assert_that( stats.DistinctPostsFavorited, is_( 0 ) )
+		assert_that( stats.TotalLikes, is_( 0 ) )
+		assert_that( stats.RecursiveChildrenCount, is_( 0 ) )
+		assert_that( stats.StandardDeviationLength, is_( 0 ) )
+		assert_that( stats.AverageLength, is_( 30 ) )
+		assert_that( stats.ContainsWhiteboardCount, is_( 0 ) )
+
+		# Two comments
+		mock_get_blog_comments.is_callable().returns( (blog_comment_record1,blog_comment_record2) )
+		stats = self.stat_source.ThoughtCommentStats
+		assert_that( stats.Count, is_( 2 ) )
+		assert_that( stats.ReplyCount, is_( 1 ) )
+		assert_that( stats.TopLevelCount, is_( 1 ) )
+		assert_that( stats.DistinctPostsLiked, is_( 1 ) )
+		assert_that( stats.DistinctPostsFavorited, is_( 1 ) )
+		assert_that( stats.TotalLikes, is_( like_count ) )
+		assert_that( stats.TotalFavorites, is_( fave_count ) )
+		assert_that( stats.RecursiveChildrenCount, is_( 0 ) ) # Need to test this
+		assert_that( stats.StandardDeviationLength, is_( 0 ) )
+		assert_that( stats.AverageLength, is_( 30 ) )
+		assert_that( stats.ContainsWhiteboardCount, is_( 0 ) )
 
 class TestAdapters( LearningNetworkTestCase ):
 

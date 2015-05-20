@@ -41,6 +41,11 @@ class ICommentStats( IPostMixin ):
 	A container for holding various comment stats.
 	"""
 
+class IThoughtCommentStats( IPostMixin ):
+	"""
+	A container for holding various comment stats.
+	"""
+
 class ITimeStats( IStats ):
 	"""
 	A container for holding various time stats.
@@ -89,34 +94,36 @@ class IAccessStatsSource( interface.Interface ):
 	"""
 	A source of learning network access stats.
 	"""
-	platform_stats = Object( ITimeStats,
+	PlatformStats = Object( ITimeStats,
 							title="The platform timing view stats for the context." )
-	forum_stats = Object( ITimeStats,
+	ForumStats = Object( ITimeStats,
 						title="The forum timing view stats for the context." )
-	video_stats = Object( ITimeStats,
+	VideoStats = Object( ITimeStats,
 						title="The video timing view stats for the context." )
-	reading_stats = Object( ITimeStats,
+	ReadingStats = Object( ITimeStats,
 						title="The reading timing view stats for the context." )
-	assignment_stats = Object( ITimeStats,
+	AssignmentStats = Object( ITimeStats,
 							title="The assignment timing view stats for the context." )
-	self_assessment_stats = Object( ITimeStats,
+	SelfAssessmentStats = Object( ITimeStats,
 								title="The self-assessment timing view stats for the context." )
 
 class IProductionStatsSource( interface.Interface ):
 	"""
 	A source of learning network production stats.
 	"""
-	assignment_stats = Object( IAssignmentStats,
+	AssignmentStats = Object( IAssignmentStats,
 							title="Stats on context assignment production." )
-	self_assessment_stats = Object( ISelfAssessmentStats,
+	SelfAssessmentStats = Object( ISelfAssessmentStats,
 								title="Stats on context self-assessment production." )
-	comment_stats = Object( ICommentStats,
+	CommentStats = Object( ICommentStats,
 						title="Stats on context comment production." )
-	thought_stats = Object( ITimeStats,
+	ThoughtStats = Object( ITimeStats,
 						title="Stats on context thought production." )
-	note_stats = Object( INoteStats,
+	ThoughtCommentStats = Object( IThoughtCommentStats,
+						title="Stats on context thought comment production." )
+	NoteStats = Object( INoteStats,
 						title="Stats on context note production." )
-	highlight_stats = Object( ITimeStats,
+	HighlightStats = Object( ITimeStats,
 							title="Stats on context highlight production." )
-	bookmark_stats = Object( ITimeStats,
+	BookmarkStats = Object( ITimeStats,
 							title="Stats on context bookmark production." )

@@ -54,7 +54,7 @@ class _AnalyticsAccessStatsSource( object ):
 		self.timestamp = timestamp
 
 	@readproperty
-	def platform_stats( self ):
+	def PlatformStats( self ):
 		user_sessions = get_user_sessions( self.user, timestamp=self.timestamp )
 
 		def is_complete( record ):
@@ -64,7 +64,7 @@ class _AnalyticsAccessStatsSource( object ):
 		return _get_stats( user_sessions, do_include=is_complete )
 
 	@readproperty
-	def forum_stats( self ):
+	def ForumStats( self ):
 		"""
 		Return the learning network stats for forums, optionally
 		with a course or timestamp filter.
@@ -74,7 +74,7 @@ class _AnalyticsAccessStatsSource( object ):
 		return _get_stats( topic_views )
 
 	@readproperty
-	def video_stats( self ):
+	def VideoStats( self ):
 		"""
 		Return the learning network stats for videos, optionally
 		with a course or timestamp filter.
@@ -85,7 +85,7 @@ class _AnalyticsAccessStatsSource( object ):
 		return _get_stats( video_views )
 
 	@readproperty
-	def reading_stats( self ):
+	def ReadingStats( self ):
 		"""
 		Return the learning network stats for readings, optionally
 		with a course or timestamp filter.
@@ -96,7 +96,7 @@ class _AnalyticsAccessStatsSource( object ):
 		return _get_stats( resource_views )
 
 	@readproperty
-	def assignment_stats( self ):
+	def AssignmentStats( self ):
 		"""
 		Return the learning network stats for assignment views, optionally
 		with a course or timestamp filter.
@@ -107,7 +107,7 @@ class _AnalyticsAccessStatsSource( object ):
 		return _get_stats( assignment_views )
 
 	@readproperty
-	def self_assessment_stats( self ):
+	def SelfAssessmentStats( self ):
 		"""
 		Return the learning network stats for self assessment views, optionally
 		with a course or timestamp filter.

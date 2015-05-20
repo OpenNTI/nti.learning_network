@@ -18,6 +18,7 @@ from nti.analytics.assessments import get_self_assessments_for_user
 from nti.analytics.boards import get_forum_comments_for_user
 
 from nti.analytics.blogs import get_blogs
+from nti.analytics.blogs import get_blog_comments
 
 from nti.analytics.resource_tags import get_notes
 from nti.analytics.resource_tags import get_highlights
@@ -32,6 +33,7 @@ from nti.learning_network.interfaces import IProductionStatsSource
 from nti.learning_network.model import NoteStats
 from nti.learning_network.model import CommentStats
 from nti.learning_network.model import AssignmentStats
+from nti.learning_network.model import ThoughtCommentStats
 from nti.learning_network.model import SelfAssessmentStats
 
 from ._utils import get_std_dev
@@ -127,7 +129,7 @@ class _AnalyticsProductionStatsSource( object ):
 		self.timestamp = timestamp
 
 	@readproperty
-	def assignment_stats( self ):
+	def AssignmentStats( self ):
 		"""
 		Return the learning network stats for assignments, optionally
 		with a course or timestamp filter.
@@ -162,7 +164,7 @@ class _AnalyticsProductionStatsSource( object ):
 		return stats
 
 	@readproperty
-	def self_assessment_stats( self ):
+	def SelfAssessmentStats( self ):
 		"""
 		Return the learning network stats for self-assessments, optionally
 		with a course or timestamp filter.
@@ -180,7 +182,7 @@ class _AnalyticsProductionStatsSource( object ):
 		return stats
 
 	@readproperty
-	def comment_stats( self ):
+	def CommentStats( self ):
 		"""
 		Return the learning network stats for comments, optionally
 		with a course or timestamp filter.
@@ -192,18 +194,29 @@ class _AnalyticsProductionStatsSource( object ):
 		return stats
 
 	@readproperty
-	def thought_stats( self ):
+	def ThoughtStats( self ):
 		"""
 		Return the learning network stats for thoughts, optionally
 		with a timestamp filter.
 		"""
+		# TODO Do we need to expand these stats?
 		blog_records = get_blogs( self.user, timestamp=self.timestamp )
-		# FIXME posts also?
-		# Thought comments?
 		return _get_stats( blog_records )
 
 	@readproperty
-	def note_stats( self ):
+	def ThoughtCommentStats( self ):
+		"""
+		Return the learning network stats for thought comments, optionally
+		with a timestamp filter.
+		"""
+		comment_records = get_blog_comments( self.user, course=self.course,
+											timestamp=self.timestamp )
+		stats = _get_post_stats( comment_records, ThoughtCommentStats,
+								'Comment', 'CommentLength' )
+		return stats
+
+	@readproperty
+	def NoteStats( self ):
 		"""
 		Return the learning network stats for notes, optionally
 		with a course or timestamp filter.
@@ -214,7 +227,7 @@ class _AnalyticsProductionStatsSource( object ):
 		return stats
 
 	@readproperty
-	def highlight_stats( self ):
+	def HighlightStats( self ):
 		"""
 		Return the learning network stats for highlights, optionally
 		with a course or timestamp filter.
@@ -224,7 +237,7 @@ class _AnalyticsProductionStatsSource( object ):
 		return _get_stats( highlight_records )
 
 	@readproperty
-	def bookmark_stats( self ):
+	def BookmarkStats( self ):
 		"""
 		Return the learning network stats for bookmarks, optionally
 		with a course or timestamp filter.

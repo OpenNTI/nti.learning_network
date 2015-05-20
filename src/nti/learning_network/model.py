@@ -20,6 +20,7 @@ from nti.learning_network.interfaces import INoteStats
 from nti.learning_network.interfaces import ITimeStats
 from nti.learning_network.interfaces import ICommentStats
 from nti.learning_network.interfaces import IAssignmentStats
+from nti.learning_network.interfaces import IThoughtCommentStats
 from nti.learning_network.interfaces import ISelfAssessmentStats
 
 @EqHash( 'count' )
@@ -71,3 +72,8 @@ class NoteStats( PostStats ):
 class CommentStats( PostStats ):
 	__external_class_name__ = "CommentStats"
 	mime_type = mimeType = 'application/vnd.nextthought.learningnetwork.commentstats'
+
+@interface.implementer(IThoughtCommentStats)
+class ThoughtCommentStats( PostStats ):
+	__external_class_name__ = "ThoughtCommentStats"
+	mime_type = mimeType = 'application/vnd.nextthought.learningnetwork.thoughtcommentstats'
