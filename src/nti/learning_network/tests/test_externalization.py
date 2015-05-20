@@ -14,21 +14,35 @@ from nti.externalization.externalization import toExternalObject
 
 from nti.testing.matchers import verifiably_provides
 
+from ..interfaces import IStats
 from ..interfaces import INoteStats
 from ..interfaces import ITimeStats
 from ..interfaces import ICommentStats
 from ..interfaces import IAssignmentStats
+from ..interfaces import IThoughtCommentStats
 from ..interfaces import ISelfAssessmentStats
 
+from ..model import Stats
 from ..model import NoteStats
 from ..model import TimeStats
 from ..model import CommentStats
 from ..model import AssignmentStats
+from ..model import ThoughtCommentStats
 from ..model import SelfAssessmentStats
 
 from . import LearningNetworkTestCase
 
 class TestExternalization( LearningNetworkTestCase ):
+
+	def test_stats(self):
+		count = 10
+		count_stats = Stats( Count=count )
+		assert_that(count_stats, verifiably_provides( IStats ) )
+
+		ext_obj = toExternalObject(count_stats)
+		assert_that(ext_obj, has_entry('Class', Stats.__external_class_name__ ))
+		assert_that(ext_obj, has_entry('MimeType', Stats.mimeType ))
+		assert_that(ext_obj, has_entry('Count', count ))
 
 	def test_time_stats(self):
 		count = 10
@@ -130,3 +144,7 @@ class TestExternalization( LearningNetworkTestCase ):
 	def test_comment_stats(self):
 		self._test_post_stats( CommentStats, ICommentStats, 18.4 )
 		self._test_post_stats( CommentStats, ICommentStats, None )
+
+	def test_thought_comment_stats(self):
+		self._test_post_stats( ThoughtCommentStats, IThoughtCommentStats, 18.4 )
+		self._test_post_stats( ThoughtCommentStats, IThoughtCommentStats, None )

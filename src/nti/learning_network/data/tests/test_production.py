@@ -308,7 +308,8 @@ class TestProduction( LearningNetworkTestCase ):
 		assert_that( stats.ContainsWhiteboardCount, is_( 0 ) )
 
 		# Two comments
-		mock_get_blog_comments.is_callable().returns( (blog_comment_record1,blog_comment_record2) )
+		mock_get_blog_comments.is_callable().returns(
+								(blog_comment_record1, blog_comment_record2) )
 		stats = self.stat_source.ThoughtCommentStats
 		assert_that( stats.Count, is_( 2 ) )
 		assert_that( stats.ReplyCount, is_( 1 ) )

@@ -50,6 +50,7 @@
 						.interfaces.ITimeStats
 						.interfaces.INoteStats
 						.interfaces.ICommentStats
+						.interfaces.IThoughtCommentStats
 						.interfaces.ISelfAssessmentStats
 						.interfaces.IAssignmentStats
 						.interfaces.IAccessStatsSource
