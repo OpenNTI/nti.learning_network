@@ -13,4 +13,4 @@ class MockTimeRecord( object ):
 
 	def __init__(self, time_length=0, end_time=0):
 		self.time_length = time_length
-		self.end_time = end_time
+		self.SessionEndTime = end_time
