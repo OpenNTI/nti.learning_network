@@ -18,6 +18,7 @@ from nti.schema.schema import EqHash
 from nti.learning_network.interfaces import IStats
 from nti.learning_network.interfaces import INoteStats
 from nti.learning_network.interfaces import ITimeStats
+from nti.learning_network.interfaces import ISocialStats
 from nti.learning_network.interfaces import ICommentStats
 from nti.learning_network.interfaces import IAssignmentStats
 from nti.learning_network.interfaces import IThoughtCommentStats
@@ -77,3 +78,15 @@ class CommentStats( PostStats ):
 class ThoughtCommentStats( PostStats ):
 	__external_class_name__ = "ThoughtCommentStats"
 	mime_type = mimeType = 'application/vnd.nextthought.learningnetwork.thoughtcommentstats'
+
+@EqHash( 'ContactsAddedCount', 'GroupsJoinedCount', 'GroupsCreatedCount',
+		'DistinctReplyToCount', 'DistinctUserReplyToOthersCount' )
+@interface.implementer(ISocialStats)
+class SocialStats( SchemaConfigured ):
+
+	count = alias( 'Count' )
+	__external_class_name__ = "SocialStats"
+	mime_type = mimeType = 'application/vnd.nextthought.learningnetwork.socialstats'
+
+	def __init__(self, *args, **kwargs):
+		SchemaConfigured.__init__(self, *args, **kwargs)

@@ -18,6 +18,7 @@ from ..interfaces import IStats
 from ..interfaces import INoteStats
 from ..interfaces import ITimeStats
 from ..interfaces import ICommentStats
+from ..interfaces import ISocialStats
 from ..interfaces import IAssignmentStats
 from ..interfaces import IThoughtCommentStats
 from ..interfaces import ISelfAssessmentStats
@@ -26,6 +27,7 @@ from ..model import Stats
 from ..model import NoteStats
 from ..model import TimeStats
 from ..model import CommentStats
+from ..model import SocialStats
 from ..model import AssignmentStats
 from ..model import ThoughtCommentStats
 from ..model import SelfAssessmentStats
@@ -79,7 +81,7 @@ class TestExternalization( LearningNetworkTestCase ):
 		count = 10
 		unique_count = 4
 		late_count = 2
-		timed_count = 4
+		timed_count = 3
 		timed_late_count = 1
 		assignment_stats = AssignmentStats( Count=count,
 										UniqueCount=unique_count,
@@ -148,3 +150,25 @@ class TestExternalization( LearningNetworkTestCase ):
 	def test_thought_comment_stats(self):
 		self._test_post_stats( ThoughtCommentStats, IThoughtCommentStats, 18.4 )
 		self._test_post_stats( ThoughtCommentStats, IThoughtCommentStats, None )
+
+	def test_social_stats(self):
+		contact_count = 10
+		group_count = 4
+		group_created_count = 2
+		reply_to_count = 7
+		user_reply_count = 1
+		social_stats = SocialStats( ContactsAddedCount=contact_count,
+									GroupsJoinedCount=group_count,
+									GroupsCreatedCount=group_created_count,
+									DistinctReplyToCount=reply_to_count,
+									DistinctUserReplyToOthersCount=user_reply_count )
+		assert_that( social_stats, verifiably_provides( ISocialStats ) )
+
+		ext_obj = toExternalObject( social_stats )
+		assert_that(ext_obj, has_entry('Class', SocialStats.__external_class_name__ ))
+		assert_that(ext_obj, has_entry('MimeType', SocialStats.mimeType ))
+		assert_that(ext_obj, has_entry('ContactsAddedCount', contact_count ))
+		assert_that(ext_obj, has_entry('GroupsJoinedCount', group_count ))
+		assert_that(ext_obj, has_entry('GroupsCreatedCount', group_created_count ))
+		assert_that(ext_obj, has_entry('DistinctReplyToCount', reply_to_count ))
+		assert_that(ext_obj, has_entry('DistinctUserReplyToOthersCount', user_reply_count ))

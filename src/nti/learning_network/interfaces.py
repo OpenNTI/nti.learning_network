@@ -73,6 +73,16 @@ class IAssignmentStats( IUniqueStatsMixin ):
 	TimedAssignmentCount = Number( title="Unique assignment count", required=True )
 	TimedAssignmentLateCount = Number( title="Late assignment timed count", required=True )
 
+class ISocialStats( interface.Interface ):
+	"""
+	A container for holding various social statistics.
+	"""
+	ContactsAddedCount = Number( title="ContactsAddedCount", required=True )
+	GroupsJoinedCount = Number( title="GroupsJoinedCount", required=True )
+	GroupsCreatedCount = Number( title="GroupsCreatedCount", required=True )
+	DistinctReplyToCount = Number( title="DistinctReplyToCount", required=True )
+	DistinctUserReplyToOthersCount = Number( title="DistinctUserReplyToOthersCount", required=True )
+
 class ILearningNetworkScoreProvider( interface.Interface ):
 	"""
 	For a given context, typically a user, able to answer
@@ -132,5 +142,5 @@ class IInteractionStatsSource( interface.Interface ):
 	"""
 	A source of learning network interaction stats.
 	"""
-	ContactStats = Object( IStats,
-							title="Stats on contextual contact interaction." )
+	SocialStats = Object( ISocialStats,
+							title="Stats on contextual interaction with others." )
