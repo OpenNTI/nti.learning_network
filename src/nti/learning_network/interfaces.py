@@ -112,18 +112,25 @@ class IProductionStatsSource( interface.Interface ):
 	A source of learning network production stats.
 	"""
 	AssignmentStats = Object( IAssignmentStats,
-							title="Stats on context assignment production." )
+							title="Stats on contextual assignment production." )
 	SelfAssessmentStats = Object( ISelfAssessmentStats,
-								title="Stats on context self-assessment production." )
+								title="Stats on contextual self-assessment production." )
 	CommentStats = Object( ICommentStats,
-						title="Stats on context comment production." )
-	ThoughtStats = Object( ITimeStats,
-						title="Stats on context thought production." )
+						title="Stats on contextual comment production." )
+	ThoughtStats = Object( IStats,
+						title="Stats on contextual thought production." )
 	ThoughtCommentStats = Object( IThoughtCommentStats,
-						title="Stats on context thought comment production." )
+						title="Stats on contextual thought comment production." )
 	NoteStats = Object( INoteStats,
-						title="Stats on context note production." )
-	HighlightStats = Object( ITimeStats,
-							title="Stats on context highlight production." )
-	BookmarkStats = Object( ITimeStats,
-							title="Stats on context bookmark production." )
+						title="Stats on contextual note production." )
+	HighlightStats = Object( IStats,
+							title="Stats on contextual highlight production." )
+	BookmarkStats = Object( IStats,
+							title="Stats on contextual bookmark production." )
+
+class IInteractionStatsSource( interface.Interface ):
+	"""
+	A source of learning network interaction stats.
+	"""
+	ContactStats = Object( IStats,
+							title="Stats on contextual contact interaction." )

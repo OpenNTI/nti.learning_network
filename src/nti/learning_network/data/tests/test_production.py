@@ -323,6 +323,44 @@ class TestProduction( LearningNetworkTestCase ):
 		assert_that( stats.AverageLength, is_( 30 ) )
 		assert_that( stats.ContainsWhiteboardCount, is_( 0 ) )
 
+	@fudge.patch( 'nti.learning_network.data.production.get_highlights' )
+	def test_highlight_stats( self, mock_get_highlights ):
+		# Empty
+		mock_get_highlights.is_callable().returns( None )
+		assert_that( self.stat_source.HighlightStats, none() )
+
+		mock_get_highlights.is_callable().returns( () )
+		assert_that( self.stat_source.HighlightStats, none() )
+
+		# We simply get counts....
+		highlights = [object()]
+		mock_get_highlights.is_callable().returns( highlights )
+		assert_that( self.stat_source.HighlightStats.Count, is_( len( highlights ) ) )
+
+		highlights = [object(), object(), object()]
+		mock_get_highlights.is_callable().returns( highlights )
+		assert_that( self.stat_source.HighlightStats.Count, is_( len( highlights ) ) )
+
+	@fudge.patch( 'nti.learning_network.data.production.get_bookmarks' )
+	def test_bookmark_stats( self, mock_get_bookmarks ):
+		# Empty
+		mock_get_bookmarks.is_callable().returns( None )
+		assert_that( self.stat_source.BookmarkStats, none() )
+
+		mock_get_bookmarks.is_callable().returns( () )
+		assert_that( self.stat_source.BookmarkStats, none() )
+
+		# We simply get counts....
+		bookmarks = [object()]
+		mock_get_bookmarks.is_callable().returns( bookmarks )
+		assert_that( self.stat_source.BookmarkStats.Count, is_( len( bookmarks ) ) )
+
+		bookmarks = [object(), object(), object()]
+		mock_get_bookmarks.is_callable().returns( bookmarks )
+		assert_that( self.stat_source.BookmarkStats.Count, is_( len( bookmarks ) ) )
+
+	# FIXME Note, comment stats
+
 class TestAdapters( LearningNetworkTestCase ):
 
 	def test_adapting(self):

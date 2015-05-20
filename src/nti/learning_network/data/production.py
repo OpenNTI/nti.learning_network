@@ -199,7 +199,7 @@ class _AnalyticsProductionStatsSource( object ):
 		Return the learning network stats for thoughts, optionally
 		with a timestamp filter.
 		"""
-		# TODO Do we need to expand these stats?
+		# TODO Do we need to expand these stats beyond counts?
 		blog_records = get_blogs( self.user, timestamp=self.timestamp )
 		return _get_stats( blog_records )
 
