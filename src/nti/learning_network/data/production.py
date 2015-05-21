@@ -209,8 +209,7 @@ class _AnalyticsProductionStatsSource( object ):
 		Return the learning network stats for thought comments, optionally
 		with a timestamp filter.
 		"""
-		comment_records = get_blog_comments( self.user, course=self.course,
-											timestamp=self.timestamp )
+		comment_records = get_blog_comments( self.user, timestamp=self.timestamp )
 		stats = _get_post_stats( comment_records, ThoughtCommentStats,
 								'Comment', 'CommentLength' )
 		return stats
