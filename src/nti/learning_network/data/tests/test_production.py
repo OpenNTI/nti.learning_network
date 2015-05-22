@@ -142,7 +142,7 @@ class TestProduction( LearningNetworkTestCase ):
 
 	@WithMockDSTrans
 	def _get_user(self):
-		return User.create_user( username='new_user1', dataserver=self.ds )
+		return User.create_user( username='new_user1' )
 
 	@fudge.patch( 'nti.learning_network.data.production.get_assignments_for_user' )
 	def test_assignment_stats( self, mock_get_assignments ):

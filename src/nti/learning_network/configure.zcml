@@ -11,6 +11,7 @@
 
 	<!-- Adapters -->
 
+	<!-- 	Access -->
 	<adapter factory=".data.access._AnalyticsAccessStatsSource"
 			 for="nti.dataserver.interfaces.IUser"
 			 provides=".interfaces.IAccessStatsSource" />
@@ -26,6 +27,7 @@
 			 	zope.interface.common.idatetime.IDate"
 			 provides=".interfaces.IAccessStatsSource" />
 
+	<!-- 	Production -->
 	<adapter factory=".data.production._AnalyticsProductionStatsSource"
 			 for="nti.dataserver.interfaces.IUser"
 			 provides=".interfaces.IProductionStatsSource" />
@@ -40,6 +42,22 @@
 			 	nti.contenttypes.courses.interfaces.ICourseInstance
 			 	zope.interface.common.idatetime.IDate"
 			 provides=".interfaces.IProductionStatsSource" />
+
+	<!-- 	Interaction -->
+	<adapter factory=".data.interaction._AnalyticsInteractionStatsSource"
+			 for="nti.dataserver.interfaces.IUser"
+			 provides=".interfaces.IInteractionStatsSource" />
+
+	<adapter factory=".data.interaction._AnalyticsInteractionStatsSource"
+			 for="nti.dataserver.interfaces.IUser
+			 	nti.contenttypes.courses.interfaces.ICourseInstance"
+			 provides=".interfaces.IInteractionStatsSource" />
+
+	<adapter factory=".data.interaction._AnalyticsInteractionStatsSource"
+			 for="nti.dataserver.interfaces.IUser
+			 	nti.contenttypes.courses.interfaces.ICourseInstance
+			 	zope.interface.common.idatetime.IDate"
+			 provides=".interfaces.IInteractionStatsSource" />
 
 	<!-- Externalization -->
 
@@ -55,7 +73,8 @@
 						.interfaces.ISelfAssessmentStats
 						.interfaces.IAssignmentStats
 						.interfaces.IAccessStatsSource
-						.interfaces.IProductionStatsSource"
+						.interfaces.IProductionStatsSource
+						.interfaces.IInteractionStatsSource"
 		modules=".model" />
 
 </configure>
