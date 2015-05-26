@@ -13,7 +13,7 @@ from zope import interface
 
 from nti.analytics.boards import get_topic_views
 from nti.analytics.sessions import get_user_sessions
-from nti.analytics.resource_views import get_user_video_events
+from nti.analytics.resource_views import get_user_video_views
 from nti.analytics.resource_views import get_user_resource_views
 from nti.analytics.assessments import get_assignment_views
 from nti.analytics.assessments import get_self_assessment_views
@@ -79,7 +79,7 @@ class _AnalyticsAccessStatsSource( object ):
 		Return the learning network stats for videos, optionally
 		with a course or timestamp filter.
 		"""
-		video_views = get_user_video_events( self.user, course=self.course,
+		video_views = get_user_video_views( self.user, course=self.course,
 											timestamp=self.timestamp )
 
 		return _get_stats( video_views )
