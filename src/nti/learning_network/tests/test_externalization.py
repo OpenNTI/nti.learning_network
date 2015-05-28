@@ -17,8 +17,9 @@ from nti.testing.matchers import verifiably_provides
 from ..interfaces import IStats
 from ..interfaces import INoteStats
 from ..interfaces import ITimeStats
-from ..interfaces import ICommentStats
+from ..interfaces import IGroupStats
 from ..interfaces import ISocialStats
+from ..interfaces import ICommentStats
 from ..interfaces import IAssignmentStats
 from ..interfaces import IThoughtCommentStats
 from ..interfaces import ISelfAssessmentStats
@@ -26,8 +27,9 @@ from ..interfaces import ISelfAssessmentStats
 from ..model import Stats
 from ..model import NoteStats
 from ..model import TimeStats
-from ..model import CommentStats
+from ..model import GroupStats
 from ..model import SocialStats
+from ..model import CommentStats
 from ..model import AssignmentStats
 from ..model import ThoughtCommentStats
 from ..model import SelfAssessmentStats
@@ -153,13 +155,9 @@ class TestExternalization( LearningNetworkTestCase ):
 
 	def test_social_stats(self):
 		contact_count = 10
-		group_count = 4
-		group_created_count = 2
 		reply_to_count = 7
 		user_reply_count = 1
 		social_stats = SocialStats( ContactsAddedCount=contact_count,
-									GroupsJoinedCount=group_count,
-									GroupsCreatedCount=group_created_count,
 									DistinctReplyToCount=reply_to_count,
 									DistinctUserReplyToOthersCount=user_reply_count )
 		assert_that( social_stats, verifiably_provides( ISocialStats ) )
@@ -168,7 +166,24 @@ class TestExternalization( LearningNetworkTestCase ):
 		assert_that(ext_obj, has_entry('Class', SocialStats.__external_class_name__ ))
 		assert_that(ext_obj, has_entry('MimeType', SocialStats.mimeType ))
 		assert_that(ext_obj, has_entry('ContactsAddedCount', contact_count ))
-		assert_that(ext_obj, has_entry('GroupsJoinedCount', group_count ))
-		assert_that(ext_obj, has_entry('GroupsCreatedCount', group_created_count ))
 		assert_that(ext_obj, has_entry('DistinctReplyToCount', reply_to_count ))
 		assert_that(ext_obj, has_entry('DistinctUserReplyToOthersCount', user_reply_count ))
+
+	def test_group_stats(self):
+		group_count = 4
+		group_created_count = 2
+		user_count = 7
+		distinct_user_count = 1
+		group_stats = GroupStats( 	GroupsJoinedCount=group_count,
+									GroupsCreatedCount=group_created_count,
+									UsersInGroupsCount=user_count,
+									DistinctUsersInGroupsCount=distinct_user_count )
+		assert_that( group_stats, verifiably_provides( IGroupStats ) )
+
+		ext_obj = toExternalObject( group_stats )
+		assert_that(ext_obj, has_entry('Class', GroupStats.__external_class_name__ ))
+		assert_that(ext_obj, has_entry('MimeType', GroupStats.mimeType ))
+		assert_that(ext_obj, has_entry('GroupsJoinedCount', group_count ))
+		assert_that(ext_obj, has_entry('GroupsCreatedCount', group_created_count ))
+		assert_that(ext_obj, has_entry('UsersInGroupsCount', user_count ))
+		assert_that(ext_obj, has_entry('DistinctUsersInGroupsCount', distinct_user_count ))

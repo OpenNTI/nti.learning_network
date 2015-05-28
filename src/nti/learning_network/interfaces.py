@@ -77,11 +77,18 @@ class ISocialStats( interface.Interface ):
 	"""
 	A container for holding various social statistics.
 	"""
-	ContactsAddedCount = Number( title="ContactsAddedCount", required=True )
-	GroupsJoinedCount = Number( title="GroupsJoinedCount", required=True )
-	GroupsCreatedCount = Number( title="GroupsCreatedCount", required=True )
-	DistinctReplyToCount = Number( title="DistinctReplyToCount", required=True )
-	DistinctUserReplyToOthersCount = Number( title="DistinctUserReplyToOthersCount", required=True )
+	ContactsAddedCount = Number( title="Number of contacts user has added.", required=True )
+	DistinctReplyToCount = Number( title="Number of distinct users replying to user.", required=True )
+	DistinctUserReplyToOthersCount = Number( title="Number of distinct users replied to.", required=True )
+
+class IGroupStats( interface.Interface ):
+	"""
+	A container for holding various group statistics.
+	"""
+	GroupsJoinedCount = Number( title="Number of groups user has joined.", required=True )
+	GroupsCreatedCount = Number( title="Number of groups user has created.", required=True )
+	UsersInGroupsCount = Number( title="Number of users in groups.", required=True )
+	DistinctUsersInGroupsCount = Number( title="Number of distinct users in groups.", required=True )
 
 class ILearningNetworkScoreProvider( interface.Interface ):
 	"""
@@ -144,3 +151,6 @@ class IInteractionStatsSource( interface.Interface ):
 	"""
 	SocialStats = Object( ISocialStats,
 							title="Stats on contextual interaction with others." )
+
+	GroupStats = Object( IGroupStats,
+							title="Stats on contextual group interaction with others." )

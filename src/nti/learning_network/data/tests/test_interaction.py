@@ -16,14 +16,17 @@ from hamcrest import assert_that
 
 from datetime import datetime
 
+import zope
 from zope import component
 
 from nti.analytics.read_models import AnalyticsNote
+from nti.analytics.read_models import AnalyticsGroup
 
 from nti.dataserver.contenttypes.note import Note
 from nti.contenttypes.courses.courses import CourseInstance
 
 from nti.dataserver.users.users import User
+from nti.dataserver.users.friends_lists import DynamicFriendsList
 
 from nti.dataserver.tests.mock_dataserver import WithMockDSTrans
 
@@ -48,6 +51,12 @@ def _get_note( user, obj ):
 							IsReply=False )
 	return result
 
+def _get_group( user, group ):
+	result = AnalyticsGroup( user=user,
+							timestamp=datetime.utcnow(),
+							Group=group )
+	return result
+
 class TestInteraction( LearningNetworkTestCase ):
 
 	def setUp(self):
@@ -64,6 +73,17 @@ class TestInteraction( LearningNetworkTestCase ):
 		user.addContainedObject( note )
 		return note
 
+	def _get_group_obj(self, user):
+		fl = DynamicFriendsList( username=user.username )
+		fl.creator = user
+		fl._ds_intid = 123456
+		intids = component.getUtility( zope.intid.IIntIds )
+		intids.register( fl )
+		return fl
+
+	def _add_member(self, group, member):
+		group.addFriend( member )
+
 	@WithMockDSTrans
 	@fudge.patch( 	'nti.learning_network.data.interaction.get_contacts_added',
 					'nti.learning_network.data.interaction.get_blog_replies',
@@ -75,7 +95,7 @@ class TestInteraction( LearningNetworkTestCase ):
 	def test_stats( self, mock_get_contacts, mock_blog, mock_forum, mock_note,
 					mock_blog_user_replies, mock_forum_user_replies, mock_note_user_replies  ):
 		"""
-		Test contracts, reply tos, and user replies to others. Notes/Blogs/Comments are
+		Test contacts, reply tos, and user replies to others. Notes/Blogs/Comments are
 		synonymous when it concerns replies.
 		"""
 		# Empty
@@ -149,6 +169,66 @@ class TestInteraction( LearningNetworkTestCase ):
 		assert_that( stats.ContactsAddedCount, is_( 3 ) )
 		assert_that( stats.DistinctReplyToCount, is_( 2 ) )
 		assert_that( stats.DistinctUserReplyToOthersCount, is_( 2 ) )
+
+	@WithMockDSTrans
+	@fudge.patch( 	'nti.learning_network.data.interaction.get_groups_created',
+					'nti.learning_network.data.interaction.get_groups_joined' )
+	def test_groups( self, mock_get_created, mock_get_joined  ):
+		"""
+		Test groups created and joined.
+		"""
+		# Empty
+		mock_get_created.is_callable().returns( () )
+		mock_get_joined.is_callable().returns( () )
+		stats = self.stat_source.GroupStats
+		assert_that( stats, not_none() )
+		assert_that( stats.GroupsJoinedCount, is_( 0 ) )
+		assert_that( stats.GroupsCreatedCount, is_( 0 ) )
+		assert_that( stats.UsersInGroupsCount, is_( 0 ) )
+		assert_that( stats.DistinctUsersInGroupsCount, is_( 0 ) )
+
+		# Create group
+		user = User.create_user( username='new_user1' )
+		group_obj = self._get_group_obj( user )
+		group = _get_group( user, group_obj )
+		mock_get_created.is_callable().returns( (group,) )
+
+		stats = self.stat_source.GroupStats
+		assert_that( stats.GroupsJoinedCount, is_( 0 ) )
+		assert_that( stats.GroupsCreatedCount, is_( 1 ) )
+		assert_that( stats.UsersInGroupsCount, is_( 0 ) )
+		assert_that( stats.DistinctUsersInGroupsCount, is_( 0 ) )
+
+		# Add some friends
+		user0 = User.create_user( username='new_user0' )
+		user2 = User.create_user( username='new_user2' )
+		user3 = User.create_user( username='new_user3' )
+		user4 = User.create_user( username='new_user4' )
+		self._add_member( group_obj, user0 )
+		self._add_member( group_obj, user2 )
+		self._add_member( group_obj, user3 )
+		self._add_member( group_obj, user4 )
+
+		stats = self.stat_source.GroupStats
+		assert_that( stats.GroupsJoinedCount, is_( 0 ) )
+		assert_that( stats.GroupsCreatedCount, is_( 1 ) )
+		assert_that( stats.UsersInGroupsCount, is_( 4 ) )
+		assert_that( stats.DistinctUsersInGroupsCount, is_( 4 ) )
+
+		# New group; different owner; one new friend; one dupe friend.
+		user5 = User.create_user( username='new_user5' )
+		group_obj2 = self._get_group_obj( user4 )
+		self._add_member( group_obj2, user0 )
+		self._add_member( group_obj2, user5 )
+		group2 = _get_group( user, group_obj2 )
+		mock_get_joined.is_callable().returns( (group2,) )
+
+		stats = self.stat_source.GroupStats
+		assert_that( stats.GroupsJoinedCount, is_( 1 ) )
+		assert_that( stats.GroupsCreatedCount, is_( 1 ) )
+		assert_that( stats.UsersInGroupsCount, is_( 6 ) )
+		assert_that( stats.DistinctUsersInGroupsCount, is_( 5 ) )
+
 
 class TestAdapters( LearningNetworkTestCase ):
 

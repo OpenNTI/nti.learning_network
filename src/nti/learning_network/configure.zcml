@@ -67,6 +67,7 @@
 		root_interfaces=".interfaces.IStats
 						.interfaces.ITimeStats
 						.interfaces.INoteStats
+						.interfaces.IGroupStats
 						.interfaces.ISocialStats
 						.interfaces.ICommentStats
 						.interfaces.IThoughtCommentStats

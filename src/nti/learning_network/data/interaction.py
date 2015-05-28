@@ -13,6 +13,9 @@ from itertools import chain
 
 from zope import interface
 
+from nti.analytics.social import get_groups_joined
+from nti.analytics.social import get_groups_created
+
 from nti.analytics.blogs import get_replies_to_user as get_blog_replies
 from nti.analytics.blogs import get_user_replies_to_others as get_blog_user_replies_to_others
 from nti.analytics.boards import get_replies_to_user as get_forum_replies
@@ -26,6 +29,7 @@ from nti.common.property import readproperty
 
 from nti.learning_network.interfaces import IInteractionStatsSource
 
+from ..model import GroupStats
 from ..model import SocialStats
 
 @interface.implementer( IInteractionStatsSource )
@@ -84,13 +88,34 @@ class _AnalyticsInteractionStatsSource( object ):
 		reply_to_count = self._get_distinct_reply_to_count()
 		user_reply_count = self._get_distinct_user_reply_to_others_count()
 
-		# FIXME Determine what 'groups' counts are needed.
-		group_count = group_created_count = 0
 		social_stats = SocialStats( ContactsAddedCount=contact_count,
-									GroupsJoinedCount=group_count,
-									GroupsCreatedCount=group_created_count,
 									DistinctReplyToCount=reply_to_count,
 									DistinctUserReplyToOthersCount=user_reply_count )
 
 		return social_stats
 
+	@readproperty
+	def GroupStats( self ):
+		"""
+		Return the learning network group stats.
+		"""
+		groups_created = get_groups_created( self.user, self.timestamp )
+		groups_joined = get_groups_joined( self.user, self.timestamp )
+		created_count = len( groups_created )
+		joined_count = len( groups_joined )
+
+		user_count = 0
+		usernames = set()
+		for group in chain( groups_created, groups_joined ):
+			group_users = {x.username for x in group.Group if x is not None}
+			usernames.update( group_users )
+			user_count += len( group_users )
+
+		distinct_user_count = len( usernames )
+
+		group_stats = GroupStats( GroupsJoinedCount=joined_count,
+								GroupsCreatedCount=created_count,
+								UsersInGroupsCount=user_count,
+								DistinctUsersInGroupsCount=distinct_user_count )
+
+		return group_stats
