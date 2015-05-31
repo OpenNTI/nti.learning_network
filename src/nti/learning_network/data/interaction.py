@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*
 """
-$Id$
+.. $Id$
 """
-from __future__ import print_function, unicode_literals, absolute_import, division
 
+from __future__ import print_function, unicode_literals, absolute_import, division
 __docformat__ = "restructuredtext en"
 
 logger = __import__('logging').getLogger(__name__)
@@ -32,11 +32,12 @@ from nti.learning_network.interfaces import IInteractionStatsSource
 from ..model import GroupStats
 from ..model import SocialStats
 
-@interface.implementer( IInteractionStatsSource )
-class _AnalyticsInteractionStatsSource( object ):
+@interface.implementer(IInteractionStatsSource)
+class _AnalyticsInteractionStatsSource(object):
 	"""
 	An interaction stats source that pulls data from analytics.
 	"""
+
 	__external_class_name__ = "InteractionStatsSource"
 	mime_type = mimeType = 'application/vnd.nextthought.learningnetwork.interactionstatssource'
 
@@ -46,24 +47,24 @@ class _AnalyticsInteractionStatsSource( object ):
 		self.timestamp = timestamp
 
 	def _get_contacts_added_count(self):
-		contacts_added = get_contacts_added( self.user, self.timestamp )
-		return len( contacts_added )
+		contacts_added = get_contacts_added(self.user, self.timestamp)
+		return len(contacts_added)
 
 	def _get_distinct_reply_to_count(self):
-		blog_replies = get_blog_replies( self.user, self.timestamp )
-		note_replies = get_note_replies( self.user, self.course, self.timestamp )
-		forum_replies = get_forum_replies( self.user, self.course, self.timestamp )
-		usernames = set( (	x.user.username
-							for x in chain( blog_replies, note_replies, forum_replies )) )
-		return len( usernames )
+		blog_replies = get_blog_replies(self.user, self.timestamp)
+		note_replies = get_note_replies(self.user, self.course, self.timestamp)
+		forum_replies = get_forum_replies(self.user, self.course, self.timestamp)
+		usernames = set((x.user.username
+							for x in chain(blog_replies, note_replies, forum_replies)))
+		return len(usernames)
 
 	def _get_distinct_user_reply_to_others_count(self):
-		blog_replies = get_blog_user_replies_to_others( self.user, self.timestamp )
-		note_replies = get_note_user_replies_to_others( self.user, self.course, self.timestamp )
-		forum_replies = get_forum_user_replies_to_others( self.user, self.course, self.timestamp )
+		blog_replies = get_blog_user_replies_to_others(self.user, self.timestamp)
+		note_replies = get_note_user_replies_to_others(self.user, self.course, self.timestamp)
+		forum_replies = get_forum_user_replies_to_others(self.user, self.course, self.timestamp)
 
-		def get_user( obj, obj_field ):
-			obj = getattr( obj, obj_field )
+		def get_user(obj, obj_field):
+			obj = getattr(obj, obj_field)
 			in_reply = obj.inReplyTo
 			# This could be an assertion...
 			if in_reply and in_reply.creator:
@@ -72,15 +73,15 @@ class _AnalyticsInteractionStatsSource( object ):
 
 		# Build our set up
 		username_set = set()
-		for replies, obj_field in ( (blog_replies, 'Comment'),
+		for replies, obj_field in ((blog_replies, 'Comment'),
 									(note_replies, 'Note'),
-									(forum_replies, 'Comment' ) ):
-			username_set.update( (get_user(x, obj_field) for x in replies) )
-		username_set.discard( None )
-		return len( username_set )
+									(forum_replies, 'Comment')):
+			username_set.update((get_user(x, obj_field) for x in replies))
+		username_set.discard(None)
+		return len(username_set)
 
 	@readproperty
-	def SocialStats( self ):
+	def SocialStats(self):
 		"""
 		Return the learning network social stats.
 		"""
@@ -88,34 +89,34 @@ class _AnalyticsInteractionStatsSource( object ):
 		reply_to_count = self._get_distinct_reply_to_count()
 		user_reply_count = self._get_distinct_user_reply_to_others_count()
 
-		social_stats = SocialStats( ContactsAddedCount=contact_count,
+		social_stats = SocialStats(ContactsAddedCount=contact_count,
 									DistinctReplyToCount=reply_to_count,
-									DistinctUserReplyToOthersCount=user_reply_count )
+									DistinctUserReplyToOthersCount=user_reply_count)
 
 		return social_stats
 
 	@readproperty
-	def GroupStats( self ):
+	def GroupStats(self):
 		"""
 		Return the learning network group stats.
 		"""
-		groups_created = get_groups_created( self.user, self.timestamp )
-		groups_joined = get_groups_joined( self.user, self.timestamp )
-		created_count = len( groups_created )
-		joined_count = len( groups_joined )
+		groups_created = get_groups_created(self.user, self.timestamp)
+		groups_joined = get_groups_joined(self.user, self.timestamp)
+		created_count = len(groups_created)
+		joined_count = len(groups_joined)
 
 		user_count = 0
 		usernames = set()
-		for group in chain( groups_created, groups_joined ):
+		for group in chain(groups_created, groups_joined):
 			group_users = {x.username for x in group.Group if x is not None}
-			usernames.update( group_users )
-			user_count += len( group_users )
+			usernames.update(group_users)
+			user_count += len(group_users)
 
-		distinct_user_count = len( usernames )
+		distinct_user_count = len(usernames)
 
-		group_stats = GroupStats( GroupsJoinedCount=joined_count,
-								GroupsCreatedCount=created_count,
-								UsersInGroupsCount=user_count,
-								DistinctUsersInGroupsCount=distinct_user_count )
+		group_stats = GroupStats(GroupsJoinedCount=joined_count,
+								 GroupsCreatedCount=created_count,
+								 UsersInGroupsCount=user_count,
+								 DistinctUsersInGroupsCount=distinct_user_count)
 
 		return group_stats

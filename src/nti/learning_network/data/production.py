@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*
 """
-$Id$
+.. $Id$
 """
+
 from __future__ import print_function, unicode_literals, absolute_import, division
 __docformat__ = "restructuredtext en"
 
@@ -39,25 +40,25 @@ from nti.learning_network.model import SelfAssessmentStats
 from ._utils import get_std_dev
 from ._utils import get_count_stats
 
-def _get_stats( records, do_include=lambda _: True ):
+def _get_stats(records, do_include=lambda _: True):
 	"""
 	For records, return the stats, optionally filtering.
 	"""
 	stats = None
 	if records:
-		records = [x for x in records if do_include( x )]
-		stats = get_count_stats( records )
+		records = [x for x in records if do_include(x)]
+		stats = get_count_stats(records)
 	return stats
 
-def _has_whiteboard( obj ):
+def _has_whiteboard(obj):
 	body = obj.body
 	if body:
 		for body_part in body:
-			if ICanvas.providedBy( body_part ):
+			if ICanvas.providedBy(body_part):
 				return True
 	return False
 
-def _get_post_stats( records, clazz, obj_field, length_field ):
+def _get_post_stats(records, clazz, obj_field, length_field):
 	post_stats = None
 
 	if records:
@@ -82,24 +83,24 @@ def _get_post_stats( records, clazz, obj_field, length_field ):
 				distinct_fave_count += 1
 				total_faves += post.FavoriteCount
 
-			post_length = getattr( post, length_field, None )
+			post_length = getattr(post, length_field, None)
 
 			if post_length is not None:
-				lengths.append( post_length )
+				lengths.append(post_length)
 				total_length += post_length
 
-			obj = getattr( post, obj_field, None )
+			obj = getattr(post, obj_field, None)
 
 			if obj is not None:
 				# Waking up object, expensive if we're
 				# waking up every child?
-				recursive_child_count += len( obj.referents )
+				recursive_child_count += len(obj.referents)
 
-				if _has_whiteboard( obj ):
+				if _has_whiteboard(obj):
 					contains_board_count += 1
 
 		average_length = total_length / count
-		std_dev_length = get_std_dev( lengths, total_length )
+		std_dev_length = get_std_dev(lengths, total_length)
 
 		post_stats = clazz( Count=count,
 							ReplyCount=reply_count,
@@ -111,12 +112,12 @@ def _get_post_stats( records, clazz, obj_field, length_field ):
 							RecursiveChildrenCount=recursive_child_count,
 							StandardDeviationLength=std_dev_length,
 							AverageLength=average_length,
-							ContainsWhiteboardCount=contains_board_count )
+							ContainsWhiteboardCount=contains_board_count)
 
 	return post_stats
 
-@interface.implementer( IProductionStatsSource )
-class _AnalyticsProductionStatsSource( object ):
+@interface.implementer(IProductionStatsSource)
+class _AnalyticsProductionStatsSource(object):
 	"""
 	A production stats source that pulls data from analytics.
 	"""
@@ -129,13 +130,13 @@ class _AnalyticsProductionStatsSource( object ):
 		self.timestamp = timestamp
 
 	@readproperty
-	def AssignmentStats( self ):
+	def AssignmentStats(self):
 		"""
 		Return the learning network stats for assignments, optionally
 		with a course or timestamp filter.
 		"""
-		assignments = get_assignments_for_user( self.user, course=self.course,
-												timestamp=self.timestamp )
+		assignments = get_assignments_for_user(self.user, course=self.course,
+											   timestamp=self.timestamp)
 		stats = None
 
 		if assignments:
@@ -143,104 +144,104 @@ class _AnalyticsProductionStatsSource( object ):
 			id_set = set()
 			for assignment_record in assignments:
 				count += 1
-				id_set.add( assignment_record.AssignmentId )
+				id_set.add(assignment_record.AssignmentId)
 				if assignment_record.IsLate:
 					late_count += 1
 
 				assignment = assignment_record.Submission.Assignment
 
-				if IQTimedAssignment.providedBy( assignment ):
+				if IQTimedAssignment.providedBy(assignment):
 					timed_count += 1
 					if assignment_record.IsLate:
 						timed_late_count += 1
 
-			unique_count = len( id_set )
+			unique_count = len(id_set)
 
-			stats = AssignmentStats( Count=count,
+			stats = AssignmentStats(Count=count,
 									UniqueCount=unique_count,
 									AssignmentLateCount=late_count,
 									TimedAssignmentCount=timed_count,
-									TimedAssignmentLateCount=timed_late_count )
+									TimedAssignmentLateCount=timed_late_count)
 		return stats
 
 	@readproperty
-	def SelfAssessmentStats( self ):
+	def SelfAssessmentStats(self):
 		"""
 		Return the learning network stats for self-assessments, optionally
 		with a course or timestamp filter.
 		"""
-		assessments = get_self_assessments_for_user( self.user, course=self.course,
-													timestamp=self.timestamp )
+		assessments = get_self_assessments_for_user(self.user, course=self.course,
+													timestamp=self.timestamp)
 		stats = None
 
 		if assessments:
-			count = sum( (1 for x in assessments) )
+			count = sum((1 for x in assessments))
 			assessment_ids = {x.AssessmentId for x in assessments}
-			unique_count = len( assessment_ids )
+			unique_count = len(assessment_ids)
 
-			stats = SelfAssessmentStats( Count=count, UniqueCount=unique_count )
+			stats = SelfAssessmentStats(Count=count, UniqueCount=unique_count)
 		return stats
 
 	@readproperty
-	def CommentStats( self ):
+	def CommentStats(self):
 		"""
 		Return the learning network stats for comments, optionally
 		with a course or timestamp filter.
 		"""
-		comment_records = get_forum_comments_for_user( self.user, course=self.course,
-													timestamp=self.timestamp )
-		stats = _get_post_stats( comment_records, CommentStats,
-								'Comment', 'CommentLength' )
+		comment_records = get_forum_comments_for_user(self.user, course=self.course,
+													  timestamp=self.timestamp)
+		stats = _get_post_stats(comment_records, CommentStats,
+								'Comment', 'CommentLength')
 		return stats
 
 	@readproperty
-	def ThoughtStats( self ):
+	def ThoughtStats(self):
 		"""
 		Return the learning network stats for thoughts, optionally
 		with a timestamp filter.
 		"""
-		# TODO Do we need to expand these stats beyond counts?
-		blog_records = get_blogs( self.user, timestamp=self.timestamp )
-		return _get_stats( blog_records )
+		# TODO: Do we need to expand these stats beyond counts?
+		blog_records = get_blogs(self.user, timestamp=self.timestamp)
+		return _get_stats(blog_records)
 
 	@readproperty
-	def ThoughtCommentStats( self ):
+	def ThoughtCommentStats(self):
 		"""
 		Return the learning network stats for thought comments, optionally
 		with a timestamp filter.
 		"""
-		comment_records = get_blog_comments( self.user, timestamp=self.timestamp )
-		stats = _get_post_stats( comment_records, ThoughtCommentStats,
-								'Comment', 'CommentLength' )
+		comment_records = get_blog_comments(self.user, timestamp=self.timestamp)
+		stats = _get_post_stats(comment_records, ThoughtCommentStats,
+								'Comment', 'CommentLength')
 		return stats
 
 	@readproperty
-	def NoteStats( self ):
+	def NoteStats(self):
 		"""
 		Return the learning network stats for notes, optionally
 		with a course or timestamp filter.
 		"""
-		note_records = get_notes( self.user, course=self.course,
-									timestamp=self.timestamp )
-		stats = _get_post_stats( note_records, NoteStats, 'Note', 'NoteLength' )
+		note_records = get_notes(self.user, course=self.course,
+								 timestamp=self.timestamp)
+		stats = _get_post_stats(note_records, NoteStats, 'Note', 'NoteLength')
 		return stats
 
 	@readproperty
-	def HighlightStats( self ):
+	def HighlightStats(self):
 		"""
 		Return the learning network stats for highlights, optionally
 		with a course or timestamp filter.
 		"""
-		highlight_records = get_highlights( self.user, course=self.course,
-										timestamp=self.timestamp )
-		return _get_stats( highlight_records )
+		highlight_records = get_highlights(self.user, course=self.course,
+										   timestamp=self.timestamp)
+		return _get_stats(highlight_records)
 
 	@readproperty
-	def BookmarkStats( self ):
+	def BookmarkStats(self):
 		"""
 		Return the learning network stats for bookmarks, optionally
 		with a course or timestamp filter.
 		"""
-		blog_records = get_bookmarks( self.user, course=self.course,
-										timestamp=self.timestamp )
-		return _get_stats( blog_records )
+		blog_records = get_bookmarks(self.user, course=self.course,
+									 timestamp=self.timestamp)
+		return _get_stats(blog_records)
