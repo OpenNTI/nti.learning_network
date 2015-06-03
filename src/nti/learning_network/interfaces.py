@@ -12,6 +12,8 @@ from zope import interface
 from nti.schema.field import Float
 from nti.schema.field import Number
 from nti.schema.field import Object
+from nti.schema.field import DateTime
+from nti.schema.field import ValidTextLine
 
 class IStats(interface.Interface):
 	"""
@@ -153,5 +155,22 @@ class IInteractionStatsSource(interface.Interface):
 	SocialStats = Object(ISocialStats,
 							title="Stats on contextual interaction with others.")
 
-	GroupStats = Object(IGroupStats,
-						title="Stats on contextual group interaction with others.")
+	GroupStats = Object( IGroupStats,
+							title="Stats on contextual group interaction with others." )
+
+class IConnectionsSource( interface.Interface ):
+	"""
+	Defines user-to-user connections.
+	"""
+	def get_connections(self, timestamp=None):
+		"""
+		Returns the connections for the context for a given timestamp.
+		"""
+
+class IConnection( interface.Interface ):
+	"""
+	Defines a connection between users.
+	"""
+	Source = ValidTextLine( title="The user who intiated the connection.", required=True )
+	Target = ValidTextLine( title="The (possibly passive) recipient of the connection.", required=True )
+	Timestamp = DateTime( title=u"The timestamp when this connection was created.", required=False )

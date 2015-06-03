@@ -1,0 +1,62 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*
+"""
+$Id$
+"""
+from __future__ import print_function, unicode_literals, absolute_import, division
+
+__docformat__ = "restructuredtext en"
+
+logger = __import__('logging').getLogger(__name__)
+
+from itertools import chain
+
+from zope import interface
+
+from nti.analytics.boards import get_forum_comments
+from nti.analytics.resource_tags import get_notes
+
+from nti.learning_network.interfaces import IConnectionsSource
+from nti.learning_network.model import Connection
+
+@interface.implementer( IConnectionsSource )
+class _AnalyticsConnections( object ):
+	"""
+	A connections source that pulls data from analytics.
+	"""
+	def __init__( self, context ):
+		self.course = context
+
+	def _get_connection_objs( self, replies, obj_attr ):
+		results = []
+		for reply in replies:
+			if reply.IsReply:
+				replied_to = getattr( reply, obj_attr, None )
+				if replied_to:
+					source = reply.user.username
+					target = replied_to.creator.username
+					if source != target:
+						timestamp = reply.timestamp
+						new_connection = Connection( Source=source,
+													Target=target,
+													Timestamp=timestamp )
+						results.append( new_connection )
+		return results
+
+	def _get_notes( self, timestamp=None ):
+		notes = get_notes( course=self.course, timestamp=timestamp )
+		results = self._get_connection_objs( notes, 'Note' )
+		return results
+
+	def _get_forum_comments( self, timestamp=None ):
+		comments = get_forum_comments( course=self.course, timestamp=timestamp )
+		results = self._get_connection_objs( comments, 'Comment' )
+		return results
+
+	def get_connections( self, timestamp=None ):
+		notes = self._get_notes( timestamp )
+		comments = self._get_forum_comments( timestamp )
+		return chain( notes, comments )
+
+
+

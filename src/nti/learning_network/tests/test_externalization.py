@@ -10,6 +10,8 @@ __docformat__ = "restructuredtext en"
 from hamcrest import has_entry
 from hamcrest import assert_that
 
+from datetime import datetime
+
 from nti.externalization.externalization import toExternalObject
 
 from nti.testing.matchers import verifiably_provides
@@ -23,6 +25,7 @@ from ..interfaces import ICommentStats
 from ..interfaces import IAssignmentStats
 from ..interfaces import IThoughtCommentStats
 from ..interfaces import ISelfAssessmentStats
+from ..interfaces import IConnection
 
 from ..model import Stats
 from ..model import NoteStats
@@ -33,6 +36,7 @@ from ..model import CommentStats
 from ..model import AssignmentStats
 from ..model import ThoughtCommentStats
 from ..model import SelfAssessmentStats
+from ..model import Connection
 
 from . import LearningNetworkTestCase
 
@@ -187,3 +191,18 @@ class TestExternalization( LearningNetworkTestCase ):
 		assert_that(ext_obj, has_entry('GroupsCreatedCount', group_created_count ))
 		assert_that(ext_obj, has_entry('UsersInGroupsCount', user_count ))
 		assert_that(ext_obj, has_entry('DistinctUsersInGroupsCount', distinct_user_count ))
+
+	def test_connection(self):
+		source = 'bobodenkirk'
+		target = 'davidcross'
+		now = datetime.utcnow()
+		connection = Connection( Source=source,
+								Target=target,
+								Timestamp=now )
+		assert_that( connection, verifiably_provides( IConnection ) )
+
+		ext_obj = toExternalObject( connection )
+		assert_that(ext_obj, has_entry('Class', Connection.__external_class_name__ ))
+		assert_that(ext_obj, has_entry('MimeType', Connection.mimeType ))
+		assert_that(ext_obj, has_entry('Source', source ))
+		assert_that(ext_obj, has_entry('Target', target ))

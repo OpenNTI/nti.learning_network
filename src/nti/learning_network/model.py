@@ -25,6 +25,7 @@ from nti.learning_network.interfaces import ICommentStats
 from nti.learning_network.interfaces import IAssignmentStats
 from nti.learning_network.interfaces import IThoughtCommentStats
 from nti.learning_network.interfaces import ISelfAssessmentStats
+from nti.learning_network.interfaces import IConnection
 
 @EqHash('count')
 @interface.implementer(IStats)
@@ -98,6 +99,16 @@ class GroupStats(SchemaConfigured):
 
 	__external_class_name__ = "GroupStats"
 	mime_type = mimeType = 'application/vnd.nextthought.learningnetwork.groupstats'
+
+	def __init__(self, *args, **kwargs):
+		SchemaConfigured.__init__(self, *args, **kwargs)
+
+@EqHash( 'Source', 'Target' )
+@interface.implementer(IConnection)
+class Connection( SchemaConfigured ):
+
+	__external_class_name__ = "Connection"
+	mime_type = mimeType = 'application/vnd.nextthought.learningnetwork.connection'
 
 	def __init__(self, *args, **kwargs):
 		SchemaConfigured.__init__(self, *args, **kwargs)
