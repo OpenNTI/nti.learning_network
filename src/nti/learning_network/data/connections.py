@@ -42,12 +42,12 @@ class _AnalyticsConnections( object ):
 		return results
 
 	def _get_notes( self, timestamp=None ):
-		notes = get_notes( course=self.course, timestamp=timestamp )
+		notes = get_notes( course=self.course, timestamp=timestamp, replies_only=True )
 		results = self._get_connection_objs( notes )
 		return results
 
 	def _get_forum_comments( self, timestamp=None ):
-		comments = get_forum_comments( course=self.course, timestamp=timestamp )
+		comments = get_forum_comments( course=self.course, timestamp=timestamp, replies_only=True )
 		results = self._get_connection_objs( comments )
 		return results
 
