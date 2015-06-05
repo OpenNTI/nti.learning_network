@@ -38,7 +38,7 @@ from nti.learning_network.tests import LearningNetworkTestCase
 
 course = CourseInstance()
 
-def _get_note( user, obj ):
+def _get_note( user, obj, replied_to_user=None ):
 	result = AnalyticsNote( Note=obj,
 							user=user,
 							timestamp=datetime.utcnow(),
@@ -48,7 +48,8 @@ def _get_note( user, obj ):
 							Flagged=False,
 							LikeCount=2,
 							FavoriteCount=3,
-							IsReply=False )
+							IsReply=False,
+							RepliedToUser=replied_to_user )
 	return result
 
 def _get_group( user, group ):
@@ -63,13 +64,12 @@ class TestInteraction( LearningNetworkTestCase ):
 		self.user = None
 		self.stat_source = _AnalyticsInteractionStatsSource( self.user )
 
-	def _get_note_obj(self, user, reply_to=None):
+	def _get_note_obj(self, user):
 		note = Note()
 		note._ds_intid = 123456
 		note.body = ('test222',)
 		note.creator = user
 		note.containerId = 'tag:nti:foo'
-		note.inReplyTo = reply_to
 		user.addContainedObject( note )
 		return note
 
@@ -134,8 +134,8 @@ class TestInteraction( LearningNetworkTestCase ):
 
 		# Multiple reply-to notes
 		user2 = User.create_user( username='new_user2' )
-		note_obj2 = self._get_note_obj( user2, reply_to=note_obj1 )
-		note2 = _get_note( user2, note_obj2 )
+		note_obj2 = self._get_note_obj( user2 )
+		note2 = _get_note( user2, note_obj2, replied_to_user=user )
 		mock_note.is_callable().returns( (note, note2) )
 		stats = self.stat_source.SocialStats
 		assert_that( stats, not_none() )
@@ -161,8 +161,8 @@ class TestInteraction( LearningNetworkTestCase ):
 
 		# User reply - multiple (with one empty)
 		user3 = User.create_user( username='new_user3' )
-		note_obj3 = self._get_note_obj( user3, reply_to=note_obj2 )
-		note3 = _get_note( user3, note_obj3 )
+		note_obj3 = self._get_note_obj( user3 )
+		note3 = _get_note( user3, note_obj3, replied_to_user=user2 )
 		mock_note_user_replies.is_callable().returns( ( note, note2, note, note3, note3 ) )
 		stats = self.stat_source.SocialStats
 		assert_that( stats, not_none() )

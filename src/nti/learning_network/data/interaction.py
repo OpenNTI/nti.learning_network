@@ -63,22 +63,13 @@ class _AnalyticsInteractionStatsSource(object):
 		note_replies = get_note_user_replies_to_others(self.user, self.course, self.timestamp)
 		forum_replies = get_forum_user_replies_to_others(self.user, self.course, self.timestamp)
 
-		def get_user(obj, obj_field):
-			obj = getattr(obj, obj_field)
-			in_reply = obj.inReplyTo
-			# This could be an assertion...
-			if in_reply and in_reply.creator:
-				return in_reply.creator.username
-			return None
-
 		# Build our set up
 		username_set = set()
-		for replies, obj_field in ((blog_replies, 'Comment'),
-									(note_replies, 'Note'),
-									(forum_replies, 'Comment')):
-			username_set.update((get_user(x, obj_field) for x in replies))
-		username_set.discard(None)
-		return len(username_set)
+		for obj in chain( blog_replies, note_replies, forum_replies ):
+			if obj.RepliedToUser:
+				username_set.add( obj.RepliedToUser.username )
+		username_set.discard( None )
+		return len( username_set )
 
 	@readproperty
 	def SocialStats(self):
