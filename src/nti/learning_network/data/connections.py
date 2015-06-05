@@ -27,30 +27,28 @@ class _AnalyticsConnections( object ):
 	def __init__( self, context ):
 		self.course = context
 
-	def _get_connection_objs( self, replies, obj_attr ):
+	def _get_connection_objs( self, replies ):
 		results = []
 		for reply in replies:
-			if reply.IsReply:
-				replied_to = getattr( reply, obj_attr, None )
-				if replied_to:
-					source = reply.user.username
-					target = replied_to.creator.username
-					if source != target:
-						timestamp = reply.timestamp
-						new_connection = Connection( Source=source,
-													Target=target,
-													Timestamp=timestamp )
-						results.append( new_connection )
+			if reply.IsReply and reply.RepliedToUser:
+				target = reply.RepliedToUser.username
+				source = reply.user.username
+				if source != target:
+					timestamp = reply.timestamp
+					new_connection = Connection( Source=source,
+												Target=target,
+												Timestamp=timestamp )
+					results.append( new_connection )
 		return results
 
 	def _get_notes( self, timestamp=None ):
 		notes = get_notes( course=self.course, timestamp=timestamp )
-		results = self._get_connection_objs( notes, 'Note' )
+		results = self._get_connection_objs( notes )
 		return results
 
 	def _get_forum_comments( self, timestamp=None ):
 		comments = get_forum_comments( course=self.course, timestamp=timestamp )
-		results = self._get_connection_objs( comments, 'Comment' )
+		results = self._get_connection_objs( comments )
 		return results
 
 	def get_connections( self, timestamp=None ):
