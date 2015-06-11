@@ -27,7 +27,7 @@ from nti.analytics.resource_tags import get_bookmarks
 
 from nti.common.property import readproperty
 
-from nti.dataserver.core.interfaces import ICanvas
+from nti.dataserver_core.interfaces import ICanvas
 
 from nti.learning_network.interfaces import IProductionStatsSource
 
