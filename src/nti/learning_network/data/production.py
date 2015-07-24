@@ -44,10 +44,9 @@ def _get_stats(records, do_include=lambda _: True):
 	"""
 	For records, return the stats, optionally filtering.
 	"""
-	stats = None
 	if records:
 		records = [x for x in records if do_include(x)]
-		stats = get_count_stats(records)
+	stats = get_count_stats(records)
 	return stats
 
 def _has_whiteboard(obj):
@@ -59,13 +58,13 @@ def _has_whiteboard(obj):
 	return False
 
 def _get_post_stats(records, clazz, obj_field, length_field):
-	post_stats = None
+	count = reply_count = top_level_count = 0
+	distinct_like_count = distinct_fave_count = 0
+	total_likes = total_faves = total_length = 0
+	recursive_child_count = contains_board_count = 0
+	average_length = std_dev_length = 0
 
 	if records:
-		count = reply_count = top_level_count = 0
-		distinct_like_count = distinct_fave_count = 0
-		total_likes = total_faves = total_length = 0
-		recursive_child_count = contains_board_count = 0
 		lengths = []
 
 		for post in records:
@@ -102,17 +101,17 @@ def _get_post_stats(records, clazz, obj_field, length_field):
 		average_length = total_length / count
 		std_dev_length = get_std_dev(lengths, total_length)
 
-		post_stats = clazz( Count=count,
-							ReplyCount=reply_count,
-							TopLevelCount=top_level_count,
-							DistinctPostsLiked=distinct_like_count,
-							DistinctPostsFavorited=distinct_fave_count,
-							TotalLikes=total_likes,
-							TotalFavorites=total_faves,
-							RecursiveChildrenCount=recursive_child_count,
-							StandardDeviationLength=std_dev_length,
-							AverageLength=average_length,
-							ContainsWhiteboardCount=contains_board_count)
+	post_stats = clazz( Count=count,
+						ReplyCount=reply_count,
+						TopLevelCount=top_level_count,
+						DistinctPostsLiked=distinct_like_count,
+						DistinctPostsFavorited=distinct_fave_count,
+						TotalLikes=total_likes,
+						TotalFavorites=total_faves,
+						RecursiveChildrenCount=recursive_child_count,
+						StandardDeviationLength=std_dev_length,
+						AverageLength=average_length,
+						ContainsWhiteboardCount=contains_board_count)
 
 	return post_stats
 
@@ -137,10 +136,10 @@ class _AnalyticsProductionStatsSource(object):
 		"""
 		assignments = get_assignments_for_user(self.user, course=self.course,
 											   timestamp=self.timestamp)
-		stats = None
+		count = unique_count = 0
+		late_count = timed_count = timed_late_count = 0
 
 		if assignments:
-			count = timed_count = late_count = timed_late_count = 0
 			id_set = set()
 			for assignment_record in assignments:
 				count += 1
@@ -157,11 +156,11 @@ class _AnalyticsProductionStatsSource(object):
 
 			unique_count = len(id_set)
 
-			stats = AssignmentStats(Count=count,
-									UniqueCount=unique_count,
-									AssignmentLateCount=late_count,
-									TimedAssignmentCount=timed_count,
-									TimedAssignmentLateCount=timed_late_count)
+		stats = AssignmentStats(Count=count,
+								UniqueCount=unique_count,
+								AssignmentLateCount=late_count,
+								TimedAssignmentCount=timed_count,
+								TimedAssignmentLateCount=timed_late_count)
 		return stats
 
 	@readproperty
@@ -172,14 +171,14 @@ class _AnalyticsProductionStatsSource(object):
 		"""
 		assessments = get_self_assessments_for_user(self.user, course=self.course,
 													timestamp=self.timestamp)
-		stats = None
+		count = unique_count = 0
 
 		if assessments:
 			count = sum((1 for x in assessments))
 			assessment_ids = {x.AssessmentId for x in assessments}
 			unique_count = len(assessment_ids)
 
-			stats = SelfAssessmentStats(Count=count, UniqueCount=unique_count)
+		stats = SelfAssessmentStats(Count=count, UniqueCount=unique_count)
 		return stats
 
 	@readproperty

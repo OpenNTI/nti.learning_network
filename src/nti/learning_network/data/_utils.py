@@ -29,26 +29,27 @@ def get_count_stats(records):
 	"""
 	For a sequence of records, return Stats.
 	"""
-	stats = None
+	count = 0
 
 	if records is not None:
 		count = len(records)
-		stats = Stats(Count=count)
+	stats = Stats(Count=count)
 	return stats
 
 def get_time_stats(time_lengths):
 	"""
 	For a sequence of time lengths, return the TimeStats.
 	"""
-	stats = None
+	total_time = std_dev = average = count = 0
 
 	if time_lengths:
 		total_time = sum(time_lengths)
 		count = len(time_lengths)
 		average = total_time / count
 		std_dev = get_std_dev(time_lengths, total_time)
-		stats = TimeStats(AggregateTime=total_time,
-							StandardDeviationDuration=std_dev,
-							AverageDuration=average,
-							Count=count)
+
+	stats = TimeStats(AggregateTime=total_time,
+						StandardDeviationDuration=std_dev,
+						AverageDuration=average,
+						Count=count)
 	return stats

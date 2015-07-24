@@ -151,11 +151,13 @@ class TestProduction( LearningNetworkTestCase ):
 		# Empty
 		mock_get_assignments.is_callable().returns( None )
 		stats = self.stat_source.AssignmentStats
-		assert_that( stats, none() )
+		assert_that( stats.Count, is_( 0 ))
+		assert_that( stats.UniqueCount, is_( 0 ) )
 
 		mock_get_assignments.is_callable().returns( () )
 		stats = self.stat_source.AssignmentStats
-		assert_that( stats, none() )
+		assert_that( stats.Count, is_( 0 ))
+		assert_that( stats.UniqueCount, is_( 0 ) )
 
 		# Single
 		assignment_id = 'assignment1'
@@ -217,11 +219,13 @@ class TestProduction( LearningNetworkTestCase ):
 		# Empty
 		mock_get_assessments.is_callable().returns( None )
 		stats = self.stat_source.SelfAssessmentStats
-		assert_that( stats, none() )
+		assert_that( stats.Count, is_( 0 ))
+		assert_that( stats.UniqueCount, is_( 0 ) )
 
 		mock_get_assessments.is_callable().returns( () )
 		stats = self.stat_source.SelfAssessmentStats
-		assert_that( stats, none() )
+		assert_that( stats.Count, is_( 0 ))
+		assert_that( stats.UniqueCount, is_( 0 ) )
 
 		# Single
 		assignment_id = 'assignment1'
@@ -260,13 +264,15 @@ class TestProduction( LearningNetworkTestCase ):
 		# Empty
 		mock_get_blogs.is_callable().returns( None )
 		mock_get_blog_comments.is_callable().returns( None )
-		assert_that( self.stat_source.ThoughtStats, none() )
-		assert_that( self.stat_source.ThoughtCommentStats, none() )
+		assert_that( self.stat_source.ThoughtStats.Count, is_( 0 ) )
+		assert_that( self.stat_source.ThoughtCommentStats.Count, is_( 0 ) )
+		assert_that( self.stat_source.ThoughtCommentStats.ReplyCount, is_( 0 ) )
 
 		mock_get_blogs.is_callable().returns( () )
 		mock_get_blog_comments.is_callable().returns( () )
-		assert_that( self.stat_source.ThoughtStats, none() )
-		assert_that( self.stat_source.ThoughtCommentStats, none() )
+		assert_that( self.stat_source.ThoughtStats.Count, is_( 0 ) )
+		assert_that( self.stat_source.ThoughtCommentStats.Count, is_( 0 ) )
+		assert_that( self.stat_source.ThoughtCommentStats.ReplyCount, is_( 0 ) )
 
 		# Blog, comment with one reply, and that reply
 		blog_container = PersonalBlog()
@@ -327,10 +333,10 @@ class TestProduction( LearningNetworkTestCase ):
 	def test_highlight_stats( self, mock_get_highlights ):
 		# Empty
 		mock_get_highlights.is_callable().returns( None )
-		assert_that( self.stat_source.HighlightStats, none() )
+		assert_that( self.stat_source.HighlightStats.Count, is_( 0 ) )
 
 		mock_get_highlights.is_callable().returns( () )
-		assert_that( self.stat_source.HighlightStats, none() )
+		assert_that( self.stat_source.HighlightStats.Count, is_( 0 ) )
 
 		# We simply get counts....
 		highlights = [object()]
@@ -345,10 +351,10 @@ class TestProduction( LearningNetworkTestCase ):
 	def test_bookmark_stats( self, mock_get_bookmarks ):
 		# Empty
 		mock_get_bookmarks.is_callable().returns( None )
-		assert_that( self.stat_source.BookmarkStats, none() )
+		assert_that( self.stat_source.BookmarkStats.Count, is_( 0 ) )
 
 		mock_get_bookmarks.is_callable().returns( () )
-		assert_that( self.stat_source.BookmarkStats, none() )
+		assert_that( self.stat_source.BookmarkStats.Count, is_( 0 ) )
 
 		# We simply get counts....
 		bookmarks = [object()]

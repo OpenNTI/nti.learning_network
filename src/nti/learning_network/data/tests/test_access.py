@@ -41,17 +41,20 @@ class TestAccess( unittest.TestCase ):
 		# Empty
 		mock_get_sessions.is_callable().returns( None )
 		platform_stats = self.stat_source.PlatformStats
-		assert_that( platform_stats, none() )
+		assert_that( platform_stats.average, is_( 0 ) )
+		assert_that( platform_stats.count, is_( 0 ) )
 
 		mock_get_sessions.is_callable().returns( [] )
 		platform_stats = self.stat_source.PlatformStats
-		assert_that( platform_stats, none() )
+		assert_that( platform_stats.average, is_( 0 ) )
+		assert_that( platform_stats.count, is_( 0 ) )
 
 		# Without end time
 		records = [ MockTimeRecord( 10, None ), MockTimeRecord( 10, None ) ]
 		mock_get_sessions.is_callable().returns( records )
 		platform_stats = self.stat_source.PlatformStats
-		assert_that( platform_stats, none() )
+		assert_that( platform_stats.average, is_( 0 ) )
+		assert_that( platform_stats.count, is_( 0 ) )
 
 		# Single valid
 		records = [ MockTimeRecord( 10, 1 ), MockTimeRecord( 10, 0 ) ]
