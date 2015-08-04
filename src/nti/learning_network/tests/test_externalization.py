@@ -27,7 +27,7 @@ from ..interfaces import IThoughtCommentStats
 from ..interfaces import ISelfAssessmentStats
 from ..interfaces import IConnection
 
-from ..model import Stats
+from ..model import CountStats
 from ..model import NoteStats
 from ..model import TimeStats
 from ..model import GroupStats
@@ -44,12 +44,12 @@ class TestExternalization( LearningNetworkTestCase ):
 
 	def test_stats(self):
 		count = 10
-		count_stats = Stats( Count=count )
+		count_stats = CountStats( Count=count )
 		assert_that(count_stats, verifiably_provides( IStats ) )
 
 		ext_obj = toExternalObject(count_stats)
-		assert_that(ext_obj, has_entry('Class', Stats.__external_class_name__ ))
-		assert_that(ext_obj, has_entry('MimeType', Stats.mimeType ))
+		assert_that(ext_obj, has_entry('Class', CountStats.__external_class_name__ ))
+		assert_that(ext_obj, has_entry('MimeType', CountStats.mimeType ))
 		assert_that(ext_obj, has_entry('Count', count ))
 
 	def test_time_stats(self):
