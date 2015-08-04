@@ -16,7 +16,7 @@ from nti.common.property import alias
 from nti.schema.schema import EqHash
 from nti.schema.field import SchemaConfigured
 
-from nti.learning_network.interfaces import IStats
+from nti.learning_network.interfaces import ICountStats
 from nti.learning_network.interfaces import INoteStats
 from nti.learning_network.interfaces import ITimeStats
 from nti.learning_network.interfaces import IGroupStats
@@ -28,11 +28,11 @@ from nti.learning_network.interfaces import ISelfAssessmentStats
 from nti.learning_network.interfaces import IConnection
 
 @EqHash('count')
-@interface.implementer(IStats)
-class Stats(SchemaConfigured):
+@interface.implementer(ICountStats)
+class CountStats(SchemaConfigured):
 
 	count = alias('Count')
-	__external_class_name__ = "Stats"
+	__external_class_name__ = "CountStats"
 	mime_type = mimeType = 'application/vnd.nextthought.learningnetwork.stats'
 
 	def __init__(self, *args, **kwargs):
@@ -40,7 +40,7 @@ class Stats(SchemaConfigured):
 
 @EqHash('aggregate_time', 'average', 'std_dev', 'count')
 @interface.implementer(ITimeStats)
-class TimeStats(Stats):
+class TimeStats(CountStats):
 	aggregate_time = alias('AggregateTime')
 	std_dev = alias('StandardDeviationDuration')
 	average = alias('AverageDuration')
@@ -49,14 +49,14 @@ class TimeStats(Stats):
 
 @EqHash('Count', 'UniqueCount')
 @interface.implementer(ISelfAssessmentStats)
-class SelfAssessmentStats(Stats):
+class SelfAssessmentStats(CountStats):
 	__external_class_name__ = "SelfAssessmentStats"
 	mime_type = mimeType = 'application/vnd.nextthought.learningnetwork.selfassessmentstats'
 
 @EqHash('Count', 'UniqueCount', 'AssignmentLateCount',
 		'TimedAssignmentCount', 'TimedAssignmentLateCount')
 @interface.implementer(IAssignmentStats)
-class AssignmentStats(Stats):
+class AssignmentStats(CountStats):
 	__external_class_name__ = "AssignmentStats"
 	mime_type = mimeType = 'application/vnd.nextthought.learningnetwork.assignmentstats'
 
@@ -64,7 +64,7 @@ class AssignmentStats(Stats):
 		'DistinctPostsLiked', 'DistinctPostsFavorited',
 		'TotalLikes', 'TotalFavorites', 'RecursiveChildrenCount',
 		'StandardDeviationLength', 'AverageLength', 'ContainsWhiteboardCount')
-class PostStats(Stats):
+class PostStats(CountStats):
 	pass
 
 @interface.implementer(INoteStats)

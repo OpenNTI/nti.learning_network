@@ -17,12 +17,17 @@ from nti.schema.field import ValidTextLine
 
 class IStats(interface.Interface):
 	"""
+	A stats object.
+	"""
+
+class ICountStats(IStats):
+	"""
 	A container for holding the count of events.
 	"""
 
 	Count = Number(title="Count", required=True)
 
-class IPostMixin(IStats):
+class IPostMixin(ICountStats):
 	TopLevelCount = Number(title="The number of top level posts.", required=True)
 	ReplyCount = Number(title="The number of reply posts.", required=True)
 	DistinctPostsLiked = Number(title="The number of distinct posts liked.", required=True)
@@ -49,7 +54,7 @@ class IThoughtCommentStats(IPostMixin):
 	A container for holding various comment stats.
 	"""
 
-class ITimeStats(IStats):
+class ITimeStats(ICountStats):
 	"""
 	A container for holding various time stats.
 	"""
@@ -57,7 +62,7 @@ class ITimeStats(IStats):
 	StandardDeviationDuration = Float(title="Standard deviation duration", required=False)
 	AverageDuration = Float(title="Average duration", required=True)
 
-class IUniqueStatsMixin(IStats):
+class IUniqueStatsMixin(ICountStats):
 	"""
 	Establishes uniqueness counts.
 	"""
@@ -76,7 +81,7 @@ class IAssignmentStats(IUniqueStatsMixin):
 	TimedAssignmentCount = Number(title="Unique assignment count", required=True)
 	TimedAssignmentLateCount = Number(title="Late assignment timed count", required=True)
 
-class ISocialStats(interface.Interface):
+class ISocialStats(IStats):
 	"""
 	A container for holding various social statistics.
 	"""
@@ -84,7 +89,7 @@ class ISocialStats(interface.Interface):
 	DistinctReplyToCount = Number(title="Number of distinct users replying to user.", required=True)
 	DistinctUserReplyToOthersCount = Number(title="Number of distinct users replied to.", required=True)
 
-class IGroupStats(interface.Interface):
+class IGroupStats(IStats):
 	"""
 	A container for holding various group statistics.
 	"""
@@ -158,7 +163,7 @@ class IInteractionStatsSource(interface.Interface):
 	GroupStats = Object( IGroupStats,
 							title="Stats on contextual group interaction with others." )
 
-class IConnectionsSource( interface.Interface ):
+class IConnectionsSource( IStats ):
 	"""
 	Defines user-to-user connections.
 	"""
