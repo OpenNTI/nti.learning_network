@@ -123,10 +123,11 @@ class _AnalyticsProductionStatsSource(object):
 	__external_class_name__ = "ProductionStatsSource"
 	mime_type = mimeType = 'application/vnd.nextthought.learningnetwork.productionstatssource'
 
-	def __init__(self, user, course=None, timestamp=None):
+	def __init__(self, user, course=None, timestamp=None, max_timestamp=None):
 		self.user = user
 		self.course = course
 		self.timestamp = timestamp
+		self.max_timestamp = max_timestamp
 
 	@readproperty
 	def AssignmentStats(self):
@@ -135,7 +136,8 @@ class _AnalyticsProductionStatsSource(object):
 		with a course or timestamp filter.
 		"""
 		assignments = get_assignments_for_user(self.user, course=self.course,
-											   timestamp=self.timestamp)
+											   timestamp=self.timestamp,
+											   max_timestamp=self.max_timestamp)
 		count = unique_count = 0
 		late_count = timed_count = timed_late_count = 0
 
@@ -170,7 +172,8 @@ class _AnalyticsProductionStatsSource(object):
 		with a course or timestamp filter.
 		"""
 		assessments = get_self_assessments_for_user(self.user, course=self.course,
-													timestamp=self.timestamp)
+													timestamp=self.timestamp,
+											   		max_timestamp=self.max_timestamp)
 		count = unique_count = 0
 
 		if assessments:
@@ -188,7 +191,8 @@ class _AnalyticsProductionStatsSource(object):
 		with a course or timestamp filter.
 		"""
 		comment_records = get_forum_comments_for_user(self.user, course=self.course,
-													  timestamp=self.timestamp)
+													  timestamp=self.timestamp,
+											   		max_timestamp=self.max_timestamp)
 		stats = _get_post_stats(comment_records, CommentStats,
 								'Comment', 'CommentLength')
 		return stats
@@ -200,7 +204,8 @@ class _AnalyticsProductionStatsSource(object):
 		with a timestamp filter.
 		"""
 		# TODO: Do we need to expand these stats beyond counts?
-		blog_records = get_blogs(self.user, timestamp=self.timestamp)
+		blog_records = get_blogs(self.user, timestamp=self.timestamp,
+											   max_timestamp=self.max_timestamp)
 		return _get_stats(blog_records)
 
 	@readproperty
@@ -209,7 +214,8 @@ class _AnalyticsProductionStatsSource(object):
 		Return the learning network stats for thought comments, optionally
 		with a timestamp filter.
 		"""
-		comment_records = get_blog_comments(self.user, timestamp=self.timestamp)
+		comment_records = get_blog_comments(self.user, timestamp=self.timestamp,
+											   max_timestamp=self.max_timestamp)
 		stats = _get_post_stats(comment_records, ThoughtCommentStats,
 								'Comment', 'CommentLength')
 		return stats
@@ -221,7 +227,8 @@ class _AnalyticsProductionStatsSource(object):
 		with a course or timestamp filter.
 		"""
 		note_records = get_notes(self.user, course=self.course,
-								 timestamp=self.timestamp)
+								 timestamp=self.timestamp,
+								max_timestamp=self.max_timestamp)
 		stats = _get_post_stats(note_records, NoteStats, 'Note', 'NoteLength')
 		return stats
 
@@ -232,7 +239,8 @@ class _AnalyticsProductionStatsSource(object):
 		with a course or timestamp filter.
 		"""
 		highlight_records = get_highlights(self.user, course=self.course,
-										   timestamp=self.timestamp)
+										   timestamp=self.timestamp,
+											max_timestamp=self.max_timestamp)
 		return _get_stats(highlight_records)
 
 	@readproperty
@@ -242,5 +250,6 @@ class _AnalyticsProductionStatsSource(object):
 		with a course or timestamp filter.
 		"""
 		blog_records = get_bookmarks(self.user, course=self.course,
-									 timestamp=self.timestamp)
+									 timestamp=self.timestamp,
+									max_timestamp=self.max_timestamp)
 		return _get_stats(blog_records)

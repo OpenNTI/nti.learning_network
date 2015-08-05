@@ -50,14 +50,16 @@ class _AnalyticsAccessStatsSource(object):
 	__external_class_name__ = "AccessStatsSource"
 	mime_type = mimeType = 'application/vnd.nextthought.learningnetwork.accessstatssource'
 
-	def __init__(self, user, course=None, timestamp=None):
+	def __init__(self, user, course=None, timestamp=None, max_timestamp=None):
 		self.user = user
 		self.course = course
 		self.timestamp = timestamp
+		self.max_timestamp = max_timestamp
 
 	@readproperty
 	def PlatformStats(self):
-		user_sessions = get_user_sessions(self.user, timestamp=self.timestamp)
+		user_sessions = get_user_sessions(self.user, timestamp=self.timestamp,
+										max_timestamp=self.max_timestamp)
 
 		def is_complete(record):
 			# Filtering out sessions without end times or time_lengths
@@ -72,7 +74,8 @@ class _AnalyticsAccessStatsSource(object):
 		with a course or timestamp filter.
 		"""
 		topic_views = get_topic_views(self.user, course=self.course,
-									  timestamp=self.timestamp)
+									  timestamp=self.timestamp,
+										max_timestamp=self.max_timestamp)
 		return _get_stats(topic_views)
 
 	@readproperty
@@ -82,7 +85,8 @@ class _AnalyticsAccessStatsSource(object):
 		with a course or timestamp filter.
 		"""
 		video_views = get_user_video_views(self.user, course=self.course,
-										   timestamp=self.timestamp)
+										   timestamp=self.timestamp,
+										max_timestamp=self.max_timestamp)
 
 		return _get_stats(video_views)
 
@@ -93,7 +97,8 @@ class _AnalyticsAccessStatsSource(object):
 		with a course or timestamp filter.
 		"""
 		resource_views = get_user_resource_views(self.user, course=self.course,
-												 timestamp=self.timestamp)
+												 timestamp=self.timestamp,
+													max_timestamp=self.max_timestamp)
 
 		return _get_stats(resource_views)
 
@@ -104,7 +109,8 @@ class _AnalyticsAccessStatsSource(object):
 		with a course or timestamp filter.
 		"""
 		assignment_views = get_assignment_views(self.user, course=self.course,
-												timestamp=self.timestamp)
+												timestamp=self.timestamp,
+												max_timestamp=self.max_timestamp)
 
 		return _get_stats(assignment_views)
 
@@ -115,6 +121,7 @@ class _AnalyticsAccessStatsSource(object):
 		with a course or timestamp filter.
 		"""
 		self_assess_views = get_self_assessment_views(self.user, course=self.course,
-													  timestamp=self.timestamp)
+													  timestamp=self.timestamp,
+													max_timestamp=self.max_timestamp)
 
 		return _get_stats(self_assess_views)

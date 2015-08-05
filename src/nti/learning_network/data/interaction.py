@@ -41,27 +41,42 @@ class _AnalyticsInteractionStatsSource(object):
 	__external_class_name__ = "InteractionStatsSource"
 	mime_type = mimeType = 'application/vnd.nextthought.learningnetwork.interactionstatssource'
 
-	def __init__(self, user, course=None, timestamp=None):
+	def __init__(self, user, course=None, timestamp=None, max_timestamp=None):
 		self.user = user
 		self.course = course
 		self.timestamp = timestamp
+		self.max_timestamp = max_timestamp
 
 	def _get_contacts_added_count(self):
-		contacts_added = get_contacts_added(self.user, self.timestamp)
+		contacts_added = get_contacts_added(self.user,
+										timestamp=self.timestamp,
+										max_timestamp=self.max_timestamp)
 		return len(contacts_added)
 
 	def _get_distinct_reply_to_count(self):
-		blog_replies = get_blog_replies(self.user, self.timestamp)
-		note_replies = get_note_replies(self.user, self.course, self.timestamp)
-		forum_replies = get_forum_replies(self.user, self.course, self.timestamp)
+		blog_replies = get_blog_replies(self.user,
+										timestamp=self.timestamp,
+										max_timestamp=self.max_timestamp)
+		note_replies = get_note_replies(self.user, self.course,
+										timestamp=self.timestamp,
+										max_timestamp=self.max_timestamp)
+		forum_replies = get_forum_replies(self.user, self.course,
+										timestamp=self.timestamp,
+										max_timestamp=self.max_timestamp)
 		usernames = set((x.user.username
 							for x in chain(blog_replies, note_replies, forum_replies)))
 		return len(usernames)
 
 	def _get_distinct_user_reply_to_others_count(self):
-		blog_replies = get_blog_user_replies_to_others(self.user, self.timestamp)
-		note_replies = get_note_user_replies_to_others(self.user, self.course, self.timestamp)
-		forum_replies = get_forum_user_replies_to_others(self.user, self.course, self.timestamp)
+		blog_replies = get_blog_user_replies_to_others(self.user,
+										timestamp=self.timestamp,
+										max_timestamp=self.max_timestamp)
+		note_replies = get_note_user_replies_to_others(self.user, self.course,
+										timestamp=self.timestamp,
+										max_timestamp=self.max_timestamp)
+		forum_replies = get_forum_user_replies_to_others(self.user, self.course,
+										timestamp=self.timestamp,
+										max_timestamp=self.max_timestamp)
 
 		# Build our set up
 		username_set = set()
@@ -91,8 +106,10 @@ class _AnalyticsInteractionStatsSource(object):
 		"""
 		Return the learning network group stats.
 		"""
-		groups_created = get_groups_created(self.user, self.timestamp)
-		groups_joined = get_groups_joined(self.user, self.timestamp)
+		groups_created = get_groups_created(self.user, timestamp=self.timestamp,
+										max_timestamp=self.max_timestamp)
+		groups_joined = get_groups_joined(self.user, timestamp=self.timestamp,
+										max_timestamp=self.max_timestamp)
 		created_count = len(groups_created)
 		joined_count = len(groups_joined)
 

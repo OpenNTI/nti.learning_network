@@ -27,6 +27,13 @@
 			 	zope.interface.common.idatetime.IDate"
 			 provides=".interfaces.IAccessStatsSource" />
 
+	<adapter factory=".data.access._AnalyticsAccessStatsSource"
+			 for="nti.dataserver.interfaces.IUser
+			 	nti.contenttypes.courses.interfaces.ICourseInstance
+			 	zope.interface.common.idatetime.IDate
+			 	zope.interface.common.idatetime.IDate"
+			 provides=".interfaces.IAccessStatsSource" />
+
 	<!-- 	Production -->
 	<adapter factory=".data.production._AnalyticsProductionStatsSource"
 			 for="nti.dataserver.interfaces.IUser"
@@ -43,6 +50,13 @@
 			 	zope.interface.common.idatetime.IDate"
 			 provides=".interfaces.IProductionStatsSource" />
 
+	<adapter factory=".data.production._AnalyticsProductionStatsSource"
+			 for="nti.dataserver.interfaces.IUser
+			 	nti.contenttypes.courses.interfaces.ICourseInstance
+			 	zope.interface.common.idatetime.IDate
+			 	zope.interface.common.idatetime.IDate"
+			 provides=".interfaces.IProductionStatsSource" />
+
 	<!-- 	Interaction -->
 	<adapter factory=".data.interaction._AnalyticsInteractionStatsSource"
 			 for="nti.dataserver.interfaces.IUser"
@@ -56,6 +70,13 @@
 	<adapter factory=".data.interaction._AnalyticsInteractionStatsSource"
 			 for="nti.dataserver.interfaces.IUser
 			 	nti.contenttypes.courses.interfaces.ICourseInstance
+			 	zope.interface.common.idatetime.IDate"
+			 provides=".interfaces.IInteractionStatsSource" />
+
+	<adapter factory=".data.interaction._AnalyticsInteractionStatsSource"
+			 for="nti.dataserver.interfaces.IUser
+			 	nti.contenttypes.courses.interfaces.ICourseInstance
+			 	zope.interface.common.idatetime.IDate
 			 	zope.interface.common.idatetime.IDate"
 			 provides=".interfaces.IInteractionStatsSource" />
 
