@@ -98,6 +98,14 @@ class IGroupStats(IStats):
 	UsersInGroupsCount = Number(title="Number of users in groups.", required=True)
 	DistinctUsersInGroupsCount = Number(title="Number of distinct users in groups.", required=True)
 
+class IAssignmentOutcomeStats(IAssignmentStats):
+	"""
+	A container for holding assignment outcome stats.
+	"""
+	FinalGradeAlpha = ValidTextLine(title="The final grade", required=False)
+	FinalGradeNumeric = Number(title="The final grade.", required=False)
+	AverageGrade = Number(title="The average grade on assignments.", required=False)
+
 class ILearningNetworkScoreProvider(interface.Interface):
 	"""
 	For a given context, typically a user, able to answer
@@ -162,6 +170,14 @@ class IInteractionStatsSource(interface.Interface):
 
 	GroupStats = Object( IGroupStats,
 							title="Stats on contextual group interaction with others." )
+
+class IOutcomeStatsSource(interface.Interface):
+	"""
+	A source of learning network outcome stats. These stats are generally `result`
+	stats, that may possible be predicted using other stats.
+	"""
+	AssignmentStats = Object(IAssignmentOutcomeStats,
+							 title="Stats on contextual assignment production.")
 
 class IConnectionsSource( IStats ):
 	"""

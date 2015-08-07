@@ -25,6 +25,7 @@ from nti.learning_network.interfaces import ICommentStats
 from nti.learning_network.interfaces import IAssignmentStats
 from nti.learning_network.interfaces import IThoughtCommentStats
 from nti.learning_network.interfaces import ISelfAssessmentStats
+from nti.learning_network.interfaces import IAssignmentOutcomeStats
 from nti.learning_network.interfaces import IConnection
 
 @EqHash('count')
@@ -52,6 +53,11 @@ class TimeStats(CountStats):
 class SelfAssessmentStats(CountStats):
 	__external_class_name__ = "SelfAssessmentStats"
 	mime_type = mimeType = 'application/vnd.nextthought.learningnetwork.selfassessmentstats'
+
+@interface.implementer(IAssignmentOutcomeStats)
+class AssignmentOutcomeStats(SchemaConfigured):
+	__external_class_name__ = "AssignmentOutcomeStats"
+	mime_type = mimeType = 'application/vnd.nextthought.learningnetwork.assignmentoutcomestats'
 
 @EqHash('Count', 'UniqueCount', 'AssignmentLateCount',
 		'TimedAssignmentCount', 'TimedAssignmentLateCount')

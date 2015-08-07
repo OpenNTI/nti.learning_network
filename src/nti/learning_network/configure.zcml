@@ -80,6 +80,16 @@
 			 	zope.interface.common.idatetime.IDate"
 			 provides=".interfaces.IInteractionStatsSource" />
 
+	<!-- 	Outcomes -->
+	<adapter factory=".data.outcomes._AnalyticsOutcomeStatsSource"
+			 for="nti.dataserver.interfaces.IUser"
+			 provides=".interfaces.IOutcomeStatsSource" />
+
+	<adapter factory=".data.outcomes._AnalyticsOutcomeStatsSource"
+			 for="nti.dataserver.interfaces.IUser
+			 	nti.contenttypes.courses.interfaces.ICourseInstance"
+			 provides=".interfaces.IOutcomeStatsSource" />
+
 	<!--	Connections -->
 	<adapter factory=".data.connections._AnalyticsConnections"
 			 for="nti.contenttypes.courses.interfaces.ICourseInstance"
@@ -100,7 +110,9 @@
 						.interfaces.IThoughtCommentStats
 						.interfaces.ISelfAssessmentStats
 						.interfaces.IAssignmentStats
+						.interfaces.IAssignmentOutcomeStats
 						.interfaces.IAccessStatsSource
+						.interfaces.IOutcomeStatsSource
 						.interfaces.IProductionStatsSource
 						.interfaces.IInteractionStatsSource"
 		modules=".model" />
