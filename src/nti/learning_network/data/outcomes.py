@@ -42,7 +42,7 @@ class _AnalyticsOutcomeStatsSource(object):
 		return result
 
 	@readproperty
-	def AssignmentOutcomeStats(self):
+	def AssignmentStats(self):
 		"""
 		Return the learning network stats for assignments, optionally
 		with a course or timestamp filter.
