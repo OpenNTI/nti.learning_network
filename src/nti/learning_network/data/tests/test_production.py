@@ -13,7 +13,6 @@ import fudge
 import weakref
 
 from hamcrest import is_
-from hamcrest import none
 from hamcrest import not_none
 from hamcrest import assert_that
 
@@ -22,11 +21,6 @@ from datetime import datetime
 from zope import component
 
 from zope.interface import directlyProvides
-
-from nti.analytics.read_models import AnalyticsBlog
-from nti.analytics.read_models import AnalyticsBlogComment
-from nti.analytics.read_models import AnalyticsAssignment
-from nti.analytics.read_models import AnalyticsAssessment
 
 from nti.app.assessment.history import UsersCourseAssignmentHistory
 
@@ -57,6 +51,8 @@ from nti.dataserver.tests.mock_dataserver import WithMockDSTrans
 from nti.learning_network.interfaces import IProductionStatsSource
 
 from ..production import _AnalyticsProductionStatsSource
+
+from nti.learning_network.data.tests import _MockAnalyticsRecord
 
 from nti.learning_network.tests import LearningNetworkTestCase
 
@@ -95,7 +91,7 @@ def _get_history_item( assignment_type=QAssignment ):
 	return result, result_creator
 
 def _get_assignment( assignment_id, user, submission, is_late=False ):
-	result = AnalyticsAssignment( Submission=submission,
+	result = _MockAnalyticsRecord( Submission=submission,
 									user=user,
 									timestamp=datetime.utcnow(),
 									RootContext=course,
@@ -109,7 +105,7 @@ def _get_assignment( assignment_id, user, submission, is_late=False ):
 	return result
 
 def _get_assessment( assignment_id, user, submission ):
-	result = AnalyticsAssessment( Submission=submission,
+	result = _MockAnalyticsRecord( Submission=submission,
 									user=user,
 									timestamp=datetime.utcnow(),
 									RootContext=course,
@@ -118,14 +114,14 @@ def _get_assessment( assignment_id, user, submission ):
 	return result
 
 def _get_blog( blog, user ):
-	result = AnalyticsBlog( Blog=blog,
+	result = _MockAnalyticsRecord( Blog=blog,
 							user=user,
 							timestamp=datetime.utcnow(),
 							BlogLength=30 )
 	return result
 
 def _get_blog_comment( comment, user, like_count=0, fave_count=0, is_reply=False ):
-	result = AnalyticsBlogComment( Comment=comment,
+	result = _MockAnalyticsRecord( Comment=comment,
 									user=user,
 									timestamp=datetime.utcnow(),
 									CommentLength=30,

@@ -12,7 +12,6 @@ import fudge
 import unittest
 
 from hamcrest import is_
-from hamcrest import none
 from hamcrest import not_none
 from hamcrest import assert_that
 

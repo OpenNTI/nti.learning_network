@@ -13,4 +13,11 @@ class MockTimeRecord( object ):
 
 	def __init__(self, time_length=0, end_time=0):
 		self.time_length = time_length
+		self.Duration = time_length
 		self.SessionEndTime = end_time
+
+class _MockAnalyticsRecord( object ):
+
+	def __init__(self, **kwargs):
+		for k,v in kwargs.items():
+			setattr( self, k, v )

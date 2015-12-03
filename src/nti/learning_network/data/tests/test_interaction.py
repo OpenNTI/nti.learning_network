@@ -19,9 +19,6 @@ from datetime import datetime
 import zope
 from zope import component
 
-from nti.analytics.read_models import AnalyticsNote
-from nti.analytics.read_models import AnalyticsGroup
-
 from nti.dataserver.contenttypes.note import Note
 from nti.contenttypes.courses.courses import CourseInstance
 
@@ -35,11 +32,12 @@ from nti.learning_network.interfaces import IInteractionStatsSource
 from ..interaction import _AnalyticsInteractionStatsSource
 
 from nti.learning_network.tests import LearningNetworkTestCase
+from nti.learning_network.data.tests import _MockAnalyticsRecord
 
 course = CourseInstance()
 
 def _get_note( user, obj, replied_to_user=None ):
-	result = AnalyticsNote( Note=obj,
+	result = _MockAnalyticsRecord( Note=obj,
 							user=user,
 							timestamp=datetime.utcnow(),
 							RootContext=course,
@@ -53,7 +51,7 @@ def _get_note( user, obj, replied_to_user=None ):
 	return result
 
 def _get_group( user, group ):
-	result = AnalyticsGroup( user=user,
+	result = _MockAnalyticsRecord( user=user,
 							timestamp=datetime.utcnow(),
 							Group=group )
 	return result
