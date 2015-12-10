@@ -29,7 +29,7 @@ from ._utils import get_time_stats
 def _get_time_lengths(records, do_include):
 	result = None
 	if records:
-		result = [ 	x.time_length
+		result = [ 	x.Duration
 					for x in records
 					if do_include(x) and x.Duration ]
 	return result
