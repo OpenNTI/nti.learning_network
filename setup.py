@@ -29,7 +29,8 @@ setup(
 	namespace_packages=['nti'],
 	install_requires=[
 		'setuptools',
-		'nti.analytics'
+		'nti.analytics',
+		'nti.app.products.badges'
 	],
 	entry_points=entry_points
 )

@@ -16,6 +16,7 @@ from nti.common.property import alias
 from nti.schema.schema import EqHash
 from nti.schema.field import SchemaConfigured
 
+from nti.learning_network.interfaces import IBadgeOutcomeStats
 from nti.learning_network.interfaces import ICountStats
 from nti.learning_network.interfaces import INoteStats
 from nti.learning_network.interfaces import ITimeStats
@@ -58,6 +59,11 @@ class SelfAssessmentStats(CountStats):
 class AssignmentOutcomeStats(SchemaConfigured):
 	__external_class_name__ = "AssignmentOutcomeStats"
 	mime_type = mimeType = 'application/vnd.nextthought.learningnetwork.assignmentoutcomestats'
+
+@interface.implementer(IBadgeOutcomeStats)
+class BadgeOutcomeStats(SchemaConfigured):
+	__external_class_name__ = "BadgeOutcomeStats"
+	mime_type = mimeType = 'application/vnd.nextthought.learningnetwork.badgeoutcomestats'
 
 @EqHash('Count', 'UniqueCount', 'AssignmentLateCount',
 		'TimedAssignmentCount', 'TimedAssignmentLateCount')

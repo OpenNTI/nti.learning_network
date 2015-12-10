@@ -9,6 +9,7 @@ __docformat__ = "restructuredtext en"
 
 from zope import interface
 
+from nti.schema.field import Bool
 from nti.schema.field import Float
 from nti.schema.field import Number
 from nti.schema.field import Object
@@ -105,6 +106,15 @@ class IAssignmentOutcomeStats(IAssignmentStats):
 	FinalGradeAlpha = ValidTextLine(title="The final grade", required=False)
 	FinalGradeNumeric = Number(title="The final grade.", required=False)
 	AverageGrade = Number(title="The average grade on assignments.", required=False)
+	TotalPoints = Number( title="Number of points in assignments", required=False)
+	MaxPointCount = Number( title="Maximum points of assignments.", required=False )
+	MaxAssignmentCount = Number( title="Maximum number of assignments.", required=False )
+
+class IBadgeOutcomeStats(IStats):
+	"""
+	A container for holding badge outcome stats.
+	"""
+	HasBadge = Bool(title="Does the user have a badge.", required=False)
 
 class ILearningNetworkScoreProvider(interface.Interface):
 	"""
@@ -174,10 +184,12 @@ class IInteractionStatsSource(interface.Interface):
 class IOutcomeStatsSource(interface.Interface):
 	"""
 	A source of learning network outcome stats. These stats are generally `result`
-	stats, that may possible be predicted using other stats.
+	stats, that may possibly be predicted using other stats.
 	"""
 	AssignmentStats = Object(IAssignmentOutcomeStats,
 							 title="Stats on contextual assignment production.")
+
+	BadgeStats = Object( IBadgeOutcomeStats, title="Badge stats" )
 
 class IConnectionsSource( IStats ):
 	"""
