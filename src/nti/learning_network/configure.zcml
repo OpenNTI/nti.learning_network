@@ -11,20 +11,20 @@
 
 	<!-- Adapters -->
 
-	<!-- 	Access -->
+	<!-- Access -->
 	<adapter factory=".data.access._AnalyticsAccessStatsSource"
 			 for="nti.dataserver.interfaces.IUser"
 			 provides=".interfaces.IAccessStatsSource" />
 
 	<adapter factory=".data.access._AnalyticsAccessStatsSource"
 			 for="nti.dataserver.interfaces.IUser
-			 	nti.contenttypes.courses.interfaces.ICourseInstance"
+			 	  nti.contenttypes.courses.interfaces.ICourseInstance"
 			 provides=".interfaces.IAccessStatsSource" />
 
 	<adapter factory=".data.access._AnalyticsAccessStatsSource"
 			 for="nti.dataserver.interfaces.IUser
-			 	nti.contenttypes.courses.interfaces.ICourseInstance
-			 	zope.interface.common.idatetime.IDate"
+			 	  nti.contenttypes.courses.interfaces.ICourseInstance
+			 	  zope.interface.common.idatetime.IDate"
 			 provides=".interfaces.IAccessStatsSource" />
 
 	<adapter factory=".data.access._AnalyticsAccessStatsSource"
@@ -34,37 +34,37 @@
 			 	zope.interface.common.idatetime.IDate"
 			 provides=".interfaces.IAccessStatsSource" />
 
-	<!-- 	Production -->
+	<!-- Production -->
 	<adapter factory=".data.production._AnalyticsProductionStatsSource"
 			 for="nti.dataserver.interfaces.IUser"
 			 provides=".interfaces.IProductionStatsSource" />
 
 	<adapter factory=".data.production._AnalyticsProductionStatsSource"
 			 for="nti.dataserver.interfaces.IUser
-			 	nti.contenttypes.courses.interfaces.ICourseInstance"
+			 	  nti.contenttypes.courses.interfaces.ICourseInstance"
 			 provides=".interfaces.IProductionStatsSource" />
 
 	<adapter factory=".data.production._AnalyticsProductionStatsSource"
 			 for="nti.dataserver.interfaces.IUser
-			 	nti.contenttypes.courses.interfaces.ICourseInstance
-			 	zope.interface.common.idatetime.IDate"
+			 	  nti.contenttypes.courses.interfaces.ICourseInstance
+			 	  zope.interface.common.idatetime.IDate"
 			 provides=".interfaces.IProductionStatsSource" />
 
 	<adapter factory=".data.production._AnalyticsProductionStatsSource"
 			 for="nti.dataserver.interfaces.IUser
-			 	nti.contenttypes.courses.interfaces.ICourseInstance
-			 	zope.interface.common.idatetime.IDate
-			 	zope.interface.common.idatetime.IDate"
+			 	  nti.contenttypes.courses.interfaces.ICourseInstance
+			 	  zope.interface.common.idatetime.IDate
+			 	  zope.interface.common.idatetime.IDate"
 			 provides=".interfaces.IProductionStatsSource" />
 
-	<!-- 	Interaction -->
+	<!-- Interaction -->
 	<adapter factory=".data.interaction._AnalyticsInteractionStatsSource"
 			 for="nti.dataserver.interfaces.IUser"
 			 provides=".interfaces.IInteractionStatsSource" />
 
 	<adapter factory=".data.interaction._AnalyticsInteractionStatsSource"
 			 for="nti.dataserver.interfaces.IUser
-			 	nti.contenttypes.courses.interfaces.ICourseInstance"
+			 	  nti.contenttypes.courses.interfaces.ICourseInstance"
 			 provides=".interfaces.IInteractionStatsSource" />
 
 	<adapter factory=".data.interaction._AnalyticsInteractionStatsSource"
@@ -75,28 +75,27 @@
 
 	<adapter factory=".data.interaction._AnalyticsInteractionStatsSource"
 			 for="nti.dataserver.interfaces.IUser
-			 	nti.contenttypes.courses.interfaces.ICourseInstance
-			 	zope.interface.common.idatetime.IDate
-			 	zope.interface.common.idatetime.IDate"
+			 	  nti.contenttypes.courses.interfaces.ICourseInstance
+			 	  zope.interface.common.idatetime.IDate
+			 	  zope.interface.common.idatetime.IDate"
 			 provides=".interfaces.IInteractionStatsSource" />
 
-	<!-- 	Outcomes -->
+	<!-- Outcomes -->
 	<adapter factory=".data.outcomes._AnalyticsOutcomeStatsSource"
 			 for="nti.dataserver.interfaces.IUser"
 			 provides=".interfaces.IOutcomeStatsSource" />
 
 	<adapter factory=".data.outcomes._AnalyticsOutcomeStatsSource"
 			 for="nti.dataserver.interfaces.IUser
-			 	nti.contenttypes.courses.interfaces.ICourseInstance"
+			 	  nti.contenttypes.courses.interfaces.ICourseInstance"
 			 provides=".interfaces.IOutcomeStatsSource" />
 
-	<!--	Connections -->
+	<!--Connections -->
 	<adapter factory=".data.connections._AnalyticsConnections"
 			 for="nti.contenttypes.courses.interfaces.ICourseInstance"
 			 provides=".interfaces.IConnectionsSource" />
 
 	<!-- Externalization -->
-
 	<include package="nti.externalization" file="meta.zcml" />
 	<include package="nti.externalization" />
 	<ext:registerAutoPackageIO

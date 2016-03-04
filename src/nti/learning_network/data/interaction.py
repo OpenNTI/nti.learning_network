@@ -13,24 +13,25 @@ from itertools import chain
 
 from zope import interface
 
-from nti.analytics.social import get_groups_joined
-from nti.analytics.social import get_groups_created
-
 from nti.analytics.blogs import get_replies_to_user as get_blog_replies
 from nti.analytics.blogs import get_user_replies_to_others as get_blog_user_replies_to_others
+
 from nti.analytics.boards import get_replies_to_user as get_forum_replies
 from nti.analytics.boards import get_user_replies_to_others as get_forum_user_replies_to_others
+
 from nti.analytics.resource_tags import get_replies_to_user as get_note_replies
 from nti.analytics.resource_tags import get_user_replies_to_others as get_note_user_replies_to_others
 
+from nti.analytics.social import get_groups_joined
+from nti.analytics.social import get_groups_created
 from nti.analytics.social import get_contacts_added
 
 from nti.common.property import readproperty
 
 from nti.learning_network.interfaces import IInteractionStatsSource
 
-from ..model import GroupStats
-from ..model import SocialStats
+from nti.learning_network.model import GroupStats
+from nti.learning_network.model import SocialStats
 
 @interface.implementer(IInteractionStatsSource)
 class _AnalyticsInteractionStatsSource(object):
@@ -49,8 +50,8 @@ class _AnalyticsInteractionStatsSource(object):
 
 	def _get_contacts_added_count(self):
 		contacts_added = get_contacts_added(self.user,
-										timestamp=self.timestamp,
-										max_timestamp=self.max_timestamp)
+											timestamp=self.timestamp,
+											max_timestamp=self.max_timestamp)
 		return len(contacts_added)
 
 	def _get_distinct_reply_to_count(self):
@@ -69,14 +70,16 @@ class _AnalyticsInteractionStatsSource(object):
 
 	def _get_distinct_user_reply_to_others_count(self):
 		blog_replies = get_blog_user_replies_to_others(self.user,
-										timestamp=self.timestamp,
-										max_timestamp=self.max_timestamp)
-		note_replies = get_note_user_replies_to_others(self.user, self.course,
-										timestamp=self.timestamp,
-										max_timestamp=self.max_timestamp)
-		forum_replies = get_forum_user_replies_to_others(self.user, self.course,
-										timestamp=self.timestamp,
-										max_timestamp=self.max_timestamp)
+													   timestamp=self.timestamp,
+													   max_timestamp=self.max_timestamp)
+		note_replies = get_note_user_replies_to_others(self.user, 
+													   self.course,
+													   timestamp=self.timestamp,
+													   max_timestamp=self.max_timestamp)
+		forum_replies = get_forum_user_replies_to_others(self.user, 
+														 self.course,
+														 timestamp=self.timestamp,
+														 max_timestamp=self.max_timestamp)
 
 		# Build our set up
 		username_set = set()
@@ -96,8 +99,8 @@ class _AnalyticsInteractionStatsSource(object):
 		user_reply_count = self._get_distinct_user_reply_to_others_count()
 
 		social_stats = SocialStats(ContactsAddedCount=contact_count,
-									DistinctReplyToCount=reply_to_count,
-									DistinctUserReplyToOthersCount=user_reply_count)
+								   DistinctReplyToCount=reply_to_count,
+								   DistinctUserReplyToOthersCount=user_reply_count)
 
 		return social_stats
 
@@ -106,10 +109,12 @@ class _AnalyticsInteractionStatsSource(object):
 		"""
 		Return the learning network group stats.
 		"""
-		groups_created = get_groups_created(self.user, timestamp=self.timestamp,
-										max_timestamp=self.max_timestamp)
-		groups_joined = get_groups_joined(self.user, timestamp=self.timestamp,
-										max_timestamp=self.max_timestamp)
+		groups_created = get_groups_created(self.user, 
+											timestamp=self.timestamp,
+											max_timestamp=self.max_timestamp)
+		groups_joined = get_groups_joined(self.user,
+										  timestamp=self.timestamp,
+										  max_timestamp=self.max_timestamp)
 		created_count = len(groups_created)
 		joined_count = len(groups_joined)
 

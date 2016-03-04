@@ -11,8 +11,6 @@ logger = __import__('logging').getLogger(__name__)
 
 from zope import interface
 
-from nti.assessment.interfaces import IQTimedAssignment
-
 from nti.analytics.assessments import get_assignments_for_user
 from nti.analytics.assessments import get_self_assessments_for_user
 
@@ -25,9 +23,14 @@ from nti.analytics.resource_tags import get_notes
 from nti.analytics.resource_tags import get_highlights
 from nti.analytics.resource_tags import get_bookmarks
 
+from nti.assessment.interfaces import IQTimedAssignment
+
 from nti.common.property import readproperty
 
 from nti.dataserver_core.interfaces import ICanvas
+
+from nti.learning_network.data._utils import get_std_dev
+from nti.learning_network.data._utils import get_count_stats
 
 from nti.learning_network.interfaces import IProductionStatsSource
 
@@ -36,9 +39,6 @@ from nti.learning_network.model import CommentStats
 from nti.learning_network.model import AssignmentStats
 from nti.learning_network.model import ThoughtCommentStats
 from nti.learning_network.model import SelfAssessmentStats
-
-from ._utils import get_std_dev
-from ._utils import get_count_stats
 
 def _get_stats(records, do_include=lambda _: True):
 	"""
@@ -101,17 +101,17 @@ def _get_post_stats(records, clazz, obj_field, length_field):
 		average_length = total_length / count
 		std_dev_length = get_std_dev(lengths, total_length)
 
-	post_stats = clazz( Count=count,
-						ReplyCount=reply_count,
-						TopLevelCount=top_level_count,
-						DistinctPostsLiked=distinct_like_count,
-						DistinctPostsFavorited=distinct_fave_count,
-						TotalLikes=total_likes,
-						TotalFavorites=total_faves,
-						RecursiveChildrenCount=recursive_child_count,
-						StandardDeviationLength=std_dev_length,
-						AverageLength=average_length,
-						ContainsWhiteboardCount=contains_board_count)
+	post_stats = clazz(Count=count,
+					   ReplyCount=reply_count,
+					   TopLevelCount=top_level_count,
+					   DistinctPostsLiked=distinct_like_count,
+					   DistinctPostsFavorited=distinct_fave_count,
+					   TotalLikes=total_likes,
+					   TotalFavorites=total_faves,
+					   RecursiveChildrenCount=recursive_child_count,
+					   StandardDeviationLength=std_dev_length,
+					   AverageLength=average_length,
+					   ContainsWhiteboardCount=contains_board_count)
 
 	return post_stats
 
@@ -192,7 +192,7 @@ class _AnalyticsProductionStatsSource(object):
 		"""
 		comment_records = get_forum_comments_for_user(self.user, course=self.course,
 													  timestamp=self.timestamp,
-											   		max_timestamp=self.max_timestamp)
+											   		  max_timestamp=self.max_timestamp)
 		stats = _get_post_stats(comment_records, CommentStats,
 								'Comment', 'CommentLength')
 		return stats
@@ -205,7 +205,7 @@ class _AnalyticsProductionStatsSource(object):
 		"""
 		# TODO: Do we need to expand these stats beyond counts?
 		blog_records = get_blogs(self.user, timestamp=self.timestamp,
-											   max_timestamp=self.max_timestamp)
+								 max_timestamp=self.max_timestamp)
 		return _get_stats(blog_records)
 
 	@readproperty
@@ -215,7 +215,7 @@ class _AnalyticsProductionStatsSource(object):
 		with a timestamp filter.
 		"""
 		comment_records = get_blog_comments(self.user, timestamp=self.timestamp,
-											   max_timestamp=self.max_timestamp)
+											max_timestamp=self.max_timestamp)
 		stats = _get_post_stats(comment_records, ThoughtCommentStats,
 								'Comment', 'CommentLength')
 		return stats
@@ -228,7 +228,7 @@ class _AnalyticsProductionStatsSource(object):
 		"""
 		note_records = get_notes(self.user, course=self.course,
 								 timestamp=self.timestamp,
-								max_timestamp=self.max_timestamp)
+								 max_timestamp=self.max_timestamp)
 		stats = _get_post_stats(note_records, NoteStats, 'Note', 'NoteLength')
 		return stats
 
@@ -240,7 +240,7 @@ class _AnalyticsProductionStatsSource(object):
 		"""
 		highlight_records = get_highlights(self.user, course=self.course,
 										   timestamp=self.timestamp,
-											max_timestamp=self.max_timestamp)
+										   max_timestamp=self.max_timestamp)
 		return _get_stats(highlight_records)
 
 	@readproperty
@@ -251,5 +251,5 @@ class _AnalyticsProductionStatsSource(object):
 		"""
 		blog_records = get_bookmarks(self.user, course=self.course,
 									 timestamp=self.timestamp,
-									max_timestamp=self.max_timestamp)
+									 max_timestamp=self.max_timestamp)
 		return _get_stats(blog_records)

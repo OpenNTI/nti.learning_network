@@ -13,10 +13,7 @@ from zope import interface
 
 from nti.common.property import alias
 
-from nti.schema.schema import EqHash
-from nti.schema.field import SchemaConfigured
-
-from nti.learning_network.interfaces import IBadgeOutcomeStats
+from nti.learning_network.interfaces import IConnection
 from nti.learning_network.interfaces import ICountStats
 from nti.learning_network.interfaces import INoteStats
 from nti.learning_network.interfaces import ITimeStats
@@ -24,10 +21,14 @@ from nti.learning_network.interfaces import IGroupStats
 from nti.learning_network.interfaces import ISocialStats
 from nti.learning_network.interfaces import ICommentStats
 from nti.learning_network.interfaces import IAssignmentStats
+from nti.learning_network.interfaces import IBadgeOutcomeStats
 from nti.learning_network.interfaces import IThoughtCommentStats
 from nti.learning_network.interfaces import ISelfAssessmentStats
 from nti.learning_network.interfaces import IAssignmentOutcomeStats
-from nti.learning_network.interfaces import IConnection
+
+from nti.schema.field import SchemaConfigured
+
+from nti.schema.schema import EqHash
 
 @EqHash('count')
 @interface.implementer(ICountStats)
@@ -115,9 +116,9 @@ class GroupStats(SchemaConfigured):
 	def __init__(self, *args, **kwargs):
 		SchemaConfigured.__init__(self, *args, **kwargs)
 
-@EqHash( 'Source', 'Target' )
+@EqHash('Source', 'Target')
 @interface.implementer(IConnection)
-class Connection( SchemaConfigured ):
+class Connection(SchemaConfigured):
 
 	__external_class_name__ = "Connection"
 	mime_type = mimeType = 'application/vnd.nextthought.learningnetwork.connection'

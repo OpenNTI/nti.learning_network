@@ -30,7 +30,8 @@ setup(
 	install_requires=[
 		'setuptools',
 		'nti.analytics',
-		'nti.app.products.badges'
+		'nti.app.products.badges',
+		'nti.app.products.gradebook'
 	],
 	entry_points=entry_points
 )

@@ -27,8 +27,8 @@ from nti.contenttypes.courses.interfaces import get_course_assessment_predicate_
 
 from nti.learning_network.interfaces import IOutcomeStatsSource
 
-from nti.learning_network.model import AssignmentOutcomeStats
 from nti.learning_network.model import BadgeOutcomeStats
+from nti.learning_network.model import AssignmentOutcomeStats
 
 @interface.implementer(IOutcomeStatsSource)
 class _AnalyticsOutcomeStatsSource(object):
@@ -44,15 +44,15 @@ class _AnalyticsOutcomeStatsSource(object):
 		self.timestamp = timestamp
 
 	def _get_predicted_grade(self, user, grade_policy):
-		result = calculate_predicted_grade( user, grade_policy )
+		result = calculate_predicted_grade(user, grade_policy)
 		return result
 
 	def _get_course_maxes(self):
 		# TODO: Cache this
-		catalog = ICourseAssignmentCatalog( self.course, None )
+		catalog = ICourseAssignmentCatalog(self.course, None)
 		count = point_count = 0
 		if catalog is not None:
-			uber_filter = get_course_assessment_predicate_for_user( self.user, self.course )
+			uber_filter = get_course_assessment_predicate_for_user(self.user, self.course)
 			for asg in (x for x in catalog.iter_assignments() if uber_filter(x)):
 
 				for part in asg.parts:
@@ -61,7 +61,7 @@ class _AnalyticsOutcomeStatsSource(object):
 						for qs_part in qs.parts:
 							for q_part in qs_part.parts:
 								for solution in q_part.solutions:
-									point_count += int( solution.weight )
+									point_count += int(solution.weight)
 					except AttributeError:
 						pass
 				count += 1
@@ -118,25 +118,25 @@ class _AnalyticsOutcomeStatsSource(object):
 			unique_count = len(id_set)
 
 		if final_grade is None:
-			grade_policy = find_grading_policy_for_course( self.course )
+			grade_policy = find_grading_policy_for_course(self.course)
 			if grade_policy is not None:
-				predicted_grade = self._get_predicted_grade( self.user, grade_policy )
+				predicted_grade = self._get_predicted_grade(self.user, grade_policy)
 				final_grade = predicted_grade.Correctness
 				final_grade_alpha = predicted_grade.Grade
 
 		max_assignment_count, max_point_count = self._get_course_maxes()
 
 		stats = AssignmentOutcomeStats(Count=count,
-								UniqueCount=unique_count,
-								AssignmentLateCount=late_count,
-								TimedAssignmentCount=timed_count,
-								TimedAssignmentLateCount=timed_late_count,
-								FinalGradeAlpha=final_grade_alpha,
-								FinalGradeNumeric=final_grade,
-								AverageGrade=average_grade,
-								TotalPoints=total_points,
-								MaxPointCount=max_point_count,
-								MaxAssignmentCount=max_assignment_count )
+									   UniqueCount=unique_count,
+									   AssignmentLateCount=late_count,
+									   TimedAssignmentCount=timed_count,
+									   TimedAssignmentLateCount=timed_late_count,
+									   FinalGradeAlpha=final_grade_alpha,
+									   FinalGradeNumeric=final_grade,
+									   AverageGrade=average_grade,
+									   TotalPoints=total_points,
+									   MaxPointCount=max_point_count,
+									   MaxAssignmentCount=max_assignment_count)
 		return stats
 
 	@readproperty
@@ -144,9 +144,9 @@ class _AnalyticsOutcomeStatsSource(object):
 		has_badge = False
 		if self.course is not None:
 			person_badges = get_person_badges(self.user)
-			for badge in person_badges:
+			for _ in person_badges:
 				# TODO: Need badge for target course
 # 				if badge.id == 'u.s.-history-1865-to-present-course-completion-badge':
 # 					has_badge = True
 				pass
-		return BadgeOutcomeStats( HasBadge=has_badge )
+		return BadgeOutcomeStats(HasBadge=has_badge)

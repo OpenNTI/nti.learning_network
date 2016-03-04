@@ -11,20 +11,21 @@ logger = __import__('logging').getLogger(__name__)
 
 from zope import interface
 
+from nti.analytics.assessments import get_assignment_views
+from nti.analytics.assessments import get_self_assessment_views
+
 from nti.analytics.boards import get_topic_views
-from nti.analytics.sessions import get_user_sessions
 
 from nti.analytics.resource_views import get_user_video_views
 from nti.analytics.resource_views import get_user_resource_views
 
-from nti.analytics.assessments import get_assignment_views
-from nti.analytics.assessments import get_self_assessment_views
+from nti.analytics.sessions import get_user_sessions
 
 from nti.common.property import readproperty
 
-from nti.learning_network.interfaces import IAccessStatsSource
+from nti.learning_network.data._utils import get_time_stats
 
-from ._utils import get_time_stats
+from nti.learning_network.interfaces import IAccessStatsSource
 
 def _get_time_lengths(records, do_include):
 	result = None
@@ -59,7 +60,7 @@ class _AnalyticsAccessStatsSource(object):
 	@readproperty
 	def PlatformStats(self):
 		user_sessions = get_user_sessions(self.user, timestamp=self.timestamp,
-										max_timestamp=self.max_timestamp)
+										  max_timestamp=self.max_timestamp)
 
 		def is_complete(record):
 			# Filtering out sessions without end times or time_lengths
@@ -86,7 +87,7 @@ class _AnalyticsAccessStatsSource(object):
 		"""
 		video_views = get_user_video_views(self.user, course=self.course,
 										   timestamp=self.timestamp,
-										max_timestamp=self.max_timestamp)
+										   max_timestamp=self.max_timestamp)
 
 		return _get_stats(video_views)
 
@@ -98,7 +99,7 @@ class _AnalyticsAccessStatsSource(object):
 		"""
 		resource_views = get_user_resource_views(self.user, course=self.course,
 												 timestamp=self.timestamp,
-													max_timestamp=self.max_timestamp)
+												 max_timestamp=self.max_timestamp)
 
 		return _get_stats(resource_views)
 
@@ -122,6 +123,6 @@ class _AnalyticsAccessStatsSource(object):
 		"""
 		self_assess_views = get_self_assessment_views(self.user, course=self.course,
 													  timestamp=self.timestamp,
-													max_timestamp=self.max_timestamp)
+													  max_timestamp=self.max_timestamp)
 
 		return _get_stats(self_assess_views)

@@ -11,12 +11,11 @@ logger = __import__('logging').getLogger(__name__)
 
 from math import sqrt
 
-from nti.learning_network.model import CountStats
 from nti.learning_network.model import TimeStats
+from nti.learning_network.model import CountStats
 
 def get_std_dev(values, summation=None):
 	result = None
-
 	if values:
 		count = len(values)
 		summation = summation if summation else sum(values)
@@ -30,7 +29,6 @@ def get_count_stats(records):
 	For a sequence of records, return Stats.
 	"""
 	count = 0
-
 	if records is not None:
 		count = len(records)
 	stats = CountStats(Count=count)
@@ -41,7 +39,6 @@ def get_time_stats(time_lengths):
 	For a sequence of time lengths, return the TimeStats.
 	"""
 	total_time = std_dev = average = count = 0
-
 	if time_lengths:
 		total_time = sum(time_lengths)
 		count = len(time_lengths)
@@ -49,7 +46,7 @@ def get_time_stats(time_lengths):
 		std_dev = get_std_dev(time_lengths, total_time)
 
 	stats = TimeStats(AggregateTime=total_time,
-						StandardDeviationDuration=std_dev,
-						AverageDuration=average,
-						Count=count)
+					  StandardDeviationDuration=std_dev,
+					  AverageDuration=average,
+					  Count=count)
 	return stats

@@ -11,7 +11,7 @@ logger = __import__('logging').getLogger(__name__)
 
 from zope import interface
 
-from .interfaces import IAccessScoreProvider
+from nti.learning_network.interfaces import IAccessScoreProvider
 
 @interface.implementer(IAccessScoreProvider)
 class _AccessScoreProvider(object):
