@@ -32,7 +32,7 @@ def _get_time_lengths(records, do_include):
 	if records:
 		result = [ 	x.Duration
 					for x in records
-					if do_include(x) and x.Duration ]
+					if do_include(x) and x.Duration is not None ]
 	return result
 
 def _get_stats(records, do_include=lambda _: True):
