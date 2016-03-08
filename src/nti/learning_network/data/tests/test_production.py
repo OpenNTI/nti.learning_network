@@ -50,7 +50,7 @@ from nti.dataserver.tests.mock_dataserver import WithMockDSTrans
 
 from nti.learning_network.interfaces import IProductionStatsSource
 
-from ..production import _AnalyticsProductionStatsSource
+from nti.learning_network.data.production import _AnalyticsProductionStatsSource
 
 from nti.learning_network.data.tests import _MockAnalyticsRecord
 

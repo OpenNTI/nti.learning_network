@@ -26,8 +26,8 @@ from nti.dataserver.users.users import User
 from nti.learning_network.interfaces import IAccessStatsSource
 from nti.learning_network.tests import LearningNetworkTestCase
 
-from . import MockTimeRecord
-from ..access import _AnalyticsAccessStatsSource
+from nti.learning_network.data.tests import MockTimeRecord
+from nti.learning_network.data.access import _AnalyticsAccessStatsSource
 
 class TestAccess( unittest.TestCase ):
 

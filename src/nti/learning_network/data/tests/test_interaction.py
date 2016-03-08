@@ -29,7 +29,7 @@ from nti.dataserver.tests.mock_dataserver import WithMockDSTrans
 
 from nti.learning_network.interfaces import IInteractionStatsSource
 
-from ..interaction import _AnalyticsInteractionStatsSource
+from nti.learning_network.data.interaction import _AnalyticsInteractionStatsSource
 
 from nti.learning_network.tests import LearningNetworkTestCase
 from nti.learning_network.data.tests import _MockAnalyticsRecord

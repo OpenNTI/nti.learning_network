@@ -21,9 +21,9 @@ from nti.analytics.resource_views import get_user_resource_views
 
 from nti.analytics.sessions import get_user_sessions
 
-from nti.common.property import readproperty
+from nti.analytics.stats.utils import get_time_stats
 
-from nti.learning_network.data._utils import get_time_stats
+from nti.common.property import readproperty
 
 from nti.learning_network.interfaces import IAccessStatsSource
 

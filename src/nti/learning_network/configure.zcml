@@ -99,16 +99,9 @@
 	<include package="nti.externalization" file="meta.zcml" />
 	<include package="nti.externalization" />
 	<ext:registerAutoPackageIO
-		root_interfaces=".interfaces.IStats
-						.interfaces.IConnection
-						.interfaces.ITimeStats
-						.interfaces.INoteStats
+		root_interfaces=".interfaces.IConnection
 						.interfaces.IGroupStats
 						.interfaces.ISocialStats
-						.interfaces.ICommentStats
-						.interfaces.IThoughtCommentStats
-						.interfaces.ISelfAssessmentStats
-						.interfaces.IAssignmentStats
 						.interfaces.IAssignmentOutcomeStats
 						.interfaces.IAccessStatsSource
 						.interfaces.IOutcomeStatsSource

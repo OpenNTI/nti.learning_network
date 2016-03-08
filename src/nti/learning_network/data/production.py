@@ -19,26 +19,24 @@ from nti.analytics.boards import get_forum_comments_for_user
 from nti.analytics.blogs import get_blogs
 from nti.analytics.blogs import get_blog_comments
 
+from nti.analytics.stats.model import NoteStats
+from nti.analytics.stats.model import CommentStats
+from nti.analytics.stats.model import AssignmentStats
+from nti.analytics.stats.model import ThoughtCommentStats
+from nti.analytics.stats.model import SelfAssessmentStats
+
 from nti.analytics.resource_tags import get_notes
 from nti.analytics.resource_tags import get_highlights
 from nti.analytics.resource_tags import get_bookmarks
+
+from nti.analytics.stats.utils import get_count_stats
+from nti.analytics.stats.utils import build_post_stats
 
 from nti.assessment.interfaces import IQTimedAssignment
 
 from nti.common.property import readproperty
 
-from nti.dataserver_core.interfaces import ICanvas
-
-from nti.learning_network.data._utils import get_std_dev
-from nti.learning_network.data._utils import get_count_stats
-
 from nti.learning_network.interfaces import IProductionStatsSource
-
-from nti.learning_network.model import NoteStats
-from nti.learning_network.model import CommentStats
-from nti.learning_network.model import AssignmentStats
-from nti.learning_network.model import ThoughtCommentStats
-from nti.learning_network.model import SelfAssessmentStats
 
 def _get_stats(records, do_include=lambda _: True):
 	"""
@@ -48,72 +46,6 @@ def _get_stats(records, do_include=lambda _: True):
 		records = [x for x in records if do_include(x)]
 	stats = get_count_stats(records)
 	return stats
-
-def _has_whiteboard(obj):
-	body = obj.body
-	if body:
-		for body_part in body:
-			if ICanvas.providedBy(body_part):
-				return True
-	return False
-
-def _get_post_stats(records, clazz, obj_field, length_field):
-	count = reply_count = top_level_count = 0
-	distinct_like_count = distinct_fave_count = 0
-	total_likes = total_faves = total_length = 0
-	recursive_child_count = contains_board_count = 0
-	average_length = std_dev_length = 0
-
-	if records:
-		lengths = []
-
-		for post in records:
-			count += 1
-			if post.IsReply:
-				reply_count += 1
-			else:
-				top_level_count += 1
-
-			if post.LikeCount:
-				distinct_like_count += 1
-				total_likes += post.LikeCount
-
-			if post.FavoriteCount:
-				distinct_fave_count += 1
-				total_faves += post.FavoriteCount
-
-			post_length = getattr(post, length_field, None)
-
-			if post_length is not None:
-				lengths.append(post_length)
-				total_length += post_length
-
-			obj = getattr(post, obj_field, None)
-
-			if obj is not None:
-				# Waking up object, expensive if we're
-				# waking up every child?
-				recursive_child_count += len(obj.referents)
-
-				if _has_whiteboard(obj):
-					contains_board_count += 1
-
-		average_length = total_length / count
-		std_dev_length = get_std_dev(lengths, total_length)
-
-	post_stats = clazz(Count=count,
-					   ReplyCount=reply_count,
-					   TopLevelCount=top_level_count,
-					   DistinctPostsLiked=distinct_like_count,
-					   DistinctPostsFavorited=distinct_fave_count,
-					   TotalLikes=total_likes,
-					   TotalFavorites=total_faves,
-					   RecursiveChildrenCount=recursive_child_count,
-					   StandardDeviationLength=std_dev_length,
-					   AverageLength=average_length,
-					   ContainsWhiteboardCount=contains_board_count)
-
-	return post_stats
 
 @interface.implementer(IProductionStatsSource)
 class _AnalyticsProductionStatsSource(object):
@@ -193,7 +125,7 @@ class _AnalyticsProductionStatsSource(object):
 		comment_records = get_forum_comments_for_user(self.user, course=self.course,
 													  timestamp=self.timestamp,
 											   		  max_timestamp=self.max_timestamp)
-		stats = _get_post_stats(comment_records, CommentStats,
+		stats = build_post_stats(comment_records, CommentStats,
 								'Comment', 'CommentLength')
 		return stats
 
@@ -216,7 +148,7 @@ class _AnalyticsProductionStatsSource(object):
 		"""
 		comment_records = get_blog_comments(self.user, timestamp=self.timestamp,
 											max_timestamp=self.max_timestamp)
-		stats = _get_post_stats(comment_records, ThoughtCommentStats,
+		stats = build_post_stats(comment_records, ThoughtCommentStats,
 								'Comment', 'CommentLength')
 		return stats
 
@@ -229,7 +161,7 @@ class _AnalyticsProductionStatsSource(object):
 		note_records = get_notes(self.user, course=self.course,
 								 timestamp=self.timestamp,
 								 max_timestamp=self.max_timestamp)
-		stats = _get_post_stats(note_records, NoteStats, 'Note', 'NoteLength')
+		stats = build_post_stats(note_records, NoteStats, 'Note', 'NoteLength')
 		return stats
 
 	@readproperty
