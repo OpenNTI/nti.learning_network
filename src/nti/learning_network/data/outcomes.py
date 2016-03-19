@@ -38,10 +38,11 @@ class _AnalyticsOutcomeStatsSource(object):
 	__external_class_name__ = "OutcomeStatsSource"
 	mime_type = mimeType = 'application/vnd.nextthought.learningnetwork.outcomestatssource'
 
-	def __init__(self, user, course=None, timestamp=None):
+	def __init__(self, user, course=None, timestamp=None, max_timestamp=None):
 		self.user = user
 		self.course = course
 		self.timestamp = timestamp
+		self.max_timestamp = max_timestamp
 
 	def _get_predicted_grade(self, user, grade_policy):
 		result = calculate_predicted_grade(user, grade_policy)

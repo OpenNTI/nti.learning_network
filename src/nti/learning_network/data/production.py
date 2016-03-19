@@ -81,9 +81,9 @@ class _AnalyticsProductionStatsSource(object):
 				if assignment_record.IsLate:
 					late_count += 1
 
-				assignment = assignment_record.Submission.Assignment
+				assignment = getattr( assignment_record.Submission, 'Assignment', None )
 
-				if IQTimedAssignment.providedBy(assignment):
+				if assignment and IQTimedAssignment.providedBy(assignment):
 					timed_count += 1
 					if assignment_record.IsLate:
 						timed_late_count += 1

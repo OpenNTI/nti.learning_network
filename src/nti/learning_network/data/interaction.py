@@ -72,11 +72,11 @@ class _AnalyticsInteractionStatsSource(object):
 		blog_replies = get_blog_user_replies_to_others(self.user,
 													   timestamp=self.timestamp,
 													   max_timestamp=self.max_timestamp)
-		note_replies = get_note_user_replies_to_others(self.user, 
+		note_replies = get_note_user_replies_to_others(self.user,
 													   self.course,
 													   timestamp=self.timestamp,
 													   max_timestamp=self.max_timestamp)
-		forum_replies = get_forum_user_replies_to_others(self.user, 
+		forum_replies = get_forum_user_replies_to_others(self.user,
 														 self.course,
 														 timestamp=self.timestamp,
 														 max_timestamp=self.max_timestamp)
@@ -109,7 +109,7 @@ class _AnalyticsInteractionStatsSource(object):
 		"""
 		Return the learning network group stats.
 		"""
-		groups_created = get_groups_created(self.user, 
+		groups_created = get_groups_created(self.user,
 											timestamp=self.timestamp,
 											max_timestamp=self.max_timestamp)
 		groups_joined = get_groups_joined(self.user,
@@ -121,7 +121,8 @@ class _AnalyticsInteractionStatsSource(object):
 		user_count = 0
 		usernames = set()
 		for group in chain(groups_created, groups_joined):
-			group_users = {x.username for x in group.Group if x is not None}
+			# TODO: Group may be None now; should retrieve from analytics.
+			group_users = {x.username for x in group.Group or () if x is not None}
 			usernames.update(group_users)
 			user_count += len(group_users)
 
