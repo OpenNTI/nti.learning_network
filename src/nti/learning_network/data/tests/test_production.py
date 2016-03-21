@@ -127,7 +127,8 @@ def _get_blog_comment( comment, user, like_count=0, fave_count=0, is_reply=False
 									CommentLength=30,
 									LikeCount=like_count,
 									FavoriteCount=fave_count,
-									IsReply=is_reply )
+									IsReply=is_reply,
+									FileMimeTypes=None )
 	return result
 
 class TestProduction( LearningNetworkTestCase ):
@@ -253,11 +254,13 @@ class TestProduction( LearningNetworkTestCase ):
 		assert_that( stats.Count, is_( 3 ))
 		assert_that( stats.UniqueCount, is_( 2 ))
 
-	@fudge.patch( 'nti.learning_network.data.production.get_blogs',
-				 'nti.learning_network.data.production.get_blog_comments')
-	def test_blog_stats( self, mock_get_blogs, mock_get_blog_comments ):
+	@fudge.patch('nti.learning_network.data.production.get_blogs',
+				 'nti.learning_network.data.production.get_blog_comments',
+				 'nti.learning_network.data.production.get_all_mime_types')
+	def test_blog_stats( self, mock_get_blogs, mock_get_blog_comments, mock_mime_types ):
 		user = self._get_user()
 		# Empty
+		mock_mime_types.is_callable().returns( () )
 		mock_get_blogs.is_callable().returns( None )
 		mock_get_blog_comments.is_callable().returns( None )
 		assert_that( self.stat_source.ThoughtStats.Count, is_( 0 ) )
