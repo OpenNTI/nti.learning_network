@@ -25,6 +25,8 @@ from nti.analytics.stats.model import AssignmentStats
 from nti.analytics.stats.model import ThoughtCommentStats
 from nti.analytics.stats.model import SelfAssessmentStats
 
+from nti.analytics.mime_types import get_all_mime_types
+
 from nti.analytics.resource_tags import get_notes
 from nti.analytics.resource_tags import get_highlights
 from nti.analytics.resource_tags import get_bookmarks
@@ -60,6 +62,11 @@ class _AnalyticsProductionStatsSource(object):
 		self.course = course
 		self.timestamp = timestamp
 		self.max_timestamp = max_timestamp
+
+	@property
+	def AllMimeTypes(self):
+		results = get_all_mime_types()
+		return sorted( results ) if results else ()
 
 	@readproperty
 	def AssignmentStats(self):
@@ -126,7 +133,8 @@ class _AnalyticsProductionStatsSource(object):
 													  timestamp=self.timestamp,
 											   		  max_timestamp=self.max_timestamp)
 		stats = build_post_stats(comment_records, CommentStats,
-								'Comment', 'CommentLength')
+								'Comment', 'CommentLength',
+								self.AllMimeTypes)
 		return stats
 
 	@readproperty
@@ -149,7 +157,8 @@ class _AnalyticsProductionStatsSource(object):
 		comment_records = get_blog_comments(self.user, timestamp=self.timestamp,
 											max_timestamp=self.max_timestamp)
 		stats = build_post_stats(comment_records, ThoughtCommentStats,
-								'Comment', 'CommentLength')
+								'Comment', 'CommentLength',
+								self.AllMimeTypes)
 		return stats
 
 	@readproperty
@@ -161,7 +170,9 @@ class _AnalyticsProductionStatsSource(object):
 		note_records = get_notes(self.user, course=self.course,
 								 timestamp=self.timestamp,
 								 max_timestamp=self.max_timestamp)
-		stats = build_post_stats(note_records, NoteStats, 'Note', 'NoteLength')
+		stats = build_post_stats(note_records, NoteStats,
+								'Note', 'NoteLength',
+								self.AllMimeTypes)
 		return stats
 
 	@readproperty

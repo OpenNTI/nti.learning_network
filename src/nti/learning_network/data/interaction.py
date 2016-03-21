@@ -65,7 +65,7 @@ class _AnalyticsInteractionStatsSource(object):
 										timestamp=self.timestamp,
 										max_timestamp=self.max_timestamp)
 		usernames = set((x.user.username
-							for x in chain(blog_replies, note_replies, forum_replies)))
+						for x in chain(blog_replies, note_replies, forum_replies)))
 		return len(usernames)
 
 	def _get_distinct_user_reply_to_others_count(self):
@@ -121,7 +121,7 @@ class _AnalyticsInteractionStatsSource(object):
 		user_count = 0
 		usernames = set()
 		for group in chain(groups_created, groups_joined):
-			# TODO: Group may be None now; should retrieve from analytics.
+			# TODO: Group may be None now; should retrieve data from analytics.
 			group_users = {x.username for x in group.Group or () if x is not None}
 			usernames.update(group_users)
 			user_count += len(group_users)
