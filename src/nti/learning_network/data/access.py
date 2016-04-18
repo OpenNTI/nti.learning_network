@@ -50,6 +50,7 @@ class _AnalyticsAccessStatsSource(object):
 	"""
 	__external_class_name__ = "AccessStatsSource"
 	mime_type = mimeType = 'application/vnd.nextthought.learningnetwork.accessstatssource'
+	display_name = 'Access'
 
 	def __init__(self, user, course=None, timestamp=None, max_timestamp=None):
 		self.user = user

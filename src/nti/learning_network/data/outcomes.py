@@ -37,6 +37,7 @@ class _AnalyticsOutcomeStatsSource(object):
 	"""
 	__external_class_name__ = "OutcomeStatsSource"
 	mime_type = mimeType = 'application/vnd.nextthought.learningnetwork.outcomestatssource'
+	display_name = 'Outcome'
 
 	def __init__(self, user, course=None, timestamp=None, max_timestamp=None):
 		self.user = user

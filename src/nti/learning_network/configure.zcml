@@ -9,8 +9,6 @@
 	<include package="zope.component" />
 	<include package="zope.security" />
 
-	<!-- Adapters -->
-
 	<!-- Access -->
 	<adapter factory=".data.access._AnalyticsAccessStatsSource"
 			 for="nti.dataserver.interfaces.IUser"

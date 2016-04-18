@@ -41,6 +41,7 @@ class _AnalyticsInteractionStatsSource(object):
 
 	__external_class_name__ = "InteractionStatsSource"
 	mime_type = mimeType = 'application/vnd.nextthought.learningnetwork.interactionstatssource'
+	display_name = 'Interaction'
 
 	def __init__(self, user, course=None, timestamp=None, max_timestamp=None):
 		self.user = user
