@@ -60,7 +60,10 @@ class TestInteraction( LearningNetworkTestCase ):
 
 	def setUp(self):
 		self.user = None
-		self.stat_source = _AnalyticsInteractionStatsSource( self.user )
+
+	@property
+	def stat_source(self):
+		return _AnalyticsInteractionStatsSource( self.user )
 
 	def _get_note_obj(self, user):
 		note = Note()

@@ -23,7 +23,7 @@ from nti.analytics.sessions import get_user_sessions
 
 from nti.analytics.stats.utils import get_time_stats
 
-from nti.common.property import readproperty
+from nti.common.property import Lazy
 
 from nti.learning_network.interfaces import IAccessStatsSource
 
@@ -58,7 +58,7 @@ class _AnalyticsAccessStatsSource(object):
 		self.timestamp = timestamp
 		self.max_timestamp = max_timestamp
 
-	@readproperty
+	@Lazy
 	def PlatformStats(self):
 		user_sessions = get_user_sessions(self.user, timestamp=self.timestamp,
 										  max_timestamp=self.max_timestamp)
@@ -69,7 +69,7 @@ class _AnalyticsAccessStatsSource(object):
 
 		return _get_stats(user_sessions, do_include=is_complete)
 
-	@readproperty
+	@Lazy
 	def ForumStats(self):
 		"""
 		Return the learning network stats for forums, optionally
@@ -80,7 +80,7 @@ class _AnalyticsAccessStatsSource(object):
 										max_timestamp=self.max_timestamp)
 		return _get_stats(topic_views)
 
-	@readproperty
+	@Lazy
 	def VideoStats(self):
 		"""
 		Return the learning network stats for videos, optionally
@@ -92,7 +92,7 @@ class _AnalyticsAccessStatsSource(object):
 
 		return _get_stats(video_views)
 
-	@readproperty
+	@Lazy
 	def ReadingStats(self):
 		"""
 		Return the learning network stats for readings, optionally
@@ -104,7 +104,7 @@ class _AnalyticsAccessStatsSource(object):
 
 		return _get_stats(resource_views)
 
-	@readproperty
+	@Lazy
 	def AssignmentStats(self):
 		"""
 		Return the learning network stats for assignment views, optionally
@@ -116,7 +116,7 @@ class _AnalyticsAccessStatsSource(object):
 
 		return _get_stats(assignment_views)
 
-	@readproperty
+	@Lazy
 	def SelfAssessmentStats(self):
 		"""
 		Return the learning network stats for self assessment views, optionally

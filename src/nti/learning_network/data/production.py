@@ -36,7 +36,7 @@ from nti.analytics.stats.utils import build_post_stats
 
 from nti.assessment.interfaces import IQTimedAssignment
 
-from nti.common.property import readproperty
+from nti.common.property import Lazy
 
 from nti.learning_network.interfaces import IProductionStatsSource
 
@@ -64,12 +64,12 @@ class _AnalyticsProductionStatsSource(object):
 		self.timestamp = timestamp
 		self.max_timestamp = max_timestamp
 
-	@property
+	@Lazy
 	def AllMimeTypes(self):
 		results = get_all_mime_types()
 		return sorted( results ) if results else ()
 
-	@readproperty
+	@Lazy
 	def AssignmentStats(self):
 		"""
 		Return the learning network stats for assignments, optionally
@@ -105,7 +105,7 @@ class _AnalyticsProductionStatsSource(object):
 								TimedAssignmentLateCount=timed_late_count)
 		return stats
 
-	@readproperty
+	@Lazy
 	def SelfAssessmentStats(self):
 		"""
 		Return the learning network stats for self-assessments, optionally
@@ -124,7 +124,7 @@ class _AnalyticsProductionStatsSource(object):
 		stats = SelfAssessmentStats(Count=count, UniqueCount=unique_count)
 		return stats
 
-	@readproperty
+	@Lazy
 	def CommentStats(self):
 		"""
 		Return the learning network stats for comments, optionally
@@ -138,7 +138,7 @@ class _AnalyticsProductionStatsSource(object):
 								self.AllMimeTypes)
 		return stats
 
-	@readproperty
+	@Lazy
 	def ThoughtStats(self):
 		"""
 		Return the learning network stats for thoughts, optionally
@@ -149,7 +149,7 @@ class _AnalyticsProductionStatsSource(object):
 								 max_timestamp=self.max_timestamp)
 		return _get_stats(blog_records)
 
-	@readproperty
+	@Lazy
 	def ThoughtCommentStats(self):
 		"""
 		Return the learning network stats for thought comments, optionally
@@ -162,7 +162,7 @@ class _AnalyticsProductionStatsSource(object):
 								self.AllMimeTypes)
 		return stats
 
-	@readproperty
+	@Lazy
 	def NoteStats(self):
 		"""
 		Return the learning network stats for notes, optionally
@@ -176,7 +176,7 @@ class _AnalyticsProductionStatsSource(object):
 								self.AllMimeTypes)
 		return stats
 
-	@readproperty
+	@Lazy
 	def HighlightStats(self):
 		"""
 		Return the learning network stats for highlights, optionally
@@ -187,7 +187,7 @@ class _AnalyticsProductionStatsSource(object):
 										   max_timestamp=self.max_timestamp)
 		return _get_stats(highlight_records)
 
-	@readproperty
+	@Lazy
 	def BookmarkStats(self):
 		"""
 		Return the learning network stats for bookmarks, optionally

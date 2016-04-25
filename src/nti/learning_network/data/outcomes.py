@@ -20,7 +20,7 @@ from nti.assessment.interfaces import IQTimedAssignment
 
 from nti.analytics.assessments import get_assignments_for_user
 
-from nti.common.property import readproperty
+from nti.common.property import Lazy
 
 from nti.contenttypes.courses.interfaces import ICourseAssignmentCatalog
 from nti.contenttypes.courses.interfaces import get_course_assessment_predicate_for_user
@@ -69,7 +69,7 @@ class _AnalyticsOutcomeStatsSource(object):
 				count += 1
 		return count, point_count
 
-	@readproperty
+	@Lazy
 	def AssignmentStats(self):
 		"""
 		Return the learning network stats for assignments, optionally
@@ -141,7 +141,7 @@ class _AnalyticsOutcomeStatsSource(object):
 									   MaxAssignmentCount=max_assignment_count)
 		return stats
 
-	@readproperty
+	@Lazy
 	def BadgeStats(self):
 		has_badge = False
 		if self.course is not None:

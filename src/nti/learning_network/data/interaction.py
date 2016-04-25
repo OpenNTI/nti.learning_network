@@ -26,7 +26,7 @@ from nti.analytics.social import get_groups_joined
 from nti.analytics.social import get_groups_created
 from nti.analytics.social import get_contacts_added
 
-from nti.common.property import readproperty
+from nti.common.property import Lazy
 
 from nti.learning_network.interfaces import IInteractionStatsSource
 
@@ -90,7 +90,7 @@ class _AnalyticsInteractionStatsSource(object):
 		username_set.discard( None )
 		return len( username_set )
 
-	@readproperty
+	@Lazy
 	def SocialStats(self):
 		"""
 		Return the learning network social stats.
@@ -105,7 +105,7 @@ class _AnalyticsInteractionStatsSource(object):
 
 		return social_stats
 
-	@readproperty
+	@Lazy
 	def GroupStats(self):
 		"""
 		Return the learning network group stats.

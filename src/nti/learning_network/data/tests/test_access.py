@@ -33,7 +33,10 @@ class TestAccess( unittest.TestCase ):
 
 	def setUp(self):
 		self.user = None
-		self.stat_source = _AnalyticsAccessStatsSource( self.user )
+
+	@property
+	def stat_source(self):
+		return _AnalyticsAccessStatsSource( self.user )
 
 	@fudge.patch( 'nti.learning_network.data.access.get_user_sessions' )
 	def test_platform_stats(self, mock_get_sessions):

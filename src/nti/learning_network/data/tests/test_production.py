@@ -135,7 +135,10 @@ class TestProduction( LearningNetworkTestCase ):
 
 	def setUp(self):
 		self.user = None
-		self.stat_source = _AnalyticsProductionStatsSource( self.user )
+
+	@property
+	def stat_source(self):
+		return _AnalyticsProductionStatsSource( self.user )
 
 	@WithMockDSTrans
 	def _get_user(self):
@@ -364,7 +367,7 @@ class TestProduction( LearningNetworkTestCase ):
 		mock_get_bookmarks.is_callable().returns( bookmarks )
 		assert_that( self.stat_source.BookmarkStats.Count, is_( len( bookmarks ) ) )
 
-	# FIXME Note, comment stats
+	# TODO: Note, comment stats
 
 class TestAdapters( LearningNetworkTestCase ):
 
