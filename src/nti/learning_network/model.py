@@ -17,9 +17,9 @@ from nti.learning_network.interfaces import ISocialStats
 from nti.learning_network.interfaces import IBadgeOutcomeStats
 from nti.learning_network.interfaces import IAssignmentOutcomeStats
 
-from nti.schema.field import SchemaConfigured
+from nti.schema.eqhash import EqHash
 
-from nti.schema.schema import EqHash
+from nti.schema.field import SchemaConfigured
 
 @interface.implementer(IAssignmentOutcomeStats)
 class AssignmentOutcomeStats(SchemaConfigured):
