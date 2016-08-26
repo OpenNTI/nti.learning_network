@@ -20,8 +20,6 @@ from nti.assessment.interfaces import IQTimedAssignment
 
 from nti.analytics.assessments import get_assignments_for_user
 
-from nti.common.property import Lazy
-
 from nti.contenttypes.courses.interfaces import ICourseAssignmentCatalog
 from nti.contenttypes.courses.interfaces import get_course_assessment_predicate_for_user
 
@@ -29,6 +27,8 @@ from nti.learning_network.interfaces import IOutcomeStatsSource
 
 from nti.learning_network.model import BadgeOutcomeStats
 from nti.learning_network.model import AssignmentOutcomeStats
+
+from nti.property.property import Lazy
 
 @interface.implementer(IOutcomeStatsSource)
 class _AnalyticsOutcomeStatsSource(object):

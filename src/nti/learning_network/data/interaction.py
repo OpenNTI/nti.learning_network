@@ -26,12 +26,12 @@ from nti.analytics.social import get_groups_joined
 from nti.analytics.social import get_groups_created
 from nti.analytics.social import get_contacts_added
 
-from nti.common.property import Lazy
-
 from nti.learning_network.interfaces import IInteractionStatsSource
 
 from nti.learning_network.model import GroupStats
 from nti.learning_network.model import SocialStats
+
+from nti.property.property import Lazy
 
 @interface.implementer(IInteractionStatsSource)
 class _AnalyticsInteractionStatsSource(object):

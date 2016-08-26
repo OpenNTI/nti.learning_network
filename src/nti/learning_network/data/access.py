@@ -23,9 +23,9 @@ from nti.analytics.sessions import get_user_sessions
 
 from nti.analytics.stats.utils import get_time_stats
 
-from nti.common.property import Lazy
-
 from nti.learning_network.interfaces import IAccessStatsSource
+
+from nti.property.property import Lazy
 
 def _get_time_lengths(records, do_include):
 	result = None

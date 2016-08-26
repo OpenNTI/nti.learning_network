@@ -36,9 +36,9 @@ from nti.analytics.stats.utils import build_post_stats
 
 from nti.assessment.interfaces import IQTimedAssignment
 
-from nti.common.property import Lazy
-
 from nti.learning_network.interfaces import IProductionStatsSource
+
+from nti.property.property import Lazy
 
 def _get_stats(records, do_include=lambda _: True):
 	"""
