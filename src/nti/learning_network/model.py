@@ -34,30 +34,18 @@ class BadgeOutcomeStats(SchemaConfigured):
 @EqHash('ContactsAddedCount', 'DistinctReplyToCount', 'DistinctUserReplyToOthersCount')
 @interface.implementer(ISocialStats)
 class SocialStats(SchemaConfigured):
-
 	__external_class_name__ = "SocialStats"
 	mime_type = mimeType = 'application/vnd.nextthought.learningnetwork.socialstats'
-
-	def __init__(self, *args, **kwargs):
-		SchemaConfigured.__init__(self, *args, **kwargs)
 
 @EqHash('GroupsJoinedCount', 'GroupsCreatedCount',
 		'UsersInGroups', 'DistinctUsersInGroups')
 @interface.implementer(IGroupStats)
 class GroupStats(SchemaConfigured):
-
 	__external_class_name__ = "GroupStats"
 	mime_type = mimeType = 'application/vnd.nextthought.learningnetwork.groupstats'
-
-	def __init__(self, *args, **kwargs):
-		SchemaConfigured.__init__(self, *args, **kwargs)
 
 @EqHash('Source', 'Target')
 @interface.implementer(IConnection)
 class Connection(SchemaConfigured):
-
 	__external_class_name__ = "Connection"
 	mime_type = mimeType = 'application/vnd.nextthought.learningnetwork.connection'
-
-	def __init__(self, *args, **kwargs):
-		SchemaConfigured.__init__(self, *args, **kwargs)
