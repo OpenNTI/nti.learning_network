@@ -31,7 +31,7 @@ class _AnalyticsConnections(object):
 
 	def _get_connection_objs(self, replies):
 		results = []
-		for reply in replies:
+		for reply in replies or ():
 			if reply.IsReply and reply.RepliedToUser:
 				target = reply.RepliedToUser.username
 				source = reply.user.username
