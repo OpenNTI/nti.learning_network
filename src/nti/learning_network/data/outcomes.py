@@ -13,8 +13,8 @@ from zope import interface
 
 from nti.app.products.badges import get_person_badges
 
+# TODO: This has be to be moved
 from nti.app.products.gradebook.grading import calculate_predicted_grade
-from nti.app.products.gradebook.grading import find_grading_policy_for_course
 
 from nti.assessment.interfaces import IQTimedAssignment
 
@@ -22,6 +22,8 @@ from nti.analytics.assessments import get_assignments_for_user
 
 from nti.contenttypes.courses.interfaces import ICourseAssignmentCatalog
 from nti.contenttypes.courses.interfaces import get_course_assessment_predicate_for_user
+
+from nti.contenttypes.courses.grading import find_grading_policy_for_course
 
 from nti.learning_network.interfaces import IOutcomeStatsSource
 
