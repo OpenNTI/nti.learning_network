@@ -123,8 +123,9 @@ class _AnalyticsOutcomeStatsSource(object):
 			grade_policy = find_grading_policy_for_course(self.course)
 			if grade_policy is not None:
 				predicted_grade = self._get_predicted_grade(self.user, grade_policy)
-				final_grade = predicted_grade.Correctness
-				final_grade_alpha = predicted_grade.Grade
+				if predicted_grade is not None:
+					final_grade = predicted_grade.Correctness
+					final_grade_alpha = predicted_grade.Grade
 
 		max_assignment_count, max_point_count = self._get_course_maxes()
 
