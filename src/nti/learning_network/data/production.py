@@ -11,6 +11,8 @@ logger = __import__('logging').getLogger(__name__)
 
 from zope import interface
 
+from zope.cachedescriptors.property import Lazy
+
 from nti.analytics.assessments import get_assignments_for_user
 from nti.analytics.assessments import get_self_assessments_for_user
 
@@ -38,7 +40,6 @@ from nti.assessment.interfaces import IQTimedAssignment
 
 from nti.learning_network.interfaces import IProductionStatsSource
 
-from nti.property.property import Lazy
 
 def _get_stats(records, do_include=lambda _: True):
 	"""

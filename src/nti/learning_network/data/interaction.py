@@ -13,6 +13,8 @@ from itertools import chain
 
 from zope import interface
 
+from zope.cachedescriptors.property import Lazy
+
 from nti.analytics.blogs import get_replies_to_user as get_blog_replies
 from nti.analytics.blogs import get_user_replies_to_others as get_blog_user_replies_to_others
 
@@ -31,7 +33,6 @@ from nti.learning_network.interfaces import IInteractionStatsSource
 from nti.learning_network.model import GroupStats
 from nti.learning_network.model import SocialStats
 
-from nti.property.property import Lazy
 
 @interface.implementer(IInteractionStatsSource)
 class _AnalyticsInteractionStatsSource(object):

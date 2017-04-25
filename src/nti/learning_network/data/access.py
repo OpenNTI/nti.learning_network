@@ -11,6 +11,8 @@ logger = __import__('logging').getLogger(__name__)
 
 from zope import interface
 
+from zope.cachedescriptors.property import Lazy
+
 from nti.analytics.assessments import get_assignment_views
 from nti.analytics.assessments import get_self_assessment_views
 
@@ -25,7 +27,6 @@ from nti.analytics.stats.utils import get_time_stats
 
 from nti.learning_network.interfaces import IAccessStatsSource
 
-from nti.property.property import Lazy
 
 def _get_time_lengths(records, do_include):
 	result = None

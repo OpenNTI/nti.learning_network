@@ -11,6 +11,8 @@ logger = __import__('logging').getLogger(__name__)
 
 from zope import interface
 
+from zope.cachedescriptors.property import Lazy
+
 from nti.app.products.badges import get_person_badges
 
 # TODO: This has be to be moved
@@ -30,7 +32,6 @@ from nti.learning_network.interfaces import IOutcomeStatsSource
 from nti.learning_network.model import BadgeOutcomeStats
 from nti.learning_network.model import AssignmentOutcomeStats
 
-from nti.property.property import Lazy
 
 @interface.implementer(IOutcomeStatsSource)
 class _AnalyticsOutcomeStatsSource(object):
