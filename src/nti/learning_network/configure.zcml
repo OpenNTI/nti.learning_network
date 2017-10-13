@@ -1,111 +1,134 @@
 <!-- -*- mode: nxml -*- -->
-<configure	xmlns="http://namespaces.zope.org/zope"
-			xmlns:i18n="http://namespaces.zope.org/i18n"
-			xmlns:zcml="http://namespaces.zope.org/zcml"
-			xmlns:ext="http://nextthought.com/ntp/ext">
+<configure  xmlns="http://namespaces.zope.org/zope"
+            xmlns:i18n="http://namespaces.zope.org/i18n"
+            xmlns:zcml="http://namespaces.zope.org/zcml"
+            xmlns:ext="http://nextthought.com/ntp/ext">
 
-	<include package="zope.component" file="meta.zcml" />
-	<include package="zope.security" file="meta.zcml" />
-	<include package="zope.component" />
-	<include package="zope.security" />
+    <include package="zope.component" file="meta.zcml" />
+    <include package="zope.security" file="meta.zcml" />
+    <include package="zope.component" />
+    <include package="zope.security" />
 
-	<!-- Access -->
-	<adapter factory=".data.access._AnalyticsAccessStatsSource"
-			 for="nti.dataserver.interfaces.IUser"
-			 provides=".interfaces.IAccessStatsSource" />
+    <!-- Access -->
+    <adapter factory=".data.access._AnalyticsAccessStatsSource"
+             for="nti.dataserver.interfaces.IUser"
+             provides=".interfaces.IAccessStatsSource" />
 
-	<adapter factory=".data.access._AnalyticsAccessStatsSource"
-			 for="nti.dataserver.interfaces.IUser
-			 	  nti.contenttypes.courses.interfaces.ICourseInstance"
-			 provides=".interfaces.IAccessStatsSource" />
+    <adapter factory=".data.access._AnalyticsAccessStatsSource"
+             for="nti.dataserver.interfaces.IUser
+                  nti.contenttypes.courses.interfaces.ICourseInstance"
+             provides=".interfaces.IAccessStatsSource" />
 
-	<adapter factory=".data.access._AnalyticsAccessStatsSource"
-			 for="nti.dataserver.interfaces.IUser
-			 	  nti.contenttypes.courses.interfaces.ICourseInstance
-			 	  zope.interface.common.idatetime.IDate"
-			 provides=".interfaces.IAccessStatsSource" />
+    <adapter factory=".data.access._AnalyticsAccessStatsSource"
+             for="nti.dataserver.interfaces.IUser
+                  nti.contenttypes.courses.interfaces.ICourseInstance
+                  zope.interface.common.idatetime.IDate"
+             provides=".interfaces.IAccessStatsSource" />
 
-	<adapter factory=".data.access._AnalyticsAccessStatsSource"
-			 for="nti.dataserver.interfaces.IUser
-			 	nti.contenttypes.courses.interfaces.ICourseInstance
-			 	zope.interface.common.idatetime.IDate
-			 	zope.interface.common.idatetime.IDate"
-			 provides=".interfaces.IAccessStatsSource" />
+    <adapter factory=".data.access._AnalyticsAccessStatsSource"
+             for="nti.dataserver.interfaces.IUser
+                nti.contenttypes.courses.interfaces.ICourseInstance
+                zope.interface.common.idatetime.IDate
+                zope.interface.common.idatetime.IDate"
+             provides=".interfaces.IAccessStatsSource" />
 
-	<!-- Production -->
-	<adapter factory=".data.production._AnalyticsProductionStatsSource"
-			 for="nti.dataserver.interfaces.IUser"
-			 provides=".interfaces.IProductionStatsSource" />
+    <!-- Resource Access -->
+    <adapter factory=".data.access._AnalyticsResourceAccessStatsSource"
+             for="nti.dataserver.interfaces.IUser"
+             provides=".interfaces.IResourceAccessStatsSource" />
 
-	<adapter factory=".data.production._AnalyticsProductionStatsSource"
-			 for="nti.dataserver.interfaces.IUser
-			 	  nti.contenttypes.courses.interfaces.ICourseInstance"
-			 provides=".interfaces.IProductionStatsSource" />
+    <adapter factory=".data.access._AnalyticsResourceAccessStatsSource"
+             for="nti.dataserver.interfaces.IUser
+                  nti.contenttypes.courses.interfaces.ICourseInstance"
+             provides=".interfaces.IResourceAccessStatsSource" />
 
-	<adapter factory=".data.production._AnalyticsProductionStatsSource"
-			 for="nti.dataserver.interfaces.IUser
-			 	  nti.contenttypes.courses.interfaces.ICourseInstance
-			 	  zope.interface.common.idatetime.IDate"
-			 provides=".interfaces.IProductionStatsSource" />
+    <adapter factory=".data.access._AnalyticsResourceAccessStatsSource"
+             for="nti.dataserver.interfaces.IUser
+                  nti.contenttypes.courses.interfaces.ICourseInstance
+                  zope.interface.common.idatetime.IDate"
+             provides=".interfaces.IResourceAccessStatsSource" />
 
-	<adapter factory=".data.production._AnalyticsProductionStatsSource"
-			 for="nti.dataserver.interfaces.IUser
-			 	  nti.contenttypes.courses.interfaces.ICourseInstance
-			 	  zope.interface.common.idatetime.IDate
-			 	  zope.interface.common.idatetime.IDate"
-			 provides=".interfaces.IProductionStatsSource" />
+    <adapter factory=".data.access._AnalyticsResourceAccessStatsSource"
+             for="nti.dataserver.interfaces.IUser
+                nti.contenttypes.courses.interfaces.ICourseInstance
+                zope.interface.common.idatetime.IDate
+                zope.interface.common.idatetime.IDate"
+             provides=".interfaces.IResourceAccessStatsSource" />
 
-	<!-- Interaction -->
-	<adapter factory=".data.interaction._AnalyticsInteractionStatsSource"
-			 for="nti.dataserver.interfaces.IUser"
-			 provides=".interfaces.IInteractionStatsSource" />
+    <!-- Production -->
+    <adapter factory=".data.production._AnalyticsProductionStatsSource"
+             for="nti.dataserver.interfaces.IUser"
+             provides=".interfaces.IProductionStatsSource" />
 
-	<adapter factory=".data.interaction._AnalyticsInteractionStatsSource"
-			 for="nti.dataserver.interfaces.IUser
-			 	  nti.contenttypes.courses.interfaces.ICourseInstance"
-			 provides=".interfaces.IInteractionStatsSource" />
+    <adapter factory=".data.production._AnalyticsProductionStatsSource"
+             for="nti.dataserver.interfaces.IUser
+                  nti.contenttypes.courses.interfaces.ICourseInstance"
+             provides=".interfaces.IProductionStatsSource" />
 
-	<adapter factory=".data.interaction._AnalyticsInteractionStatsSource"
-			 for="nti.dataserver.interfaces.IUser
-			 	nti.contenttypes.courses.interfaces.ICourseInstance
-			 	zope.interface.common.idatetime.IDate"
-			 provides=".interfaces.IInteractionStatsSource" />
+    <adapter factory=".data.production._AnalyticsProductionStatsSource"
+             for="nti.dataserver.interfaces.IUser
+                  nti.contenttypes.courses.interfaces.ICourseInstance
+                  zope.interface.common.idatetime.IDate"
+             provides=".interfaces.IProductionStatsSource" />
 
-	<adapter factory=".data.interaction._AnalyticsInteractionStatsSource"
-			 for="nti.dataserver.interfaces.IUser
-			 	  nti.contenttypes.courses.interfaces.ICourseInstance
-			 	  zope.interface.common.idatetime.IDate
-			 	  zope.interface.common.idatetime.IDate"
-			 provides=".interfaces.IInteractionStatsSource" />
+    <adapter factory=".data.production._AnalyticsProductionStatsSource"
+             for="nti.dataserver.interfaces.IUser
+                  nti.contenttypes.courses.interfaces.ICourseInstance
+                  zope.interface.common.idatetime.IDate
+                  zope.interface.common.idatetime.IDate"
+             provides=".interfaces.IProductionStatsSource" />
 
-	<!-- Outcomes -->
-	<adapter factory=".data.outcomes._AnalyticsOutcomeStatsSource"
-			 for="nti.dataserver.interfaces.IUser"
-			 provides=".interfaces.IOutcomeStatsSource" />
+    <!-- Interaction -->
+    <adapter factory=".data.interaction._AnalyticsInteractionStatsSource"
+             for="nti.dataserver.interfaces.IUser"
+             provides=".interfaces.IInteractionStatsSource" />
 
-	<adapter factory=".data.outcomes._AnalyticsOutcomeStatsSource"
-			 for="nti.dataserver.interfaces.IUser
-			 	  nti.contenttypes.courses.interfaces.ICourseInstance"
-			 provides=".interfaces.IOutcomeStatsSource" />
+    <adapter factory=".data.interaction._AnalyticsInteractionStatsSource"
+             for="nti.dataserver.interfaces.IUser
+                  nti.contenttypes.courses.interfaces.ICourseInstance"
+             provides=".interfaces.IInteractionStatsSource" />
 
-	<!--Connections -->
-	<adapter factory=".data.connections._AnalyticsConnections"
-			 for="nti.contenttypes.courses.interfaces.ICourseInstance"
-			 provides=".interfaces.IConnectionsSource" />
+    <adapter factory=".data.interaction._AnalyticsInteractionStatsSource"
+             for="nti.dataserver.interfaces.IUser
+                nti.contenttypes.courses.interfaces.ICourseInstance
+                zope.interface.common.idatetime.IDate"
+             provides=".interfaces.IInteractionStatsSource" />
 
-	<!-- Externalization -->
-	<include package="nti.externalization" file="meta.zcml" />
-	<include package="nti.externalization" />
-	<ext:registerAutoPackageIO
-		root_interfaces=".interfaces.IConnection
-						.interfaces.IGroupStats
-						.interfaces.ISocialStats
-						.interfaces.IAssignmentOutcomeStats
-						.interfaces.IAccessStatsSource
-						.interfaces.IOutcomeStatsSource
-						.interfaces.IProductionStatsSource
-						.interfaces.IInteractionStatsSource"
-		modules=".model" />
+    <adapter factory=".data.interaction._AnalyticsInteractionStatsSource"
+             for="nti.dataserver.interfaces.IUser
+                  nti.contenttypes.courses.interfaces.ICourseInstance
+                  zope.interface.common.idatetime.IDate
+                  zope.interface.common.idatetime.IDate"
+             provides=".interfaces.IInteractionStatsSource" />
+
+    <!-- Outcomes -->
+    <adapter factory=".data.outcomes._AnalyticsOutcomeStatsSource"
+             for="nti.dataserver.interfaces.IUser"
+             provides=".interfaces.IOutcomeStatsSource" />
+
+    <adapter factory=".data.outcomes._AnalyticsOutcomeStatsSource"
+             for="nti.dataserver.interfaces.IUser
+                  nti.contenttypes.courses.interfaces.ICourseInstance"
+             provides=".interfaces.IOutcomeStatsSource" />
+
+    <!--Connections -->
+    <adapter factory=".data.connections._AnalyticsConnections"
+             for="nti.contenttypes.courses.interfaces.ICourseInstance"
+             provides=".interfaces.IConnectionsSource" />
+
+    <!-- Externalization -->
+    <include package="nti.externalization" file="meta.zcml" />
+    <include package="nti.externalization" />
+    <ext:registerAutoPackageIO
+        root_interfaces=".interfaces.IConnection
+                        .interfaces.IGroupStats
+                        .interfaces.ISocialStats
+                        .interfaces.IAssignmentOutcomeStats
+                        .interfaces.IAccessStatsSource
+                        .interfaces.IOutcomeStatsSource
+                        .interfaces.IProductionStatsSource
+                        .interfaces.IInteractionStatsSource"
+        modules=".model" />
 
 </configure>
 
