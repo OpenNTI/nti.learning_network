@@ -9,6 +9,7 @@ entry_points = {
 
 TESTS_REQUIRE = [
     'fudge',
+    'nti.app.assessment',
     'nti.testing',
     'zope.dottedname',
     'zope.testrunner',
@@ -54,10 +55,15 @@ setup(
         'nti.analytics',
         'nti.app.products.badges',
         'nti.app.products.gradebook',
+        'nti.assessment',
         'nti.contenttypes.courses',
         'nti.externalization',
+        'nti.ntiids',
         'nti.schema',
+        'zope.cachedescriptors',
         'zope.interface',
+        'zope.component',
+        'zope.security',
     ],
     extras_require={
         'test': TESTS_REQUIRE,
