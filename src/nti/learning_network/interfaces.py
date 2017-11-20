@@ -10,12 +10,6 @@ from __future__ import absolute_import
 
 from zope import interface
 
-from nti.schema.field import Bool
-from nti.schema.field import Number
-from nti.schema.field import Object
-from nti.schema.field import DateTime
-from nti.schema.field import ValidTextLine
-
 from nti.analytics.stats.interfaces import IStats
 from nti.analytics.stats.interfaces import INoteStats
 from nti.analytics.stats.interfaces import ITimeStats
@@ -23,6 +17,12 @@ from nti.analytics.stats.interfaces import ICommentStats
 from nti.analytics.stats.interfaces import IAssignmentStats
 from nti.analytics.stats.interfaces import IThoughtCommentStats
 from nti.analytics.stats.interfaces import ISelfAssessmentStats
+
+from nti.schema.field import Bool
+from nti.schema.field import Number
+from nti.schema.field import Object
+from nti.schema.field import DateTime
+from nti.schema.field import ValidTextLine
 
 
 class ISocialStats(IStats):
