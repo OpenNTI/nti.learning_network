@@ -121,13 +121,13 @@
     <include package="nti.externalization" />
     <ext:registerAutoPackageIO
         root_interfaces=".interfaces.IConnection
-                        .interfaces.IGroupStats
-                        .interfaces.ISocialStats
-                        .interfaces.IAssignmentOutcomeStats
-                        .interfaces.IAccessStatsSource
-                        .interfaces.IOutcomeStatsSource
-                        .interfaces.IProductionStatsSource
-                        .interfaces.IInteractionStatsSource"
+                         .interfaces.IGroupStats
+                         .interfaces.ISocialStats
+                         .interfaces.IAssignmentOutcomeStats
+                         .interfaces.IAccessStatsSource
+                         .interfaces.IOutcomeStatsSource
+                         .interfaces.IProductionStatsSource
+                         .interfaces.IInteractionStatsSource"
         modules=".model" />
 
 </configure>

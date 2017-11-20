@@ -1,37 +1,77 @@
 import codecs
-from setuptools import setup, find_packages
-
-VERSION = '0.0.0'
+from setuptools import setup
+from setuptools import find_packages 
 
 entry_points = {
-	'console_scripts': [
-	],
+    'console_scripts': [
+    ],
 }
 
+TESTS_REQUIRE = [
+    'fudge',
+    'nti.app.assessment',
+    'nti.testing',
+    'zope.dottedname',
+    'zope.testrunner',
+]
+
+
+def _read(fname):
+    with codecs.open(fname, encoding='utf-8') as f:
+        return f.read()
+
+
 setup(
-	name='nti.learning_network',
-	version=VERSION,
-	author='Josh Zuech',
-	author_email='josh.zuech@nextthought.com',
-	description="NTI learning_network",
-	long_description=codecs.open('README.rst', encoding='utf-8').read(),
-	license='Proprietary',
-	keywords='pyramid preference',
-	classifiers=[
-		'Intended Audience :: Developers',
-		'Natural Language :: English',
-		'Programming Language :: Python :: 2.7',
-		'Programming Language :: Python :: 3',
-		'Programming Language :: Python :: 3.3',
-	],
-	packages=find_packages('src'),
-	package_dir={'': 'src'},
-	namespace_packages=['nti'],
-	install_requires=[
-		'setuptools',
-		'nti.analytics',
-		'nti.app.products.badges',
-		'nti.app.products.gradebook'
-	],
-	entry_points=entry_points
+    name='nti.learning_network',
+    version=_read('version.txt').strip(),
+    author='Jason Madden',
+    author_email='jason@nextthought.com',
+    description="NTI learning network",
+	long_description=(
+		_read('README.rst') 
+		+ '\n\n' 
+		+ _read("CHANGES.rst")
+	),
+    license='Apache',
+    keywords='analytics learning network',
+    classifiers=[
+        'Intended Audience :: Developers',
+        'Natural Language :: English',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: Implementation :: CPython',
+        'Programming Language :: Python :: Implementation :: PyPy',
+    ],
+    url="https://github.com/NextThought/nti.learning_network",
+    zip_safe=True,
+    packages=find_packages('src'),
+    package_dir={'': 'src'},
+    include_package_data=True,
+    namespace_packages=['nti'],
+    tests_require=TESTS_REQUIRE,
+    install_requires=[
+        'setuptools',
+        'nti.analytics',
+        'nti.app.products.badges',
+        'nti.app.products.gradebook',
+        'nti.assessment',
+        'nti.contenttypes.courses',
+        'nti.externalization',
+        'nti.ntiids',
+        'nti.schema',
+        'zope.cachedescriptors',
+        'zope.interface',
+        'zope.component',
+        'zope.security',
+    ],
+    extras_require={
+        'test': TESTS_REQUIRE,
+        'docs': [
+            'Sphinx',
+            'repoze.sphinx.autointerface',
+            'sphinx_rtd_theme',
+        ],
+    },
+    entry_points=entry_points,
 )
