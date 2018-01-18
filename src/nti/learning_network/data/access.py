@@ -111,7 +111,7 @@ class _AnalyticsAccessStatsSource(object):
         Return the learning network stats for readings, optionally
         with a course or timestamp filter.
         """
-        resource_views = get_user_resource_views(self.user, course=self.course,
+        resource_views = get_user_resource_views(self.user, root_context=self.course,
                                                  timestamp=self.timestamp,
                                                  max_timestamp=self.max_timestamp)
 
@@ -165,7 +165,7 @@ class _AnalyticsResourceAccessStatsSource(object):
 
     def get_all_resource_names(self):
         result = set()
-        resource_views = get_user_resource_views(course=self.course,
+        resource_views = get_user_resource_views(root_context=self.course,
                                                  timestamp=self.timestamp,
                                                  max_timestamp=self.max_timestamp)
         for resource_view in resource_views:
@@ -199,7 +199,7 @@ class _AnalyticsResourceAccessStatsSource(object):
     def get_resource_stats(self):
         result = {}
         resource_views = get_user_resource_views(self.user,
-                                                 course=self.course,
+                                                 root_context=self.course,
                                                  timestamp=self.timestamp,
                                                  max_timestamp=self.max_timestamp)
         record_map = {}
