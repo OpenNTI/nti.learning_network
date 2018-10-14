@@ -18,7 +18,7 @@ from nti.learning_network.interfaces import IAssignmentOutcomeStats
 
 from nti.schema.eqhash import EqHash
 
-from nti.schema.field import SchemaConfigured
+from nti.schema.schema import SchemaConfigured
 
 logger = __import__('logging').getLogger(__name__)
 
