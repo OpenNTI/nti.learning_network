@@ -1,6 +1,6 @@
 import codecs
 from setuptools import setup
-from setuptools import find_packages 
+from setuptools import find_packages
 
 entry_points = {
     'console_scripts': [
@@ -29,8 +29,8 @@ setup(
     author_email='jason@nextthought.com',
     description="NTI learning network",
 	long_description=(
-		_read('README.rst') 
-		+ '\n\n' 
+		_read('README.rst')
+		+ '\n\n'
 		+ _read("CHANGES.rst")
 	),
     license='Apache',
@@ -54,7 +54,6 @@ setup(
     install_requires=[
         'setuptools',
         'nti.analytics',
-        'nti.app.products.badges',
         'nti.app.products.gradebook',
         'nti.assessment',
         'nti.contenttypes.courses',

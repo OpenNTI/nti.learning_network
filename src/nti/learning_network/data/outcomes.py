@@ -13,9 +13,6 @@ from zope import interface
 from zope.cachedescriptors.property import Lazy
 
 # TODO: Break dependency
-from nti.app.products.badges import get_person_badges
-
-# TODO: Break dependency
 from nti.app.products.gradebook.grading import calculate_predicted_grade
 
 from nti.analytics.assessments import get_assignments_for_user
@@ -29,7 +26,6 @@ from nti.contenttypes.courses.grading import find_grading_policy_for_course
 
 from nti.learning_network.interfaces import IOutcomeStatsSource
 
-from nti.learning_network.model import BadgeOutcomeStats
 from nti.learning_network.model import AssignmentOutcomeStats
 
 logger = __import__('logging').getLogger(__name__)
@@ -147,15 +143,3 @@ class _AnalyticsOutcomeStatsSource(object):
                                        MaxPointCount=max_point_count,
                                        MaxAssignmentCount=max_assignment_count)
         return stats
-
-    @Lazy
-    def BadgeStats(self):
-        has_badge = False
-        if self.course is not None:
-            person_badges = get_person_badges(self.user)
-            for _ in person_badges:
-                # TODO: Need badge for target course
-                # 				if badge.id == 'u.s.-history-1865-to-present-course-completion-badge':
-                # 					has_badge = True
-                pass
-        return BadgeOutcomeStats(HasBadge=has_badge)

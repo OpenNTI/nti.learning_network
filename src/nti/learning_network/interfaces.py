@@ -31,13 +31,13 @@ class ISocialStats(IStats):
     """
     A container for holding various social statistics.
     """
-    ContactsAddedCount = Number(title=u"Number of contacts user has added.", 
+    ContactsAddedCount = Number(title=u"Number of contacts user has added.",
 								required=True)
 
-    DistinctReplyToCount = Number(title=u"Number of distinct users replying to user.", 
+    DistinctReplyToCount = Number(title=u"Number of distinct users replying to user.",
 								  required=True)
 
-    DistinctUserReplyToOthersCount = Number(title=u"Number of distinct users replied to.", 
+    DistinctUserReplyToOthersCount = Number(title=u"Number of distinct users replied to.",
 											required=True)
 
 
@@ -45,16 +45,16 @@ class IGroupStats(IStats):
     """
     A container for holding various group statistics.
     """
-    GroupsJoinedCount = Number(title=u"Number of groups user has joined.", 
+    GroupsJoinedCount = Number(title=u"Number of groups user has joined.",
 							   required=True)
 
-    GroupsCreatedCount = Number(title=u"Number of groups user has created.", 
+    GroupsCreatedCount = Number(title=u"Number of groups user has created.",
 								required=True)
 
-    UsersInGroupsCount = Number(title=u"Number of users in groups.", 
+    UsersInGroupsCount = Number(title=u"Number of users in groups.",
 								required=True)
 
-    DistinctUsersInGroupsCount = Number(title=u"Number of distinct users in groups.", 
+    DistinctUsersInGroupsCount = Number(title=u"Number of distinct users in groups.",
 										required=True)
 
 
@@ -66,24 +66,17 @@ class IAssignmentOutcomeStats(IAssignmentStats):
 
     FinalGradeNumeric = Number(title=u"The final grade.", required=False)
 
-    AverageGrade = Number(title=u"The average grade on assignments.", 
+    AverageGrade = Number(title=u"The average grade on assignments.",
 						  required=False)
 
-    TotalPoints = Number(title=u"Number of points in assignments", 
+    TotalPoints = Number(title=u"Number of points in assignments",
 						 required=False)
 
-    MaxPointCount = Number(title=u"Maximum points of assignments.", 
+    MaxPointCount = Number(title=u"Maximum points of assignments.",
 						   required=False)
 
-    MaxAssignmentCount = Number(title=u"Maximum number of assignments.", 
+    MaxAssignmentCount = Number(title=u"Maximum number of assignments.",
 								required=False)
-
-
-class IBadgeOutcomeStats(IStats):
-    """
-    A container for holding badge outcome stats.
-    """
-    HasBadge = Bool(title=u"Does the user have a badge.", required=False)
 
 
 class ILearningNetworkScoreProvider(interface.Interface):
@@ -157,13 +150,13 @@ class IProductionStatsSource(interface.Interface):
 
     CommentStats = Object(ICommentStats,
                           title=u"Stats on contextual comment production.")
- 
+
     ThoughtStats = Object(IStats,
                           title=u"Stats on contextual thought production.")
 
     ThoughtCommentStats = Object(IThoughtCommentStats,
                                  title=u"Stats on contextual thought comment production.")
- 
+
     NoteStats = Object(INoteStats,
                        title=u"Stats on contextual note production.")
 
@@ -195,8 +188,6 @@ class IOutcomeStatsSource(interface.Interface):
     AssignmentStats = Object(IAssignmentOutcomeStats,
                              title=u"Stats on contextual assignment production.")
 
-    BadgeStats = Object(IBadgeOutcomeStats, title=u"Badge stats")
-
 
 class IConnectionsSource(IStats):
     """
@@ -219,5 +210,5 @@ class IConnection(interface.Interface):
     Target = ValidTextLine(title=u"The (possibly passive) recipient of the connection.",
                            required=True)
 
-    Timestamp = DateTime(title=u"The timestamp when this connection was created.", 
+    Timestamp = DateTime(title=u"The timestamp when this connection was created.",
 						 required=False)

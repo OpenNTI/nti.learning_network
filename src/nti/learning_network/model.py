@@ -13,7 +13,6 @@ from zope import interface
 from nti.learning_network.interfaces import IConnection
 from nti.learning_network.interfaces import IGroupStats
 from nti.learning_network.interfaces import ISocialStats
-from nti.learning_network.interfaces import IBadgeOutcomeStats
 from nti.learning_network.interfaces import IAssignmentOutcomeStats
 
 from nti.schema.eqhash import EqHash
@@ -27,12 +26,6 @@ logger = __import__('logging').getLogger(__name__)
 class AssignmentOutcomeStats(SchemaConfigured):
     __external_class_name__ = "AssignmentOutcomeStats"
     mime_type = mimeType = 'application/vnd.nextthought.learningnetwork.assignmentoutcomestats'
-
-
-@interface.implementer(IBadgeOutcomeStats)
-class BadgeOutcomeStats(SchemaConfigured):
-    __external_class_name__ = "BadgeOutcomeStats"
-    mime_type = mimeType = 'application/vnd.nextthought.learningnetwork.badgeoutcomestats'
 
 
 @EqHash('ContactsAddedCount', 'DistinctReplyToCount', 'DistinctUserReplyToOthersCount')
